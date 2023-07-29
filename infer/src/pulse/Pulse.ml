@@ -1283,6 +1283,7 @@ let analyze specialization
     ({InterproceduralAnalysis.tenv; proc_desc; err_log; exe_env} as analysis_data) =
   if should_analyze proc_desc then
     let proc_name = Procdesc.get_proc_name proc_desc in
+    (* let () = Procname.process_java_name_iter [proc_name] in *)
     let proc_attrs = Procdesc.get_attributes proc_desc in
     let integer_type_widths = Exe_env.get_integer_type_widths exe_env proc_name in
     let initial =

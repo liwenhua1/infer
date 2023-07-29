@@ -43,19 +43,13 @@ let iter_sorted cfg ~f = get_sorted_procs cfg |> List.iter ~f
 
 let fold_sorted cfg ~init ~f = get_sorted_procs cfg |> List.fold ~init ~f
 
-let rec process_name_iter (alist: Procname.t list) = 
-  match alist with
-  | [] -> ()
-  | x::xs -> (match x with
-              | Java a -> (print_endline (Procname.Java.get_method a)); print_endline (Procname.Java.get_class_name a)
-              | _ -> ()  
-                ) ; process_name_iter xs
+
 
 let store source_file cfg =
   (*cfg store all process name*)
-  let t1 = get_all_defined_proc_names cfg in 
+  (* let t1 = get_all_defined_proc_names cfg in  *)
   (* let () = print_endline (string_of_int (List.length t1)) in *)
-  process_name_iter t1; 
+  (* Procname.process_java_name_iter t1;  *)
   let save_proc _ proc_desc =
     let attributes = Procdesc.get_attributes proc_desc in
     let loc = attributes.loc in

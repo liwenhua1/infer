@@ -130,6 +130,8 @@ module Java = struct
       L.die InternalError "Expected java type but got %a@." (Typ.pp_full Pp.text) t
 
 
+  
+                      
   let make ~class_name ~return_type ~method_name ~parameters ~kind () =
     Option.iter return_type ~f:ensure_java_type ;
     {class_name; return_type; method_name; parameters; kind}
@@ -978,6 +980,13 @@ let get_class_type_name t =
   | C _ | Erlang _ | WithFunctionParameters _ | Linters_dummy_method ->
       None
 
+let rec process_java_name_iter (alist: t list) = 
+        match alist with
+        | [] -> ()
+        | x::xs -> (match x with
+                    | Java a -> (print_endline (Java.get_method a)); print_endline (Java.get_class_name a)
+                    | _ -> ()  
+                      ) ; process_java_name_iter xs
 
 let get_class_name t =
   match base_of t with

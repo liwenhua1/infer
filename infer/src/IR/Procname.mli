@@ -275,6 +275,9 @@ val compare_name : t -> t -> int
 
 val get_class_type_name : t -> Typ.Name.t option
 
+val process_java_name_iter : t list -> unit
+(** print process name, support java process **)
+
 val get_class_name : t -> string option
 
 val get_parameters : t -> Parameter.t list
