@@ -25,7 +25,10 @@ val force_exit_program :
   -> ExecutionDomain.t
   -> _ ExecutionDomain.base_t SatUnsat.t
 
+val pp_pre_post_list: Format.formatter -> pp_kind:(Format.formatter -> unit) -> ExecutionDomain.summary list -> unit
+
 val pp : Format.formatter -> t -> unit
+
 
 val append_objc_actual_self_positive :
      Procname.t
