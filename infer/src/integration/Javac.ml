@@ -111,10 +111,14 @@ let call_infer_javac_capture ~javac_args =
   L.debug Capture Verbose "%s %s@." prog (String.concat ~sep:" " args) ;
   Process.create_process_and_wait ~prog ~args
 
-
+(* let rec print_string_list al = 
+  match al with
+  | [] -> ()
+  | x::xs -> print_endline x ; print_string_list xs *)
 let capture compiler ~prog ~args =
   (* Simulates Buck support for compilation commands with no source file *)
   if not (Config.buck_cache_mode && no_source_file args) then (
+    (*prog = java or javc, args = filename*)
     let verbose_out_file = compile compiler prog args in
     if not (InferCommand.equal Config.command Compile) then JMain.from_verbose_out verbose_out_file ;
     if not Config.debug_mode then Unix.unlink verbose_out_file )

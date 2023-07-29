@@ -12,13 +12,13 @@ open! IStd
 
 (** A control-flow graph is a collection of all the CFGs for the procedure names in a file *)
 type t = Procdesc.t Procname.Hash.t
-
+(*cfgs, procdesc.t should be one cfg*)
 val get_all_defined_proc_names : t -> Procname.t list
 (** get all the procedure names that are defined in the current file *)
 
 val store : SourceFile.t -> t -> unit
 (** Save the individual [Procdesc.t] and [ProcAttributes.t] to the database for the procedures in
-    the cfg. *)
+    the cfg. important*)
 
 (** {2 Functions for manipulating an interprocedural CFG} *)
 
