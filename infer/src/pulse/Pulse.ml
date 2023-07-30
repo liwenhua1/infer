@@ -1334,7 +1334,7 @@ let analyze specialization
               Option.to_list objc_nil_summary @ summary
             else summary
           in
-          PulseSummary.pp_pre_post_list F.std_formatter ~pp_kind:(fun _fmt -> ()) summary ;
+          (* PulseSummary.pp_pre_post_list F.std_formatter ~pp_kind:(fun _fmt -> ()) summary ; *)
           report_topl_errors proc_desc err_log summary ;
           report_unnecessary_copies proc_desc err_log non_disj_astate ;
           report_unnecessary_parameter_copies tenv proc_desc err_log non_disj_astate ;

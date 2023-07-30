@@ -18,11 +18,12 @@ class Subtype extends Supertype {
          return new Object();
        }
    
-     public void dynamicDispatchShouldNotReportWhenCallingSupertypeOK(Supertype a, int y) 
+     public void dynamicDispatchShouldNotReportWhenCallingSupertypeOK(Supertype a) 
      //static //presumes this::Subtype<> * o::Supertype<> achieves this::Subtype<> * o::Supertype<> * temp::Objec<>;
      //static //presumes this::Subtype<> * o::Subtype<> achieves err this::Subtype<> * o::Subtype<> & temp = null;
      {
-      if (y == 1){
+      if (a instanceof Supertype){
+       a = (Subtype) a;
        Object temp =  a.foo();
        temp.toString();}
       else {(new Object()).toString();}
@@ -31,7 +32,7 @@ class Subtype extends Supertype {
      public void dynamicDispatchShouldReportWhenCalledWithSubtypeParameterBad_FN(Subtype o) 
      //static //presumes this::Subtype<> * o::Subtype<> achieves err this::Subtype<> * o::Subtype<>;
      {
-       this.dynamicDispatchShouldNotReportWhenCallingSupertypeOK(o,1);
+       this.dynamicDispatchShouldNotReportWhenCallingSupertypeOK(o);
      }
    
      
