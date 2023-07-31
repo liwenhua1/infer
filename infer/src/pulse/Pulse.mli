@@ -7,7 +7,7 @@
 
 open! IStd
 
-val unitf_on_list:'a list -> ('a -> unit) -> unit
+
 val checker :
      ?specialization:PulseSummary.t * Specialization.t
   -> PulseSummary.t InterproceduralAnalysis.t

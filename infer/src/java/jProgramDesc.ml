@@ -93,6 +93,7 @@ let create_sourcemap classes program =
     | None ->
         ()
     | Some source_file ->
+       (* print_endline source_file; filename eg. supertype.java*)
         let class_names =
           try Sourcemap.find program.sourcemap source_file with Caml.Not_found -> []
         in
@@ -124,6 +125,7 @@ let create_sourcemap classes program =
 
 let load JClasspath.{classpath_channel; classes} =
   L.(debug Capture Medium) "loading classes... %!" ;
+  (* print_endline "loading class"; *)
   let program =
     { classpath_channel
     ; classmap= Classmap.create 128

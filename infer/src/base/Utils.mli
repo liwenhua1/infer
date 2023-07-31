@@ -176,3 +176,4 @@ val zip_fold : init:'a -> f:('a -> Zip.in_file -> Zip.entry -> 'a) -> zip_filena
 val is_term_dumb : unit -> bool
 (** Check if the terminal is "dumb" or otherwise has very limited functionality. For example, Emacs'
     eshell reports itself as a dumb terminal. *)
+val unitf_on_list:'a list -> ('a -> unit) -> unit

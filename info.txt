@@ -1,4 +1,4 @@
-Print pre_post_list
+Print instruction
     pulse.ml -> 1291-1292
     (* let nodes = Procdesc.get_nodes proc_desc in 
     unitf_on_list nodes (fun x -> Instrs.pp Pp.text F.std_formatter (Procdesc.Node.get_instrs x)); *)
@@ -10,3 +10,13 @@ Print proc_name and class_name
 Methodmatcher
     pattern matcher for Java/C++ methods NB matching is modulo template arguments in C++ classes and
     functions
+
+print pre-post
+    pulse.ml -> 1337
+       (* PulseSummary.pp_pre_post_list F.std_formatter ~pp_kind:(fun _fmt -> ()) summary ;)
+
+print process_set
+        JFrontend -> 217 -219
+          (* let plist = Cfg.get_all_defined_proc_names x in 
+  Utils.unitf_on_list plist (fun z -> Procname.pp_verbose Format.std_formatter z); 
+  Cfg.pp_proc_signatures Format.std_formatter x; *)

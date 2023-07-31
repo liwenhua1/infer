@@ -1278,10 +1278,6 @@ let log_summary_count proc_name summary =
   Yojson.Basic.to_channel (Lazy.force summary_count_channel) counts ;
   Out_channel.output_char (Lazy.force summary_count_channel) '\n'
 
-let rec unitf_on_list list f = 
-  match list with
-  | [] -> ()
-  | x::xs -> f x ; unitf_on_list xs f
 
   
 let analyze specialization
@@ -1289,7 +1285,7 @@ let analyze specialization
   if should_analyze proc_desc then
     let proc_name = Procdesc.get_proc_name proc_desc in
     (* let nodes = Procdesc.get_nodes proc_desc in 
-    unitf_on_list nodes (fun x -> Instrs.pp Pp.text F.std_formatter (Procdesc.Node.get_instrs x)); *)
+    Utils.unitf_on_list nodes (fun x -> Instrs.pp Pp.text F.std_formatter (Procdesc.Node.get_instrs x)); *)
     (* let () = Procname.process_java_name_iter [proc_name] in *)
     let proc_attrs = Procdesc.get_attributes proc_desc in
     let integer_type_widths = Exe_env.get_integer_type_widths exe_env proc_name in

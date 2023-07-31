@@ -191,6 +191,7 @@ let should_capture package_opt source_basename classname node =
       | Some pkg ->
           List.equal String.equal pkg (JBasics.cn_package classname) )
 
+       
 
 (* Computes the control - flow graph and call - graph of a given source file.
    In the standard - mode, it translated all the classes of [program] that correspond to this
@@ -212,7 +213,12 @@ let compute_source_icfg program tenv source_basename package_opt source_file =
     select (should_capture package_opt source_basename) (create_icfg source_file program tenv icfg)
   in
   List.iter ~f:create (JProgramDesc.get_matching_class_names program source_basename) ;
-  icfg.JContext.cfg
+  let x = icfg.JContext.cfg in
+  (* let plist = Cfg.get_all_defined_proc_names x in 
+  Utils.unitf_on_list plist (fun z -> Procname.pp_verbose Format.std_formatter z); 
+  Cfg.pp_proc_signatures Format.std_formatter x; *)
+  x
+  
 
 
 let compute_class_icfg source_file program tenv node =

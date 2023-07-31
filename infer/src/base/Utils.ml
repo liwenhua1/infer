@@ -587,3 +587,9 @@ let is_term_dumb () =
       true
   | _ ->
       false
+
+let rec unitf_on_list list f = 
+        match list with
+        | [] -> ()
+        | x::xs -> f x ; print_endline "" ;unitf_on_list xs f
+      
