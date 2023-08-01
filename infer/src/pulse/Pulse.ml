@@ -12,6 +12,7 @@ module IRAttributes = Attributes
 open PulseBasicInterface
 open PulseDomainInterface
 open PulseOperationResult.Import
+open AbstractDomain
 
 (** raised when we detect that pulse is using too much memory to stop the analysis of the current
     procedure *)
@@ -1301,9 +1302,14 @@ let analyze specialization
           in
           (initial_disjuncts, initial_non_disj) )
     in
-    let exit_summaries_opt, exn_sink_summaries_opt =
+    let ((exit_summaries_opt:DisjunctiveAnalyzer.TransferFunctions.Domain.t option), exn_sink_summaries_opt) =
       DisjunctiveAnalyzer.compute_post_including_exceptional analysis_data ~initial proc_desc
     in
+(*     
+    let res = match exit_summaries_opt with 
+    | None _ -> ()
+    | Some a -> Utils.unitf_on_list (fst a) (fun x -> Pretty_printer F.std_formatter x) in
+    res; *)
     let process_postconditions node posts_opt ~convert_normal_to_exceptional =
       match posts_opt with
       | Some (posts, non_disj_astate) ->
