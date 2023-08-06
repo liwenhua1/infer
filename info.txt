@@ -20,3 +20,9 @@ print process_set
           (* let plist = Cfg.get_all_defined_proc_names x in 
   Utils.unitf_on_list plist (fun z -> Procname.pp_verbose Format.std_formatter z); 
   Cfg.pp_proc_signatures Format.std_formatter x; *)
+
+print pre?
+    AbstractInterpreter.ml -> 553-559 
+
+important instruction process 
+    AbstractInterpreter.ml 496 549
