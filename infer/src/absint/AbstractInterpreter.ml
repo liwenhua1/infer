@@ -546,10 +546,17 @@ module AbstractInterpreterCommon (TransferFunctions : NodeTransferFunctions) = s
 
   (* Note on narrowing operations: we defines the narrowing operations simply to take a smaller one.
      So, as of now, the termination of narrowing is not guaranteed in general. *)
-  let exec_node ~pp_instr analysis_data node ~is_loop_head ~is_narrowing astate_pre inv_map =
+  let exec_node ~pp_instr analysis_data (node:Node.t) ~is_loop_head ~is_narrowing astate_pre inv_map =
+    
     let node_id = Node.id node in
     let update_inv_map inv_map new_pre old_state_opt =
-      let new_post = exec_node_instrs old_state_opt ~pp_instr analysis_data node new_pre in
+      (* Domain.pp F.std_formatter new_pre;
+      print_endline "";
+      print_endline "========================================"; *)
+      let (new_post:Domain.t) = exec_node_instrs old_state_opt ~pp_instr analysis_data node new_pre in
+      (* Domain.pp F.std_formatter new_post;
+      print_endline "";
+      print_endline "========================================"; *)
       let new_visit_count =
         match old_state_opt with
         | None ->

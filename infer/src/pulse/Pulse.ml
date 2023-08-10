@@ -1302,6 +1302,7 @@ let analyze specialization
               (List.map initial_disjuncts ~f:fst)
               NonDisjDomain.bottom
           in
+          NonDisjDomain.pp F.std_formatter initial_non_disj;
           (initial_disjuncts, initial_non_disj) )
     in
     let ((exit_summaries_opt:DisjunctiveAnalyzer.TransferFunctions.Domain.t option), exn_sink_summaries_opt) =
