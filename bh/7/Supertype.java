@@ -22,11 +22,10 @@ class Subtype extends Supertype {
      //static //presumes this::Subtype<> * o::Supertype<> achieves this::Subtype<> * o::Supertype<> * temp::Objec<>;
      //static //presumes this::Subtype<> * o::Subtype<> achieves err this::Subtype<> * o::Subtype<> & temp = null;
      {
-      if (a instanceof Supertype){
-       a = (Subtype) a;
+      
        Object temp =  a.foo();
-       temp.toString();}
-      else {(new Object()).toString();}
+       temp.toString();
+      
      }
    
      public void dynamicDispatchShouldReportWhenCalledWithSubtypeParameterBad_FN(Subtype o) 

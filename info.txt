@@ -20,3 +20,10 @@ print process_set
           (* let plist = Cfg.get_all_defined_proc_names x in 
   Utils.unitf_on_list plist (fun z -> Procname.pp_verbose Format.std_formatter z); 
   Cfg.pp_proc_signatures Format.std_formatter x; *)
+
+print raw_post_pre
+    pulse.ml -> 1309
+    (* let res = match exit_summaries_opt with 
+    | None  -> ()
+    | Some a -> DisjunctiveAnalyzer.TransferFunctions.Domain.pp F.std_formatter a in
+    res; *)
