@@ -33,3 +33,7 @@ print raw_post_pre
     | None  -> ()
     | Some a -> DisjunctiveAnalyzer.TransferFunctions.Domain.pp F.std_formatter a in
     res; *)
+
+print class_tree
+    pulse.ml -> 1288
+    (* Tenv.pp F.std_formatter tenv; print_endline "=========================="; *)

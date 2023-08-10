@@ -1229,7 +1229,7 @@ let initial tenv proc_attrs specialization =
     |> PulseSummary.initial_with_positive_self proc_attrs
     |> PulseTaintOperations.taint_initial tenv proc_attrs
   in
-  AbductiveDomain.pp F.std_formatter initial_astate;
+  (* AbductiveDomain.pp F.std_formatter initial_astate; *)
   [(ContinueProgram initial_astate, PathContext.initial)]
 
 
@@ -1285,6 +1285,7 @@ let log_summary_count proc_name summary =
   
 let analyze specialization
     ({InterproceduralAnalysis.tenv; proc_desc; err_log; exe_env} as analysis_data) =
+    (* Tenv.pp F.std_formatter tenv; print_endline "=========================="; *)
   if should_analyze proc_desc then
     let proc_name = Procdesc.get_proc_name proc_desc in
     (* let nodes = Procdesc.get_nodes proc_desc in 
@@ -1302,7 +1303,7 @@ let analyze specialization
               (List.map initial_disjuncts ~f:fst)
               NonDisjDomain.bottom
           in
-          NonDisjDomain.pp F.std_formatter initial_non_disj;
+          (* NonDisjDomain.pp F.std_formatter initial_non_disj; *)
           (initial_disjuncts, initial_non_disj) )
     in
     let ((exit_summaries_opt:DisjunctiveAnalyzer.TransferFunctions.Domain.t option), exn_sink_summaries_opt) =
