@@ -37,3 +37,7 @@ print raw_post_pre
 print class_tree
     pulse.ml -> 1288
     (* Tenv.pp F.std_formatter tenv; print_endline "=========================="; *)
+
+print instraction
+    AbstractInterpreter.ml 499
+     (* Instrs.pp Pp.text F.std_formatter instrs; *)

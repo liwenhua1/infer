@@ -496,7 +496,7 @@ module AbstractInterpreterCommon (TransferFunctions : NodeTransferFunctions) = s
   let exec_node_instrs old_state_opt ~pp_instr proc_data node pre =
     
     let instrs = CFG.instrs node in
-    Instrs.pp Pp.text F.std_formatter instrs;
+    (* Instrs.pp Pp.text F.std_formatter instrs; *)
     if Config.write_html then L.d_printfln "PRE STATE:@\n@[%a@]@\n" pp_domain_html pre ;
     let exec_instr idx pre instr =
       call_once_in_ten ~f:!ProcessPoolState.update_heap_words () ;
