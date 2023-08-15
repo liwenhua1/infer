@@ -41,3 +41,6 @@ print class_tree
 print instraction
     AbstractInterpreter.ml 499
      (* Instrs.pp Pp.text F.std_formatter instrs; *)
+     Jmain 32-33
+       (* Cfg.pp_proc_signatures Format.std_formatter cfg; *)
+  (* let () =  Cfg.iter_sorted cfg ~f:(fun x-> Procdesc.pp_with_instrs Format.std_formatter x) in *)

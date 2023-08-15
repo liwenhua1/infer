@@ -29,6 +29,8 @@ let do_source_file program tenv source_basename package_opt source_file =
   L.(debug Capture Medium) "@\nfilename: %a (%s)@." SourceFile.pp source_file source_basename ;
   init_global_state source_file ;
   let cfg = JFrontend.compute_source_icfg program tenv source_basename package_opt source_file in
+  (* Cfg.pp_proc_signatures Format.std_formatter cfg; *)
+  (* let () =  Cfg.iter_sorted cfg ~f:(fun x-> Procdesc.pp_with_instrs Format.std_formatter x) in *)
   ( if Config.dump_textual then
       let filename = Filename.chop_extension (SourceFile.to_abs_path source_file) ^ ".sil" in
       TextualSil.from_java ~filename tenv cfg ) ;
@@ -41,7 +43,9 @@ let do_class tenv program cn node =
     "@\nfilename (class): %a (%s)@." SourceFile.pp class_source_file (JBasics.cn_name cn) ;
   init_global_state class_source_file ;
   let cfg = JFrontend.compute_class_icfg class_source_file program tenv node in
+  Cfg.pp_proc_signatures Format.std_formatter cfg;
   store_icfg class_source_file cfg ;
+
   JFrontend.cache_classname cn
 
 
