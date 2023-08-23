@@ -1385,7 +1385,7 @@ let analyze specialization
 
 
 let checker ?specialization ({InterproceduralAnalysis.proc_desc} as analysis_data) =
-  Procdesc.pp_with_instrs F.std_formatter proc_desc;
+  Procdesc.pp_with_instrs ~print_types:true F.std_formatter proc_desc;
   print_endline "====================";
   let open IOption.Let_syntax in
   if should_analyze proc_desc then (
