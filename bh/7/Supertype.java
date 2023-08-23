@@ -1,10 +1,14 @@
 public class Supertype {
     
-       public Object foo() 
+       public int foo(int b) 
        //static //presumes this::Supertype<> achieves this::Supertype<> * res::Objec<>;
        //dynamic //presumes this::Supertype<> achieves this::Supertype<> * res::Objec<>;
        {
-         return null;
+        if (b>0) {
+        int a = 1;
+        a = a + 1;
+        return a;}
+        else {return 3;}
        }
    
      }
