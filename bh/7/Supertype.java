@@ -1,14 +1,13 @@
 public class Supertype {
     
-       public int foo(int b) 
+       public int foo(Object b) 
        //static //presumes this::Supertype<> achieves this::Supertype<> * res::Objec<>;
        //dynamic //presumes this::Supertype<> achieves this::Supertype<> * res::Objec<>;
        {
-        if (b>0) {
-        int a = 1;
-        a = a + 1;
-        return a;}
-        else {return 3;}
+        String z = (String) b;
+        z.toString();
+        
+        return 3;
        }
    
      }

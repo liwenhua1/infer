@@ -180,6 +180,7 @@ and eval_to_value_path (path : PathContext.t) mode location exp astate :
         (ArrayAccess (StdTyp.void, fst addr_hist_index))
         astate
   | Closure {name; captured_vars} ->
+  
       let** astate, rev_captured =
         List.fold captured_vars
           ~init:(Sat (Ok (astate, [])))
@@ -196,12 +197,18 @@ and eval_to_value_path (path : PathContext.t) mode location exp astate :
       in
       (astate, ValuePath.Unknown v_hist)
   | Const (Cfun proc_name) ->
+      
       (* function pointers are represented as closures with no captured variables *)
       let++ astate, addr_hist = Closures.record path location proc_name [] astate in
       (astate, ValuePath.Unknown addr_hist)
   | Cast (_, exp') ->
       eval_to_value_path path mode location exp' astate
   | Const (Cint i) ->
+
+      (* return statement here
+      
+      print_endline "1111";
+      print_endline  (Location.to_string location); *)
       let v = Formula.absval_of_int astate.AbductiveDomain.path_condition i in
       let invalidation = Invalidation.ConstantDereference i in
       let++ astate =
@@ -215,6 +222,7 @@ and eval_to_value_path (path : PathContext.t) mode location exp astate :
       in
       (astate, ValuePath.Unknown addr_hist)
   | Const (Cstr s) ->
+    
       (* TODO: record actual string value; since we are making strings be a record in memory
          instead of pure values some care has to be added to access string values once written *)
       let v = AbstractValue.mk_fresh () in
@@ -228,6 +236,7 @@ and eval_to_value_path (path : PathContext.t) mode location exp astate :
       let astate = AddressAttributes.add_one v (ConstString s) astate in
       (astate, ValuePath.Unknown (v, hist))
   | Const ((Cfloat _ | Cclass _) as c) ->
+    
       let v = AbstractValue.mk_fresh () in
       let++ astate = PulseArithmetic.and_eq_const v c astate in
       (astate, ValuePath.Unknown (v, ValueHistory.singleton (Assignment (location, path.timestamp))))

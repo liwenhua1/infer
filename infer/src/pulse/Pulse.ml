@@ -693,6 +693,7 @@ module PulseTransferFunctions = struct
 
 
   let eval_function_call_args path call_exp actuals call_loc astate =
+    (* print_endline (Exp.to_string call_exp); *)
     let** astate, callee_pname = PulseOperations.eval_proc_name path call_loc call_exp astate in
     (* special case for objc dispatch models *)
     let callee_pname, call_exp, actuals =
@@ -1385,7 +1386,8 @@ let analyze specialization
 
 
 let checker ?specialization ({InterproceduralAnalysis.proc_desc} as analysis_data) =
-  Procdesc.pp_with_instrs ~print_types:true F.std_formatter proc_desc;
+  (* Procdesc.pp_with_instrs ~print_types:true F.std_formatter proc_desc; *)
+  (* Tenv.pp_per_file F.std_formatter (Tenv.FileLocal analysis_data.tenv); *)
   print_endline "====================";
   let open IOption.Let_syntax in
   if should_analyze proc_desc then (

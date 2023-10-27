@@ -260,7 +260,9 @@ let pp f e = pp_printenv ~print_types:false Pp.text f e
 
 let pp_closure = pp_closure_ Pp.text (Typ.pp Pp.text)
 
-let to_string e = F.asprintf "%a" pp e
+let to_string e = match e with
+    | Cast _ -> "cast"
+    |_ -> F.asprintf "%a" pp e
 
 let color_wrapper ~f = if Config.print_using_diff then Pp.color_wrapper ~f else f
 
