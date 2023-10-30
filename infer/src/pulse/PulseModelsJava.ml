@@ -36,6 +36,9 @@ let write_field path field new_val location addr astate =
 
 
 let instance_of (argv, hist) typeexpr : model =
+  (* AbstractValue.pp Format.std_formatter argv;
+  Exp.pp Format.std_formatter typeexpr; *)
+ 
  fun {location; path; ret= ret_id, _} astate ->
   let event = Hist.call_event path location "Java.instanceof" in
   let res_addr = AbstractValue.mk_fresh () in

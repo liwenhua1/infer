@@ -1,13 +1,21 @@
 public class Supertype {
     
-       public int foo(Object b) 
+       public Integer foo(Object b) 
        //static //presumes this::Supertype<> achieves this::Supertype<> * res::Objec<>;
        //dynamic //presumes this::Supertype<> achieves this::Supertype<> * res::Objec<>;
        {
-        String z = (String) b;
-        z.toString();
-        
+       
+        if (b instanceof Supertype) {
+            return null;
+        }
         return 3;
+       }
+
+       public void test (Supertype x) {
+
+          Integer a = this.foo(x);
+          a.toString();
+
        }
    
      }
