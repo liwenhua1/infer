@@ -2511,9 +2511,9 @@ module DynamicTypes = struct
            let is_instanceof =
              match (Typ.name dynamic_type, Typ.name typ) with
              | Some name1, Some name2 ->
-                 Typ.print_name name1;
+                 (* Typ.print_name name1;
                  Typ.print_name name2;
-                 print_endline "////////////";
+                 print_endline "////////////"; *)
                  PatternMatch.is_subtype tenv name1 name2
              | _, _ ->
                  Typ.equal dynamic_type typ
