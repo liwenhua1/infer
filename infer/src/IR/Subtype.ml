@@ -19,6 +19,7 @@ let list_to_string list =
 type t' = Exact  (** denotes the current type only *) | Subtypes of Typ.Name.t list
 [@@deriving compare, equal, hash]
 
+
 let equal_modulo_flag (st1, _) (st2, _) = equal_t' st1 st2
 
 (** denotes the current type and a list of types that are not their subtypes *)
@@ -36,6 +37,23 @@ let is_interface tenv (class_name : Typ.Name.t) =
       true
   | _ ->
       false
+
+let ppli (subcls, ty) = 
+  
+  (match ty with
+  | CAST -> print_endline "cast"
+  | INSTOF -> print_endline "instanceof"
+  | NORMAL -> print_endline "normal"
+  ) ;
+  let rec helper alist = 
+    (match alist with 
+    | [] -> print_endline ""
+    | x::xs -> Typ.Name.pp Format.std_formatter x; helper xs
+    
+    ) in
+  match subcls with
+  | Exact -> print_endline "exact"
+  | Subtypes a -> helper a
 
 
 let is_root_class class_name =

@@ -1081,6 +1081,8 @@ module PulseTransferFunctions = struct
           let results = SatUnsat.to_list result in
           (PulseReport.report_results tenv proc_desc err_log loc results, path, astate_n)
       | Call (ret, call_exp, actuals, loc, call_flags) ->
+          
+          
           let astate_n = check_modified_before_dtor actuals call_exp astate astate_n in
           let astates =
             List.fold actuals ~init:[astate] ~f:(fun astates (exp, typ) ->
@@ -1286,6 +1288,7 @@ let log_summary_count proc_name summary =
   
 let analyze specialization
     ({InterproceduralAnalysis.tenv; proc_desc; err_log; exe_env} as analysis_data) =
+    (* Procdesc.pp_with_instrs ~print_types:true F.std_formatter proc_desc; *)
     (* Tenv.pp F.std_formatter tenv; print_endline "=========================="; *)
   if should_analyze proc_desc then
     let proc_name = Procdesc.get_proc_name proc_desc in

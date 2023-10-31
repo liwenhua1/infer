@@ -4,22 +4,17 @@ public class Supertype {
        //static //presumes this::Supertype<> achieves this::Supertype<> * res::Objec<>;
        //dynamic //presumes this::Supertype<> achieves this::Supertype<> * res::Objec<>;
        {
-       
-        if (b instanceof Supertype) {
+        Object y = new Object();
+        if (y instanceof Object) {
             return null;
         }
         return 3;
        }
 
-       public void test (Supertype x) {
-
-          Integer a = this.foo(x);
-          a.toString();
-
-       }
+       
    
      }
-// class Subtype extends Supertype {
+ class Subtype extends Supertype {}
    
 //        public Object foo() 
 //        //static //presumes this::Subtype<> achieves this::Subtype<> & res = null;

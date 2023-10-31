@@ -2445,6 +2445,7 @@ let and_equal_vars v1 v2 formula =
 let and_not_equal = and_mk_atom Ne
 
 let and_equal_instanceof v1 v2 t formula =
+  (* pp F.std_formatter formula; *)
   let atom = Atom.equal (Var v1) (IsInstanceOf (v2, t)) in
   and_atom atom formula
 
@@ -2510,6 +2511,7 @@ module DynamicTypes = struct
            let is_instanceof =
              match (Typ.name dynamic_type, Typ.name typ) with
              | Some name1, Some name2 ->
+               
                  PatternMatch.is_subtype tenv name1 name2
              | _, _ ->
                  Typ.equal dynamic_type typ

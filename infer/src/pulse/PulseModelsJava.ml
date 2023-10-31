@@ -36,14 +36,18 @@ let write_field path field new_val location addr astate =
 
 
 let instance_of (argv, hist) typeexpr : model =
-  (* AbstractValue.pp Format.std_formatter argv;
-  Exp.pp Format.std_formatter typeexpr; *)
- 
+  (* AbstractValue.pp Format.std_formatter argv; *)
+  (* ValueHistory.pp Format.std_formatter hist; *)
+  (* print_endline "";
+  (match typeexpr with
+  | Exp.Sizeof a -> Exp.ppsz a
+  | _ -> print_endline (Exp.to_string typeexpr)); *)
+
  fun {location; path; ret= ret_id, _} astate ->
   let event = Hist.call_event path location "Java.instanceof" in
   let res_addr = AbstractValue.mk_fresh () in
   match typeexpr with
-  | Exp.Sizeof {typ} ->
+  | Exp.Sizeof {typ} -> 
       let<++> astate = PulseArithmetic.and_equal_instanceof res_addr argv typ astate in
       PulseOperations.write_id ret_id (res_addr, Hist.add_event path event hist) astate
   (* The type expr is sometimes a Var expr but this is not expected.

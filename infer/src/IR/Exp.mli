@@ -65,6 +65,9 @@ val is_zero : t -> bool
 
 val is_const : t -> bool
 
+val ppsz :  sizeof_data -> unit
+
+
 (** {2 Utility Functions for Expressions} *)
 
 val texp_to_typ : Typ.t option -> t -> Typ.t

@@ -79,6 +79,9 @@ let texp_to_typ default_opt = function
   | _ ->
       Typ.unsome "texp_to_typ" default_opt
 
+      (* {typ: Typ.t; nbytes: int option; dynamic_length: t option; subtype: Subtype.t} *)
+let ppsz sizeof  = 
+     print_endline ((Typ.to_string sizeof.typ)); Subtype.ppli sizeof.subtype
 
 (** Return the root of [lexp]. *)
 let rec root_of_lexp lexp =
@@ -256,7 +259,7 @@ let pp_printenv ~print_types pe f e =
   pp_ pe (pp_typ pe) f e
 
 
-let pp f e = pp_printenv ~print_types:false Pp.text f e
+let pp f e = pp_printenv ~print_types:true Pp.text f e
 
 let pp_closure = pp_closure_ Pp.text (Typ.pp Pp.text)
 

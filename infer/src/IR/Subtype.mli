@@ -27,6 +27,8 @@ val subtypes_instof : t
 
 val join : t -> t -> t
 
+val ppli : t -> unit
+
 val case_analysis : Tenv.t -> Typ.Name.t * t -> Typ.Name.t * t -> t option * t option
 (** [case_analysis tenv (c1, st1) (c2, st2)] performs case analysis on [c1 <: c2] according to [st1]
     and [st2]. [case_analysis] returns a pair:
