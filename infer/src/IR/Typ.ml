@@ -152,6 +152,10 @@ module T = struct
   [@@deriving compare, equal, yojson_of]
 
   let yojson_of_name = [%yojson_of: _]
+  let print_name (na:name)=
+    match na with
+    |JavaClass a -> print_endline (JavaClassName.to_string a) 
+    |_ -> print_endline "other language"
 
   let rec equal_ignore_quals t1 t2 = equal_desc_ignore_quals t1.desc t2.desc
 

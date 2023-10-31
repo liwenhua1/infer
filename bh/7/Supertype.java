@@ -4,8 +4,8 @@ public class Supertype {
        //static //presumes this::Supertype<> achieves this::Supertype<> * res::Objec<>;
        //dynamic //presumes this::Supertype<> achieves this::Supertype<> * res::Objec<>;
        {
-        Object y = new Object();
-        if (y instanceof Object) {
+        Object a = b instanceof Supertype;
+        if ((boolean)a) {
             return null;
         }
         return 3;

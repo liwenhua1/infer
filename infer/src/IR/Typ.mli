@@ -124,6 +124,7 @@ val mk_array : ?default:t -> ?quals:type_quals -> ?length:IntLit.t -> ?stride:In
     as static length and size. *)
 
 val mk_struct : name -> t
+val print_name : name -> unit
 
 val mk_ptr : ?ptr_kind:ptr_kind -> t -> t
 (** make a pointer to [t], default kind is [Pk_pointer] *)
