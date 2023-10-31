@@ -37,7 +37,7 @@ let from_string str =
 
 
 let to_string = function
-  | {classname; package= None} ->
+  | {classname; package= None} -> 
       classname
   | {classname; package= Some pkg} ->
       String.concat ~sep:"." [pkg; classname]

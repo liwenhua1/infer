@@ -1,11 +1,12 @@
 public class Supertype {
     
        public Integer foo(Object b) 
+       //seems input parameter has no type, but constructed parameter has type
        //static //presumes this::Supertype<> achieves this::Supertype<> * res::Objec<>;
        //dynamic //presumes this::Supertype<> achieves this::Supertype<> * res::Objec<>;
        {
-        Object a = b instanceof Supertype;
-        if ((boolean)a) {
+        Object y = new Supertype();
+        if (y instanceof Object) {
             return null;
         }
         return 3;

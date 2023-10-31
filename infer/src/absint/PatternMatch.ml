@@ -30,8 +30,10 @@ let supertype_find_map_opt tenv f name =
 
 (** return true if [typ0] <: [typ1] *)
 let is_subtype tenv name0 name1 =
+  let a = 
   Typ.Name.equal name0 name1
-  || supertype_exists tenv (fun name _ -> Typ.Name.equal name name1) name0
+  || supertype_exists tenv (fun name _ -> Typ.Name.equal name name1) name0 in 
+   a
 
 
 let is_subtype_of_str tenv cn1 classname_str =
