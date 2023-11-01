@@ -576,7 +576,7 @@ module Term = struct
     | NotEqual (t1, t2) ->
         F.fprintf fmt "%a≠%a" (pp_paren pp_var ~needs_paren) t1 (pp_paren pp_var ~needs_paren) t2
     | IsInstanceOf (v, t) ->
-        F.fprintf fmt "(%a instanceof %a)" pp_var v (Typ.pp Pp.text) t
+         F.fprintf fmt "(%a instanceof %a)" pp_var v (Typ.pp_desc Pp.text) t.desc
     | IsInt t ->
         F.fprintf fmt "is_int(%a)" (pp_no_paren pp_var) t
 
@@ -2446,6 +2446,7 @@ let and_not_equal = and_mk_atom Ne
 
 let and_equal_instanceof v1 v2 t formula =
   (* pp F.std_formatter formula; *)
+  (* print_endline "2"; *)
   let atom = Atom.equal (Var v1) (IsInstanceOf (v2, t)) in
   and_atom atom formula
 
@@ -2561,6 +2562,7 @@ module DynamicTypes = struct
 
 
   let simplify tenv ~get_dynamic_type formula =
+    (* print_endline "here"; *)
     if has_instanceof formula then really_simplify tenv ~get_dynamic_type formula
     else Sat (formula, RevList.empty)
 end

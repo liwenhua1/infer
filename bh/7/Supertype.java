@@ -1,26 +1,26 @@
 public class Supertype {
     
-       public Integer foo(int b) 
+       public Integer foo(Subtype b) 
        //seems input parameter has no type, but constructed parameter has type
        //static //presumes this::Supertype<> achieves this::Supertype<> * res::Objec<>;
        //dynamic //presumes this::Supertype<> achieves this::Supertype<> * res::Objec<>;
        {
       
-        if (b > 0 ) {
+        if (b instanceof Supertype ) {
             return null;
         }
         return 3;
        }
 
-       public void test() 
-       //seems input parameter has no type, but constructed parameter has type
-       //static //presumes this::Supertype<> achieves this::Supertype<> * res::Objec<>;
-       //dynamic //presumes this::Supertype<> achieves this::Supertype<> * res::Objec<>;
-       {
+    //    public void test() 
+    //    //seems input parameter has no type, but constructed parameter has type
+    //    //static //presumes this::Supertype<> achieves this::Supertype<> * res::Objec<>;
+    //    //dynamic //presumes this::Supertype<> achieves this::Supertype<> * res::Objec<>;
+    //    {
       
-        Integer a = foo(10);
-        a.toString();
-       }
+    //     Integer a = foo(10);
+    //     a.toString();
+    //    }
        
    
      }
