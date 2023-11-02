@@ -527,6 +527,7 @@ module PulseTransferFunctions = struct
   let rec dispatch_call_eval_args
       ({InterproceduralAnalysis.tenv; proc_desc; err_log; exe_env} as analysis_data) path ret
       call_exp actuals func_args call_loc flags astate callee_pname =
+       
     let method_info, astate =
       let default_info = Option.map ~f:Tenv.MethodInfo.mk_class callee_pname in
       if flags.CallFlags.cf_virtual then
@@ -554,6 +555,7 @@ module PulseTransferFunctions = struct
     in   
     let callee_pname = Option.map ~f:Tenv.MethodInfo.get_procname method_info in
     let astate, func_args = add_self_for_hack_traits astate method_info func_args in
+    
     let astate =
       match (callee_pname, func_args) with
       | Some callee_pname, [{ProcnameDispatcher.Call.FuncArg.arg_payload= arg}]
@@ -571,6 +573,7 @@ module PulseTransferFunctions = struct
           | _ ->
               acc )
     in
+    
     let model =
       match callee_pname with
       | Some callee_pname -> (
@@ -589,6 +592,7 @@ module PulseTransferFunctions = struct
     let exec_states_res, call_was_unknown =
       match model with
       | OcamlModel (model, callee_procname) ->
+        
           L.d_printfln "Found ocaml model for call@\n" ;
           let astate =
             let arg_values =
@@ -607,6 +611,7 @@ module PulseTransferFunctions = struct
               astate
           , `KnownCall )
       | DoliModel callee_pname ->
+     
           L.d_printfln "Found doli model %a for call@\n" Procname.pp callee_pname ;
           PerfEvent.(log (fun logger -> log_begin_event logger ~name:"pulse interproc call" ())) ;
           let r =
@@ -616,6 +621,7 @@ module PulseTransferFunctions = struct
           PerfEvent.(log (fun logger -> log_end_event logger ())) ;
           r
       | NoModel ->
+        (*goes to here*)
           PerfEvent.(log (fun logger -> log_begin_event logger ~name:"pulse interproc call" ())) ;
           let r =
             interprocedural_call analysis_data path ret callee_pname call_exp func_args call_loc
@@ -624,11 +630,14 @@ module PulseTransferFunctions = struct
           PerfEvent.(log (fun logger -> log_end_event logger ())) ;
           r
     in
+    (*haven't reach post*)
     let exec_states_res =
+     
       let one_state exec_state_res =
         let* exec_state = exec_state_res in
         match exec_state with
         | ContinueProgram astate ->
+          
             let call_event =
               match callee_pname with
               | None ->
@@ -639,7 +648,9 @@ module PulseTransferFunctions = struct
             let call_was_unknown =
               match call_was_unknown with `UnknownCall -> true | `KnownCall -> false
             in
+            
             let+ astate =
+              
               let astate_after_call =
                 (* TODO: move to PulseModelsHack *)
                 match callee_pname with
@@ -649,11 +660,14 @@ module PulseTransferFunctions = struct
                     match PulseOperations.read_id (fst ret) astate with
                     | None ->
                         L.d_printfln "couldn't find ret in state" ;
+                       
                         astate
                     | Some (rv, _) ->
                         L.d_printfln "return value %a" AbstractValue.pp rv ;
+                         
                         PulseOperations.allocate Attribute.HackAsync call_loc rv astate )
                 | _ ->
+                  
                     astate
               in
               PulseTaintOperations.call tenv path call_loc ret ~call_was_unknown call_event
@@ -669,8 +683,10 @@ module PulseTransferFunctions = struct
           | LatentInvalidAccess _ ) as exec_state ->
             Ok exec_state
       in
-      List.map exec_states_res ~f:one_state
+     
+      List.map exec_states_res ~f:one_state;
     in
+    
     let exec_states_res =
       if Topl.is_active () then
         match callee_pname with
@@ -691,6 +707,7 @@ module PulseTransferFunctions = struct
       | None ->
           exec_states_res
     in
+    
     if Option.exists callee_pname ~f:IRAttributes.is_no_return then
       List.filter_map exec_states_res ~f:(fun exec_state_res ->
           (let+ exec_state = exec_state_res in
