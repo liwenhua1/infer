@@ -18,6 +18,11 @@ open PulseOperationResult.Import
     procedure *)
 exception AboutToOOM
 
+let rec list_printer f alist = 
+  match alist with
+  | [] -> print_endline ""
+  | x::xs -> f x ; list_printer f xs 
+
 let report_topl_errors proc_desc err_log summary =
   let f = function
     | ContinueProgram astate ->
@@ -545,7 +550,8 @@ module PulseTransferFunctions = struct
         let proc_name = Procdesc.get_proc_name proc_desc in
         resolve_hack_static_method path call_loc astate tenv proc_name callee_pname
       else (default_info, astate)
-    in
+     
+    in   
     let callee_pname = Option.map ~f:Tenv.MethodInfo.get_procname method_info in
     let astate, func_args = add_self_for_hack_traits astate method_info func_args in
     let astate =
@@ -653,6 +659,8 @@ module PulseTransferFunctions = struct
               PulseTaintOperations.call tenv path call_loc ret ~call_was_unknown call_event
                 func_args astate_after_call
             in
+            (* AbductiveDomain.pp F.std_formatter astate;  *)
+            (*result calculated in astate*)
             ContinueProgram astate
         | ( ExceptionRaised _
           | ExitProgram _
@@ -693,12 +701,14 @@ module PulseTransferFunctions = struct
 
 
   let eval_function_call_args path call_exp actuals call_loc astate =
-    (* print_endline (Exp.to_string call_exp); *)
+    print_endline ("call name "^Exp.to_string call_exp);
+    
     let** astate, callee_pname = PulseOperations.eval_proc_name path call_loc call_exp astate in
     (* special case for objc dispatch models *)
     let callee_pname, call_exp, actuals =
       match callee_pname with
-      | Some callee_pname when ObjCDispatchModels.is_model callee_pname -> (
+      | Some callee_pname when ObjCDispatchModels.is_model callee_pname -> 
+        (
         match ObjCDispatchModels.get_dispatch_closure_opt actuals with
         | Some (block_name, closure_exp, args) ->
             (Some block_name, closure_exp, args)
@@ -714,11 +724,13 @@ module PulseTransferFunctions = struct
           let++ astate, actual_evaled =
             PulseOperations.eval_to_value_path path Read call_loc actual_exp astate
           in
+         
           ( astate
           , ProcnameDispatcher.Call.FuncArg.
               {exp= actual_exp; arg_payload= actual_evaled; typ= actual_typ}
             :: rev_func_args ) )
     in
+    (* AbductiveDomain.pp F.std_formatter astate; print_endline "intermedia"; *)
     (astate, call_exp, callee_pname, List.rev rev_actuals)
 
 
@@ -1081,8 +1093,13 @@ module PulseTransferFunctions = struct
           let results = SatUnsat.to_list result in
           (PulseReport.report_results tenv proc_desc err_log loc results, path, astate_n)
       | Call (ret, call_exp, actuals, loc, call_flags) ->
-          
-          
+        print_endline "start";
+          print_endline ("ret ident "^Ident.to_string (fst ret));
+          print_endline ("ret type "^Typ.to_string (snd ret));
+          (*actuals -> input arguments and types*)
+          (* print_endline (Exp.to_string call_exp) ; *)
+          list_printer (fun x -> print_endline ("act exp "^Exp.to_string (fst x)); print_endline ("act type " ^Typ.to_string (snd x))) actuals;
+
           let astate_n = check_modified_before_dtor actuals call_exp astate astate_n in
           let astates =
             List.fold actuals ~init:[astate] ~f:(fun astates (exp, typ) ->
@@ -1101,16 +1118,22 @@ module PulseTransferFunctions = struct
                     (* stash the intermediate "before" [astate] here because the result monad does
                        not accept more complicated types than lists of states (we need a pair of the
                        before astate and the list of results) *)
+
                     astates_before := astate :: !astates_before ;
+                    (* AbductiveDomain.pp F.std_formatter astate; *)
                     dispatch_call_eval_args analysis_data path ret call_exp actuals func_args loc
                       call_flags astate callee_pname
                   in
                   let<**> r = results_and_before_state in
+                  
                   r )
             in
             let astates_before = !astates_before in
             (PulseReport.report_exec_results tenv proc_desc err_log loc res, astates_before)
           in
+          (* list_printer (fun x -> AbductiveDomain.pp F.std_formatter x) astates_before; (*state before*)
+          list_printer (fun x -> ExecutionDomain.pp F.std_formatter x) astates; state after *)
+          print_endline "here";
           let astate_n, astates =
             let pname = Procdesc.get_proc_name proc_desc in
             let integer_type_widths = Exe_env.get_integer_type_widths exe_env pname in
@@ -1122,6 +1145,7 @@ module PulseTransferFunctions = struct
             List.fold actuals ~init:astate_n ~f:(fun astate_n (exp, _) ->
                 NonDisjDomain.set_captured_variables exp astate_n )
           in
+          
           (astates, path, astate_n)
       | Prune (condition, loc, is_then_branch, if_kind) ->
           let prune_result =
@@ -1314,10 +1338,10 @@ let analyze specialization
       DisjunctiveAnalyzer.compute_post_including_exceptional analysis_data ~initial proc_desc
     in
     
-    let res = match exit_summaries_opt with 
+    (* let res = match exit_summaries_opt with 
     | None  -> ()
     | Some a -> DisjunctiveAnalyzer.TransferFunctions.Domain.pp F.std_formatter a in
-    res;
+    res; *)
     let process_postconditions node posts_opt ~convert_normal_to_exceptional =
       match posts_opt with
       | Some (posts, non_disj_astate) ->

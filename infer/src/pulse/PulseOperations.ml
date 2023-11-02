@@ -197,8 +197,8 @@ and eval_to_value_path (path : PathContext.t) mode location exp astate :
       in
       (astate, ValuePath.Unknown v_hist)
   | Const (Cfun proc_name) ->
-      (* Procname.pp Format.std_formatter proc_name;
-      print_endline "i amhere"; *)
+      (* Procname.pp Format.std_formatter proc_name;*)
+      (* print_endline "i amhere";  *)
       (* function pointers are represented as closures with no captured variables *)
       let++ astate, addr_hist = Closures.record path location proc_name [] astate in
       (astate, ValuePath.Unknown addr_hist)
