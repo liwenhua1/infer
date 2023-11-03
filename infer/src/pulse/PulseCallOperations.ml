@@ -546,7 +546,15 @@ let maybe_dynamic_type_specialization_is_needed specialization contradiction ast
   | _ ->
       `UseCurrentSummary
 
-
+let pp_ex a = 
+        match a with
+        | ContinueProgram a -> print_endline "Continue"; AbductiveDomain.pp Format.std_formatter a
+        | ExceptionRaised a -> print_endline "Exception"; AbductiveDomain.pp Format.std_formatter a
+        | _ -> print_endline "Exit, Abort or Latend"
+let rec list_printer f alist = 
+          match alist with
+          | [] -> print_endline ""
+          | x::xs -> f x ; list_printer f xs 
 let call tenv path ~caller_proc_desc
     ~(analyze_dependency : ?specialization:Specialization.t -> Procname.t -> PulseSummary.t option)
     call_loc callee_pname ~ret ~actuals ~formals_opt ~call_kind (astate : AbductiveDomain.t) =
@@ -575,10 +583,14 @@ let call tenv path ~caller_proc_desc
     else results
   in
   let call_aux exec_states =
-    let results, contradiction =
+    let (results : (t execution_domain_base_t, base_error) pulse_result list), contradiction =
+
+    let r1, r2 =
       call_aux tenv path caller_proc_desc call_loc callee_pname ret actuals call_kind
         (IRAttributes.load_exn callee_pname)
-        exec_states astate
+        exec_states astate in  
+        list_printer (fun x -> match x with | Ok a -> pp_ex a | _ -> print_endline "not ok" ) r1;
+        r1, r2
     in
     (* When a function call does not have a post of type ContinueProgram, we may want to treat
        the call as unknown to make the analysis continue. This may introduce false positives but
@@ -593,7 +605,9 @@ let call tenv path ~caller_proc_desc
         callee_pname ;
       let unknown_results = call_as_unknown () in
       (unknown_results @ results, None) )
-    else (results, contradiction)
+    else 
+      
+      (results, contradiction)
   in
   let rec iter_call ~max_iteration ~nth_iteration ~is_pulse_specialization_limit_not_reached
       ?specialization pre_post_list =
@@ -669,6 +683,7 @@ let call tenv path ~caller_proc_desc
       (* no spec found for some reason (unknown function, ...) *)
       L.d_printfln_escaped "No spec found for %a@\n" Procname.pp callee_pname ;
       let res, contradiction =
+      
         call_aux_unknown tenv path ~caller_proc_desc call_loc callee_pname ~ret ~actuals
           ~formals_opt ~call_kind astate
       in

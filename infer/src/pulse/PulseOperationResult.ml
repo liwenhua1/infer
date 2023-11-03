@@ -129,6 +129,7 @@ module Import = struct
         ; must_be_valid: Trace.t * Invalidation.must_be_valid_reason option
         ; calling_context: (CallEvent.t * Location.t) list }
 
+    
   type base_error = AccessResult.error =
     | PotentialInvalidAccess of
         { astate: AbductiveDomain.t
@@ -138,6 +139,8 @@ module Import = struct
     | WithSummary of base_error * AbductiveDomain.Summary.t
 end
 
+
+
 open Import
 
 let sat_ok : 'ok t -> _ = function
@@ -145,6 +148,7 @@ let sat_ok : 'ok t -> _ = function
       Some x
   | Unsat | Sat (FatalError _ | Recoverable _) ->
       None
+
 
 
 let list_fold l ~init ~f =

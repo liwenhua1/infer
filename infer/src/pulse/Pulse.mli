@@ -14,3 +14,5 @@ val checker :
   -> PulseSummary.t option
 
 val is_already_specialized : Specialization.t -> PulseSummary.t -> bool
+
+val list_printer: ('a -> unit) -> 'a list -> unit
