@@ -589,7 +589,8 @@ let call tenv path ~caller_proc_desc
       call_aux tenv path caller_proc_desc call_loc callee_pname ret actuals call_kind
         (IRAttributes.load_exn callee_pname)
         exec_states astate in  
-        list_printer (fun x -> match x with | Ok a -> pp_ex a | _ -> print_endline "not ok" ) r1;
+        list_printer (fun x -> match x with | Ok a -> pp_ex a | _ -> print_endline "not ok" ) r1; 
+        (*result changed*)
         r1, r2
     in
     (* When a function call does not have a post of type ContinueProgram, we may want to treat
