@@ -379,6 +379,8 @@ let materialize_pre path callee_proc_name call_location callee_summary ~captured
   PerfEvent.(log (fun logger -> log_begin_event logger ~name:"pulse call pre" ())) ;
   let r =
     let callee_precondition = AbductiveDomain.Summary.get_pre callee_summary in
+    (* BaseDomain.pp Format.std_formatter callee_precondition; *)
+    (*pre-condition*)
     let open PulseResult.Let_syntax in
     (* first make as large a mapping as we can between callee values and caller values... *)
     materialize_pre_for_parameters ~pre:callee_precondition ~formals ~actuals call_state
@@ -1014,6 +1016,10 @@ let check_all_taint_valid path callee_proc_name call_location callee_summary ast
    - if aliasing is introduced at any time then give up *)
 let apply_summary path callee_proc_name call_location ~callee_summary ~captured_formals
     ~captured_actuals ~formals ~actuals astate =
+    (* Utils.list_printer (fun x -> print_endline "calling"; print_endline ("act type " ^Typ.to_string (snd x))) captured_actuals;
+    Utils.list_printer (fun x -> print_endline "calling"; print_endline ("act type " ^Typ.to_string (snd x))) actuals; *)
+    print_endline "fucntion call";
+    (* AbductiveDomain.Summary.pp Format.std_formatter callee_summary; *)
   let aux () =
     let empty_call_state =
       {astate; subst= AddressMap.empty; rev_subst= AddressMap.empty; visited= AddressSet.empty}
@@ -1024,6 +1030,7 @@ let apply_summary path callee_proc_name call_location ~callee_summary ~captured_
         ~captured_actuals ~formals ~actuals empty_call_state
     with
     | exception Contradiction reason ->
+        
         (* can't make sense of the pre-condition in the current context: give up on that particular
            pre/post pair *)
         L.d_printfln ~color:Orange "Cannot apply precondition: %a@\n" pp_contradiction reason ;
@@ -1040,12 +1047,14 @@ let apply_summary path callee_proc_name call_location ~callee_summary ~captured_
         let res =
           let open PulseResult.Let_syntax in
           let* call_state = result in
+          (* pp_call_state Format.std_formatter call_state; *)
           L.d_printfln "Pre applied successfully, call_state after = %a" pp_call_state call_state ;
           let pre = AbductiveDomain.Summary.get_pre callee_summary in
           let* astate =
             check_all_valid path callee_proc_name call_location ~pre call_state
             |> AccessResult.of_result
           in
+          
           let* astate = check_config_usage_at_call call_location ~pre call_state.subst astate in
           (* reset [visited] *)
           let call_state = {call_state with astate; visited= AddressSet.empty} in
@@ -1067,6 +1076,7 @@ let apply_summary path callee_proc_name call_location ~callee_summary ~captured_
             Option.fold ~init:astate return_caller ~f:(fun astate ret_v ->
                 Decompiler.add_call_source (fst ret_v) (Call callee_proc_name) actuals astate )
           in
+          (* AbductiveDomain.pp Format.std_formatter astate; *)
           let+ astate =
             (* This has to happen after the post has been applied so that we are aware of any
                sanitizers applied to tainted values too, otherwise we'll report false positives if
@@ -1074,6 +1084,7 @@ let apply_summary path callee_proc_name call_location ~callee_summary ~captured_
             check_all_taint_valid path callee_proc_name call_location callee_summary astate
               call_state
           in
+          AbductiveDomain.pp Format.std_formatter astate;
           (astate, return_caller, call_state.subst)
         in
         let contradiciton =

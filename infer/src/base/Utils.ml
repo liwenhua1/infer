@@ -11,6 +11,11 @@ module F = Format
 module Hashtbl = Caml.Hashtbl
 module L = Die
 
+let rec list_printer f alist = 
+  match alist with
+  | [] -> print_endline ""
+  | x::xs -> f x ; list_printer f xs 
+
 let fold_file_tree ~init ~f_dir ~f_reg ~path =
   let rec traverse_dir_aux acc dir_path =
     let aux base_path acc' rel_path =

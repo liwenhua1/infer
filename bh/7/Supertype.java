@@ -1,16 +1,16 @@
 public class Supertype {
-       public int p;
+      
     
-       public int foo(int b) 
+       public String foo(int b) 
        //seems input parameter has no type, but constructed parameter has type
        //static //presumes this::Supertype<> achieves this::Supertype<> * res::Objec<>;
        //dynamic //presumes this::Supertype<> achieves this::Supertype<> * res::Objec<>;
        {
       
-        if (b >0 ) {
-            return 0;
+        if (b > 0 ) {
+            return null;
         }
-        return 3;
+        return "aaaa";
        }
 
        public void test() 
@@ -18,10 +18,9 @@ public class Supertype {
        //static //presumes this::Supertype<> achieves this::Supertype<> * res::Objec<>;
        //dynamic //presumes this::Supertype<> achieves this::Supertype<> * res::Objec<>;
        {
-      
-        int a = foo(-10);
-        this.p = a;
         
+        String c = foo(-1);
+        c.toString();        
        }
        
    

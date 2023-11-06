@@ -230,6 +230,7 @@ let apply_callee tenv ({PathContext.timestamp} as path) ~caller_proc_desc callee
     in
     let sat_unsat =
       let** post, return_val_opt, subst = sat_unsat in
+      (* AbductiveDomain.pp Format.std_formatter post; *)
       let post =
         match return_val_opt with
         | Some return_val_hist ->
@@ -417,7 +418,7 @@ let call_aux tenv path caller_proc_desc call_loc callee_pname ret actuals call_k
         in
         (* apply one pre/post spec, check for timeouts in-between each pre/post spec from the callee
            *)
-        Timer.check_timeout () ;
+        Timer.check_timeout () ;  (*not call yet*)
         match
           apply_callee tenv path ~caller_proc_desc callee_pname call_loc callee_exec_state
             ~captured_formals ~captured_actuals ~formals ~actuals ~ret astate
@@ -546,7 +547,7 @@ let maybe_dynamic_type_specialization_is_needed specialization contradiction ast
   | _ ->
       `UseCurrentSummary
 
-let pp_ex a = 
+(* let pp_ex a = 
         match a with
         | ContinueProgram a -> print_endline "Continue"; AbductiveDomain.pp Format.std_formatter a
         | ExceptionRaised a -> print_endline "Exception"; AbductiveDomain.pp Format.std_formatter a
@@ -554,7 +555,7 @@ let pp_ex a =
 let rec list_printer f alist = 
           match alist with
           | [] -> print_endline ""
-          | x::xs -> f x ; list_printer f xs 
+          | x::xs -> f x ; list_printer f xs  *)
 let call tenv path ~caller_proc_desc
     ~(analyze_dependency : ?specialization:Specialization.t -> Procname.t -> PulseSummary.t option)
     call_loc callee_pname ~ret ~actuals ~formals_opt ~call_kind (astate : AbductiveDomain.t) =
@@ -586,10 +587,11 @@ let call tenv path ~caller_proc_desc
     let (results : (t execution_domain_base_t, base_error) pulse_result list), contradiction =
 
     let r1, r2 =
+    (* AbductiveDomain.pp Format.std_formatter astate; *)
       call_aux tenv path caller_proc_desc call_loc callee_pname ret actuals call_kind
         (IRAttributes.load_exn callee_pname)
         exec_states astate in  
-        list_printer (fun x -> match x with | Ok a -> pp_ex a | _ -> print_endline "not ok" ) r1; 
+        (* list_printer (fun x -> match x with | Ok a -> pp_ex a | _ -> print_endline "not ok" ) r1;  *)
         (*result changed*)
         r1, r2
     in
