@@ -1051,6 +1051,7 @@ let apply_summary path callee_proc_name call_location ~callee_summary ~captured_
           (* pp_call_state Format.std_formatter call_state; *)
           L.d_printfln "Pre applied successfully, call_state after = %a" pp_call_state call_state ;
           let pre = AbductiveDomain.Summary.get_pre callee_summary in
+          BaseDomain.pp F.std_formatter pre;
           let* astate =
             check_all_valid path callee_proc_name call_location ~pre call_state
             |> AccessResult.of_result
@@ -1085,7 +1086,7 @@ let apply_summary path callee_proc_name call_location ~callee_summary ~captured_
             check_all_taint_valid path callee_proc_name call_location callee_summary astate
               call_state
           in
-          AbductiveDomain.pp Format.std_formatter astate;
+          (* AbductiveDomain.pp Format.std_formatter astate; *)
           (astate, return_caller, call_state.subst)
         in
         let contradiciton =
