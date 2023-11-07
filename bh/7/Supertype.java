@@ -6,7 +6,7 @@ public class Supertype {
        //dynamic //presumes this::Supertype<> achieves this::Supertype<> * res::Objec<>;
        {
       
-        if (b instanceof Supertype ) {
+        if (b instanceof Subtype ) {
            {
             return null;}
         }
@@ -18,9 +18,10 @@ public class Supertype {
        //static //presumes this::Supertype<> achieves this::Supertype<> * res::Objec<>;
        //dynamic //presumes this::Supertype<> achieves this::Supertype<> * res::Objec<>;
        {
-        Subtype a = new Subtype();
+        Supertype a = new Supertype();
+        if (a instanceof Supertype){
         String c = foo(a);
-        c.toString();        
+        c.toString();  }      
        }
     //    public Integer foo(int b) 
     //    //seems input parameter has no type, but constructed parameter has type

@@ -1274,7 +1274,7 @@ let initial tenv proc_attrs specialization =
     |> PulseSummary.initial_with_positive_self proc_attrs
     |> PulseTaintOperations.taint_initial tenv proc_attrs
   in
-  AbductiveDomain.pp F.std_formatter initial_astate;
+
   [(ContinueProgram initial_astate, PathContext.initial)]
 
 
