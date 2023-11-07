@@ -1549,6 +1549,7 @@ let mk_initial tenv (proc_attrs : ProcAttributes.t) specialization =
     { pre
     ; post
     ; path_condition= Formula.ttrue
+    (*may add instance informa for java program*)
     ; decompiler= Decompiler.empty
     ; need_closure_specialization= false
     ; need_dynamic_type_specialization= AbstractValue.Set.empty
