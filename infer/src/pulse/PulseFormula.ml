@@ -1247,6 +1247,7 @@ module Atom = struct
     | NotEqual of Term.t * Term.t
   [@@deriving compare, equal, yojson_of]
 
+   
   let pp_with_pp_var pp_var fmt atom =
     (* add parens around terms that look like atoms to disambiguate *)
     let needs_paren (t : Term.t) =
@@ -2145,6 +2146,9 @@ module Formula = struct
     (* TODO: should we check if [φ ⊢ atom] (i.e. whether [φ ∧ ¬atom] is unsat) in [normalize_atom],
        or is [normalize_atom] already just as strong? *)
     let normalize_atom phi (atom : Atom.t) =
+      (* print_endline "";
+      Atom.pp_with_pp_var Var.pp F.std_formatter atom;
+      print_endline ""; *)
       let atom' = Atom.map_terms atom ~f:(fun t -> normalize_var_const phi t) in
       Atom.eval ~is_neq_zero:(is_neq_zero phi) atom'
 
@@ -2470,7 +2474,8 @@ let and_equal_binop v (bop : Binop.t) x y formula =
   and_atom (Equal (Var v, Term.of_binop bop (Term.of_operand x) (Term.of_operand y))) formula
 
 
-let prune_atom atom (formula, new_eqs) =
+let prune_atom (atom:Atom.t) (formula, (new_eqs:new_eqs)) =
+  (*formula -> caller*)
   (* Use [phi] to normalize [atom] here to take previous [prune]s into account. *)
   let* normalized_atoms = Formula.Normalizer.normalize_atom formula.phi atom in
   let+ phi, new_eqs =
@@ -2645,6 +2650,10 @@ let and_fold_subst_variables formula0 ~up_to_f:formula_foreign ~init ~f:f_var =
 
 
 let and_conditions_fold_subst_variables phi0 ~up_to_f:phi_foreign ~init ~f:f_var =
+  (* pp F.std_formatter phi0;
+  
+  
+  pp F.std_formatter phi_foreign; *)
   let f_subst acc v =
     let acc', v' = f_var acc v in
     (acc', VarSubst v')
@@ -2664,7 +2673,7 @@ let and_conditions_fold_subst_variables phi0 ~up_to_f:phi_foreign ~init ~f:f_var
   try
     let acc, (phi, new_eqs) = add_conditions phi_foreign.conditions (init, (phi0, RevList.empty)) in
     Sat (acc, phi, new_eqs)
-  with Contradiction -> Unsat
+  with Contradiction ->  Unsat
 
 
 module QuantifierElimination : sig
