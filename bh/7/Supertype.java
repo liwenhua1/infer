@@ -1,4 +1,5 @@
 public class Supertype {
+  
      
          public String foo(Object b) 
        //seems input parameter has no type, but constructed parameter has type
