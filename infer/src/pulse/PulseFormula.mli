@@ -126,3 +126,7 @@ val absval_of_int : t -> IntLit.t -> Var.t
     {!IR.IntLit.t}. The idea is that clients will record in the abstract state that the returned [t]
     is equal to the given integer. If the same integer is queried later on then this module will
     return the same abstract variable. *)
+
+val init_with_instanceof : Var.t -> Typ.t -> t -> t
+
+val init_instanceof : ('a * Typ.t * (Var.t * 'b)) list -> t -> t

@@ -1673,7 +1673,8 @@ module Formula = struct
     ; intervals= Var.Map.empty
     ; atoms= Atom.Set.empty }
 
-
+  let swap_term_eqs old_f terms = 
+    {var_eqs = old_f.var_eqs;linear_eqs = old_f.linear_eqs;term_eqs = terms;tableau = old_f.tableau;intervals=old_f.intervals;atoms = old_f.atoms}
   let is_empty
       ({var_eqs; linear_eqs; term_eqs; tableau; intervals; atoms}
         [@warning "+missing-record-field-pattern"] ) =
@@ -2355,6 +2356,24 @@ let mk_atom_of_binop (binop : Binop.t) =
   | _ ->
       L.die InternalError "wrong argument to [mk_atom_of_binop]: %a" Binop.pp binop
 
+let init_with_instanceof abs_ori typ condition = 
+  let empty_path_condition = condition in 
+  let atoms = empty_path_condition.conditions in 
+  let abs_new = Var.mk_fresh () in 
+  let atom = Atom.NotEqual (Var abs_new, Const (Q.zero)) in 
+  let new_atoms = Atom.Set.add atom atoms in 
+  let eqs = empty_path_condition.phi.term_eqs in 
+  let instanceof = Term.IsInstanceOf (abs_ori,typ) in 
+  let new_eqs = Term.VarMap.add instanceof abs_new eqs in 
+  let new_phi = Formula.swap_term_eqs empty_path_condition.phi new_eqs in 
+  {conditions = new_atoms;phi = new_phi}
+
+let rec init_instanceof var_list cond =
+    match var_list with 
+    | [] -> cond 
+    | (_,a,(b,_))::xs -> init_instanceof xs (init_with_instanceof b a cond)
+
+
 
 module Intervals = struct
   let interval_and_var_of_operand intervals = function
@@ -3000,3 +3019,4 @@ end
 let () = AnalysisGlobalState.register_ref Constants.cache ~init:(fun () -> Constants.initial_cache)
 
 let absval_of_int formula i = Constants.get_int formula i
+

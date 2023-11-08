@@ -1,5 +1,5 @@
 public class Supertype {
-      
+     
          public String foo(Object b) 
        //seems input parameter has no type, but constructed parameter has type
        //static //presumes this::Supertype<> achieves this::Supertype<> * res::Objec<>;
@@ -8,21 +8,22 @@ public class Supertype {
       
         if (b instanceof Subtype ) {
            {
-            return null;}
+            return "null";}
         }
-        return "aaaa";
+        return null;
        }
 
-       public void test() 
+       public void test(Supertype a) 
        //seems input parameter has no type, but constructed parameter has type
        //static //presumes this::Supertype<> achieves this::Supertype<> * res::Objec<>;
        //dynamic //presumes this::Supertype<> achieves this::Supertype<> * res::Objec<>;
        {
-        Supertype a = new Supertype();
-        if (a instanceof Supertype){
+        
         String c = foo(a);
-        c.toString();  }      
-       }
+        c.toString();  }  
+
+        
+       
     //    public Integer foo(int b) 
     //    //seems input parameter has no type, but constructed parameter has type
     //    //static //presumes this::Supertype<> achieves this::Supertype<> * res::Objec<>;
@@ -50,6 +51,8 @@ public class Supertype {
    
      }
  class Subtype extends Supertype {}
+ class Sub extends Supertype{}
+ class Sub1 extends Sub{}
    
 //        public Object foo() 
 //        //static //presumes this::Subtype<> achieves this::Subtype<> & res = null;

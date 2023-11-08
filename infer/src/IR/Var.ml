@@ -6,7 +6,7 @@
  *)
 
 open! IStd
-module F = Format
+
 
 (** Single abstraction for all the kinds of variables in SIL *)
 
@@ -81,7 +81,7 @@ let is_cpp_unnamed_param = function
 
 let pp fmt = function
   | ProgramVar pv ->
-      F.pp_print_string fmt (Pvar.get_simplified_name pv)
+      print_endline (Pvar.get_simplified_name pv)
   | LogicalVar id ->
       Ident.pp fmt id
 

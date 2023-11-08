@@ -1488,6 +1488,7 @@ let get_pre {pre} = (pre :> BaseDomain.t)
 let get_post {post} = (post :> BaseDomain.t)
 
 let mk_initial tenv (proc_attrs : ProcAttributes.t) specialization =
+  (* ProcAttributes.pp F.std_formatter proc_attrs; *)
   let proc_name = proc_attrs.proc_name in
   (* HACK: save the formals in the stacks of the pre and the post to remember which local variables
      correspond to formals *)
@@ -1503,20 +1504,30 @@ let mk_initial tenv (proc_attrs : ProcAttributes.t) specialization =
       in
       (Var.of_pvar pvar, typ, (AbstractValue.mk_fresh (), ValueHistory.singleton event))
     in
-    let formals =
+    let formals:(Var.t * Typ.t * (AbstractValue.t * ValueHistory.t)) list =
       List.map proc_attrs.formals ~f:(fun (mangled, typ, _) ->
           init_var `Formal (Pvar.mk mangled proc_name) typ )
     in
+   
     let captured =
       List.map proc_attrs.captured ~f:(fun {CapturedVar.pvar; typ; capture_mode} ->
           init_var (`Captured capture_mode) pvar typ )
     in
+   
     captured @ formals
   in
+  
+   let condi = 
+      if Language.curr_language_is Java then 
+        Formula.init_instanceof formals_and_captured Formula.ttrue
+      else 
+        Formula.ttrue
+      in 
   let initial_stack =
     List.fold formals_and_captured ~init:(PreDomain.empty :> BaseDomain.t).stack
       ~f:(fun stack (formal, _, addr_loc) -> BaseStack.add formal addr_loc stack)
   in
+  
   let initial_heap =
     let register heap (_, _, (addr, _)) =
       (* safe because the state is empty, i.e. there are no equalities and each value is its own
@@ -1548,7 +1559,7 @@ let mk_initial tenv (proc_attrs : ProcAttributes.t) specialization =
   let astate =
     { pre
     ; post
-    ; path_condition= Formula.ttrue
+    ; path_condition= condi
     (*may add instance informa for java program*)
     ; decompiler= Decompiler.empty
     ; need_closure_specialization= false
@@ -1563,7 +1574,9 @@ let mk_initial tenv (proc_attrs : ProcAttributes.t) specialization =
       add_static_types tenv astate formals_and_captured
     else astate
   in
+  let finial = 
   apply_specialization proc_name specialization astate
+  in finial
 
 
 let get_unreachable_attributes {post} =
