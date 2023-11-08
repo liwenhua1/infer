@@ -81,7 +81,7 @@ let is_cpp_unnamed_param = function
 
 let pp fmt = function
   | ProgramVar pv ->
-      print_endline (Pvar.get_simplified_name pv)
+    Format.pp_print_string fmt (Pvar.get_simplified_name pv)
   | LogicalVar id ->
       Ident.pp fmt id
 

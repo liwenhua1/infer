@@ -1517,12 +1517,12 @@ let mk_initial tenv (proc_attrs : ProcAttributes.t) specialization =
     captured @ formals
   in
   
-   let condi = 
+   (* let condi = 
       if Language.curr_language_is Java then 
         Formula.init_instanceof formals_and_captured Formula.ttrue
       else 
         Formula.ttrue
-      in 
+      in  *)
   let initial_stack =
     List.fold formals_and_captured ~init:(PreDomain.empty :> BaseDomain.t).stack
       ~f:(fun stack (formal, _, addr_loc) -> BaseStack.add formal addr_loc stack)
@@ -1559,7 +1559,7 @@ let mk_initial tenv (proc_attrs : ProcAttributes.t) specialization =
   let astate =
     { pre
     ; post
-    ; path_condition= condi
+    ; path_condition= Formula.ttrue
     (*may add instance informa for java program*)
     ; decompiler= Decompiler.empty
     ; need_closure_specialization= false
