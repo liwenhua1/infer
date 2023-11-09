@@ -1111,12 +1111,12 @@ module PulseTransferFunctions = struct
           let results = SatUnsat.to_list result in
           (PulseReport.report_results tenv proc_desc err_log loc results, path, astate_n)
       | Call (ret, call_exp, actuals, loc, call_flags) ->
-        print_endline "start";
+        (* print_endline "start";
           print_endline ("ret ident "^Ident.to_string (fst ret));
-          print_endline ("ret type "^Typ.to_string (snd ret));
+          print_endline ("ret type "^Typ.to_string (snd ret)); *)
           (*actuals -> input arguments and types*)
           (* print_endline (Exp.to_string call_exp) ; *)
-          list_printer (fun x -> print_endline ("act exp "^Exp.to_string (fst x)); print_endline ("act type " ^Typ.to_string (snd x))) actuals;
+          (* list_printer (fun x -> print_endline ("act exp "^Exp.to_string (fst x)); print_endline ("act type " ^Typ.to_string (snd x))) actuals; *)
 
           let astate_n = check_modified_before_dtor actuals call_exp astate astate_n in
           let astates =
@@ -1274,7 +1274,7 @@ let initial tenv proc_attrs specialization =
     |> PulseSummary.initial_with_positive_self proc_attrs
     |> PulseTaintOperations.taint_initial tenv proc_attrs
   in
-
+  (* AbductiveDomain.pp F.std_formatter initial_astate; *)
   [(ContinueProgram initial_astate, PathContext.initial)]
 
 
@@ -1340,9 +1340,12 @@ let analyze specialization
     let proc_attrs = Procdesc.get_attributes proc_desc in
     let integer_type_widths = Exe_env.get_integer_type_widths exe_env proc_name in
     let initial =
+      (* print_endline "process init";
+      Procname.pp_name_only F.std_formatter proc_name; *)
       with_html_debug_node (Procdesc.get_start_node proc_desc) ~desc:"initial state creation"
         ~f:(fun () ->
           let initial_disjuncts = initial tenv proc_attrs specialization in
+          (* print_endline "process init end"; *)
           let initial_non_disj =
             PulseNonDisjunctiveOperations.init_const_refable_parameters proc_desc
               integer_type_widths tenv
@@ -1355,11 +1358,13 @@ let analyze specialization
     let ((exit_summaries_opt:DisjunctiveAnalyzer.TransferFunctions.Domain.t option), exn_sink_summaries_opt) =
       DisjunctiveAnalyzer.compute_post_including_exceptional analysis_data ~initial proc_desc
     in
-    
+    print_endline "process analysis";
+    Procname.pp_name_only F.std_formatter proc_name;
     let res = match exit_summaries_opt with 
     | None  -> ()
     | Some a -> DisjunctiveAnalyzer.TransferFunctions.Domain.pp F.std_formatter a in
     res;
+    print_endline "process analysis end";
     let process_postconditions node posts_opt ~convert_normal_to_exceptional =
       match posts_opt with
       | Some (posts, non_disj_astate) ->

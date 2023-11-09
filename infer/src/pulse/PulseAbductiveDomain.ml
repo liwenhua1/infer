@@ -1487,12 +1487,17 @@ let get_pre {pre} = (pre :> BaseDomain.t)
 
 let get_post {post} = (post :> BaseDomain.t)
 
+(* let abs_value (_,_,(c,_)) = c 
+let find_mapping abs mem : RawMemory.value = RawMemory.find abs mem *)
+
+(* let global_tenv = ref Tenv.create *)
 let mk_initial tenv (proc_attrs : ProcAttributes.t) specialization =
+  (* global_tenv := tenv; *)
   (* ProcAttributes.pp F.std_formatter proc_attrs; *)
   let proc_name = proc_attrs.proc_name in
   (* HACK: save the formals in the stacks of the pre and the post to remember which local variables
      correspond to formals *)
-  let formals_and_captured =
+  
     let init_var formal_or_captured pvar typ =
       let event =
         match formal_or_captured with
@@ -1514,7 +1519,7 @@ let mk_initial tenv (proc_attrs : ProcAttributes.t) specialization =
           init_var (`Captured capture_mode) pvar typ )
     in
    
-    captured @ formals
+    let formals_and_captured = captured @ formals
   in
   
    (* let condi = 
@@ -1528,7 +1533,7 @@ let mk_initial tenv (proc_attrs : ProcAttributes.t) specialization =
       ~f:(fun stack (formal, _, addr_loc) -> BaseStack.add formal addr_loc stack)
   in
   
-  let initial_heap =
+  let (initial_heap: RawMemory.t) =
     let register heap (_, _, (addr, _)) =
       (* safe because the state is empty, i.e. there are no equalities and each value is its own
          canonical representative *)
@@ -1537,6 +1542,7 @@ let mk_initial tenv (proc_attrs : ProcAttributes.t) specialization =
     in
     List.fold formals_and_captured ~init:(PreDomain.empty :> base_domain).heap ~f:register
   in
+  
   let initial_attrs = BaseDomain.empty.attrs in
   let pre =
     PreDomain.update ~stack:initial_stack ~heap:initial_heap ~attrs:initial_attrs PreDomain.empty
@@ -1568,11 +1574,14 @@ let mk_initial tenv (proc_attrs : ProcAttributes.t) specialization =
     ; skipped_calls= SkippedCalls.empty }
   in
   let astate =
-    if Language.curr_language_is Hack then
+    if (Language.curr_language_is Hack)  then
       (* The Hack frontend does not propagate types from declarations to usage,
          so we redo part of the work ourself *)
       add_static_types tenv astate formals_and_captured
-    else astate
+    else 
+       if (Language.curr_language_is Java)  then
+      add_static_types tenv astate formals_and_captured else
+      astate
   in
   let finial = 
   apply_specialization proc_name specialization astate

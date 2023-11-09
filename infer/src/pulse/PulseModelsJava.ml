@@ -14,6 +14,7 @@ module Cplusplus = PulseModelsCpp
 module GenericArrayBackedCollection = PulseModelsGenericArrayBackedCollection
 module StringSet = Caml.Set.Make (String)
 
+exception Foo of string
 let mk_java_field pkg clazz field =
   Fieldname.make (Typ.JavaClass (JavaClassName.make ~package:(Some pkg) ~classname:clazz)) field
 
@@ -36,24 +37,78 @@ let write_field path field new_val location addr astate =
 
 
 let instance_of (argv, hist) typeexpr : model =
-  (* AbstractValue.pp Format.std_formatter argv; *)
+  print_endline "instanceof";
+  (* let tenv = match (Tenv.load_global ()) with 
+    | Some t -> t 
+    | None -> Tenv.create ()
+  in *)
+  (* Tenv.pp Format.std_formatter tenv;
+  AbstractValue.pp Format.std_formatter argv; *)
   (* ValueHistory.pp Format.std_formatter hist; *)
-  (* print_endline "";*)
+  
   (* (match typeexpr with
   | Exp.Sizeof a -> Exp.ppsz a
   | _ -> print_endline (Exp.to_string typeexpr));  *)
 
  fun {location; path; ret= ret_id, _} astate ->
+  let tenv = match (Tenv.load_global ()) with 
+    | Some t -> t 
+    | None -> Tenv.create ()
+  in
+ 
   let event = Hist.call_event path location "Java.instanceof" in
   let res_addr = AbstractValue.mk_fresh () in
   match typeexpr with
   | Exp.Sizeof {typ} -> 
+    let name2 = match (Typ.name typ) with
+            | None -> raise (Foo "None target type")
+            | Some a -> a in
+      print_endline (Typ.to_string typ);
+      let astate = AbductiveDomain.AddressAttributes.add_static_type tenv name2 argv astate in
       let<++> astate = PulseArithmetic.and_equal_instanceof res_addr argv typ astate in
       PulseOperations.write_id ret_id (res_addr, Hist.add_event path event hist) astate
   (* The type expr is sometimes a Var expr but this is not expected.
      This seems to be introduced by inline mechanism of Java synthetic methods during preanalysis *)
   | _ ->
       astate |> Basic.ok_continue
+
+let java_cast (argv, _) typeexpr : model =
+        print_endline "cast";
+       
+        AbstractValue.pp Format.std_formatter argv;
+        (* ValueHistory.pp Format.std_formatter hist; *)
+        
+        (* (match typeexpr with
+        | Exp.Sizeof a -> Exp.ppsz a
+        | _ -> print_endline (Exp.to_string typeexpr));  *)
+      
+       fun {location; path = _; ret= _, _} (astate:AbductiveDomain.t) ->
+          let tenv = match (Tenv.load_global ()) with 
+            | Some t -> t 
+            | None -> Tenv.create ()
+          in
+          
+        let typ1 = AbductiveDomain.AddressAttributes.get_static_type argv astate in
+        let name1 = match typ1 with
+        |Some t ->  t
+        | _ -> raise (Foo "None source type") in
+        (* let event = Hist.call_event path location "Java.cast" in
+        let res_addr = AbstractValue.mk_fresh () in *)
+        match typeexpr with
+        | Exp.Sizeof {typ} -> 
+          let name2 = match (Typ.name typ) with
+            | None -> raise (Foo "None target type")
+            | Some a -> a in
+            let res = PatternMatch.is_subtype tenv name1 name2 in 
+            let () = if (Bool.equal res false) then (print_endline ("possible cast error detected at"^ (Location.to_string location))) else print_endline "no cast error" in
+            
+              astate |> Basic.ok_continue
+           
+            
+        (* The type expr is sometimes a Var expr but this is not expected.
+           This seems to be introduced by inline mechanism of Java synthetic methods during preanalysis *)
+        | _ ->
+            astate |> Basic.ok_continue
 
 
 let call_may_throw_exception (exn : JavaClassName.t) : model =
@@ -796,6 +851,7 @@ let matchers : matcher list =
     &:: "next" <>$ capt_arg_payload
     $!--> Iterator.next ~desc:"Iterator.next()"
   ; +BuiltinDecl.(match_builtin __instanceof) <>$ capt_arg_payload $+ capt_exp $--> instance_of
+  ; +BuiltinDecl.(match_builtin __cast) <>$ capt_arg_payload $+ capt_exp $--> java_cast
   ; ( +map_context_tenv PatternMatch.Java.implements_enumeration
     &:: "nextElement" <>$ capt_arg_payload
     $!--> fun x ->

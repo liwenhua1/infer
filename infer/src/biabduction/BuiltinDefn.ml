@@ -259,6 +259,7 @@ let replace_ptsto_texp tenv prop root_e texp =
 let execute___instanceof_cast ~instof
     {Builtin.analysis_data= {tenv; _} as analysis_data; prop_; path; ret_id_typ; args} :
     Builtin.ret_typ =
+    print_endline "waring cast";
   match args with
   | [(val1_, typ1); (texp2_, _)] ->
       let val1, prop__ = check_arith_norm_exp analysis_data val1_ prop_ in

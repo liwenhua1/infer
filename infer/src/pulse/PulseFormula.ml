@@ -2670,8 +2670,6 @@ let and_fold_subst_variables formula0 ~up_to_f:formula_foreign ~init ~f:f_var =
 
 let and_conditions_fold_subst_variables phi0 ~up_to_f:phi_foreign ~init ~f:f_var =
   (* pp F.std_formatter phi0;
-  
-  
   pp F.std_formatter phi_foreign; *)
   let f_subst acc v =
     let acc', v' = f_var acc v in

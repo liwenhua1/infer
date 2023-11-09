@@ -6,22 +6,25 @@ public class Supertype {
        //static //presumes this::Supertype<> achieves this::Supertype<> * res::Objec<>;
        //dynamic //presumes this::Supertype<> achieves this::Supertype<> * res::Objec<>;
        {
-      
+        
         if (b instanceof Subtype ) {
            {
+            Subtype c = (Subtype) b;
             return "null";}
         }
         return null;
        }
 
-       public void test(Supertype a) 
+       public void test(Integer k) 
        //seems input parameter has no type, but constructed parameter has type
        //static //presumes this::Supertype<> achieves this::Supertype<> * res::Objec<>;
        //dynamic //presumes this::Supertype<> achieves this::Supertype<> * res::Objec<>;
        {
-        
+        Supertype a = new Supertype();
         String c = foo(a);
         c.toString();  }  
+
+       
 
         
        

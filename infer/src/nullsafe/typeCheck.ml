@@ -1300,6 +1300,7 @@ let typecheck_instr ({IntraproceduralAnalysis.proc_desc= curr_pdesc; tenv; _} as
   (* Type cast *)
   | Sil.Call ((id, _), Exp.Const (Const.Cfun pn), (e, typ) :: _, loc, _)
     when Procname.equal pn BuiltinDecl.__cast ->
+      print_endline "warning cast";
       typecheck_expr_for_errors analysis_data ~nullsafe_mode find_canonical_duplicate calls_this
         checks node instr_ref typestate e loc ;
       let e' =
