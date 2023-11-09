@@ -189,6 +189,8 @@ let remove_attribute remover address attrs =
 
 let remove_allocation_attr = remove_attribute Attributes.remove_allocation
 
+let remove_static_type_attr = remove_attribute Attributes.remove_static_type
+
 let remove_tainted = remove_attribute Attributes.remove_tainted
 
 let remove_taint_sanitizer = remove_attribute Attributes.remove_taint_sanitized
@@ -453,6 +455,8 @@ module type S = sig
   val get_used_as_branch_cond : key -> t -> (Procname.t * Location.t * Trace.t) option
 
   val remove_allocation_attr : key -> t -> t
+
+  val remove_static_type_attr : key -> t -> t
 
   val remove_taint_attrs : key -> t -> t
 

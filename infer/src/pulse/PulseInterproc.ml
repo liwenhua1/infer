@@ -1026,7 +1026,7 @@ let apply_summary path callee_proc_name call_location ~callee_summary ~captured_
     ~captured_actuals ~formals ~actuals astate =
     (* Utils.list_printer (fun x -> print_endline "calling"; print_endline ("act type " ^Typ.to_string (snd x))) captured_actuals;
     Utils.list_printer (fun x -> print_endline "calling"; print_endline ("act type " ^Typ.to_string (snd x))) actuals; *)
-    print_endline "fucntion call";
+    (* print_endline "fucntion call"; *)
     (* AbductiveDomain.Summary.pp Format.std_formatter callee_summary; *)
   let aux () =
     let empty_call_state =

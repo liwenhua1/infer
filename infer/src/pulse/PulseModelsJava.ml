@@ -37,7 +37,7 @@ let write_field path field new_val location addr astate =
 
 
 let instance_of (argv, hist) typeexpr : model =
-  print_endline "instanceof";
+  (* print_endline "instanceof"; *)
   (* let tenv = match (Tenv.load_global ()) with 
     | Some t -> t 
     | None -> Tenv.create ()
@@ -63,8 +63,10 @@ let instance_of (argv, hist) typeexpr : model =
     let name2 = match (Typ.name typ) with
             | None -> raise (Foo "None target type")
             | Some a -> a in
-      print_endline (Typ.to_string typ);
-      let astate = AbductiveDomain.AddressAttributes.add_static_type tenv name2 argv astate in
+      (* print_endline (Typ.to_string typ); *)
+      (* AbductiveDomain.pp Format.std_formatter astate; *)
+      let astate = AbductiveDomain.AddressAttributes.swap_static_type tenv name2 argv astate in
+      (* AbductiveDomain.pp Format.std_formatter astate; *)
       let<++> astate = PulseArithmetic.and_equal_instanceof res_addr argv typ astate in
       PulseOperations.write_id ret_id (res_addr, Hist.add_event path event hist) astate
   (* The type expr is sometimes a Var expr but this is not expected.
@@ -73,8 +75,8 @@ let instance_of (argv, hist) typeexpr : model =
       astate |> Basic.ok_continue
 
 let java_cast (argv, _) typeexpr : model =
-        print_endline "cast";
-       
+        (* print_endline "cast";
+        *)
         AbstractValue.pp Format.std_formatter argv;
         (* ValueHistory.pp Format.std_formatter hist; *)
         
@@ -99,10 +101,11 @@ let java_cast (argv, _) typeexpr : model =
           let name2 = match (Typ.name typ) with
             | None -> raise (Foo "None target type")
             | Some a -> a in
+        
             let res = PatternMatch.is_subtype tenv name1 name2 in 
-            let () = if (Bool.equal res false) then (print_endline ("possible cast error detected at"^ (Location.to_string location))) else print_endline "no cast error" in
             
-              astate |> Basic.ok_continue
+            let () = if (Bool.equal res false) then (print_endline ("possible cast error detected at "^ (Location.to_string location))) else print_endline ("no cast error at "^ (Location.to_string location)) in
+            astate |> Basic.ok_continue
            
             
         (* The type expr is sometimes a Var expr but this is not expected.

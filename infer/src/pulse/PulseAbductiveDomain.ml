@@ -549,6 +549,9 @@ module Internal = struct
     let remove_allocation_attr address astate =
       map_post_attrs astate ~f:(BaseAddressAttributes.remove_allocation_attr address)
 
+    let remove_static_type_attr address astate =
+        map_post_attrs astate ~f:(BaseAddressAttributes.remove_static_type_attr address)
+
 
     let remove_taint_attrs address astate =
       map_post_attrs astate ~f:(BaseAddressAttributes.remove_taint_attrs address)
@@ -736,10 +739,12 @@ module Internal = struct
   end
 
   let add_static_type tenv typ_name addr astate =
+    
     let is_final =
       Tenv.lookup tenv typ_name
       |> Option.value_map ~default:false ~f:(fun {Struct.annots} -> Annot.Item.is_final annots)
     in
+
     if is_final then SafeAttributes.add_dynamic_type (Typ.mk_struct typ_name) addr astate
     else SafeAttributes.add_static_type typ_name addr astate
 
@@ -765,6 +770,7 @@ module Internal = struct
               pre= PreDomain.update ~heap:pre_heap astate.pre
             ; post= PostDomain.update ~heap:post_heap astate.post }
           in
+          
           add_static_type tenv typ_name addr astate
       | _ ->
           astate
@@ -2051,12 +2057,20 @@ module AddressAttributes = struct
   let add_static_type tenv typ v astate =
     add_static_type tenv typ (CanonValue.canon' astate v) astate
 
+  
+
 
   let is_ref_counted v astate = SafeAttributes.is_ref_counted (CanonValue.canon' astate v) astate
 
   let remove_allocation_attr v astate =
     SafeAttributes.remove_allocation_attr (CanonValue.canon' astate v) astate
 
+  let remove_static_type_attr v astate =
+      SafeAttributes.remove_static_type_attr (CanonValue.canon' astate v) astate
+
+  let swap_static_type tenv typ v astete = 
+        let astete = remove_static_type_attr v astete in 
+        add_static_type tenv typ v astete
 
   let remove_taint_attrs v astate =
     SafeAttributes.remove_taint_attrs (CanonValue.canon' astate v) astate

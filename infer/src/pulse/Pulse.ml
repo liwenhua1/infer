@@ -1151,7 +1151,7 @@ module PulseTransferFunctions = struct
           in
           (* list_printer (fun x -> AbductiveDomain.pp F.std_formatter x) astates_before; (*state before*)
           list_printer (fun x -> ExecutionDomain.pp F.std_formatter x) astates; state after *)
-          print_endline "here";
+          (* print_endline "here"; *)
           let astate_n, astates =
             let pname = Procdesc.get_proc_name proc_desc in
             let integer_type_widths = Exe_env.get_integer_type_widths exe_env pname in
@@ -1358,13 +1358,13 @@ let analyze specialization
     let ((exit_summaries_opt:DisjunctiveAnalyzer.TransferFunctions.Domain.t option), exn_sink_summaries_opt) =
       DisjunctiveAnalyzer.compute_post_including_exceptional analysis_data ~initial proc_desc
     in
-    print_endline "process analysis";
+    (* print_endline "process analysis";
     Procname.pp_name_only F.std_formatter proc_name;
     let res = match exit_summaries_opt with 
     | None  -> ()
     | Some a -> DisjunctiveAnalyzer.TransferFunctions.Domain.pp F.std_formatter a in
     res;
-    print_endline "process analysis end";
+    print_endline "process analysis end"; *)
     let process_postconditions node posts_opt ~convert_normal_to_exceptional =
       match posts_opt with
       | Some (posts, non_disj_astate) ->

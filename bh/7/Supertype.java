@@ -6,10 +6,11 @@ public class Supertype {
        //static //presumes this::Supertype<> achieves this::Supertype<> * res::Objec<>;
        //dynamic //presumes this::Supertype<> achieves this::Supertype<> * res::Objec<>;
        {
-        
+        Subtype c = (Subtype) b;
         if (b instanceof Subtype ) {
            {
-            Subtype c = (Subtype) b;
+            
+            
             return "null";}
         }
         return null;

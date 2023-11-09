@@ -796,6 +796,8 @@ module Attributes = struct
 
   let remove_allocation = remove_by_rank Attribute.allocated_rank
 
+  let remove_static_type = remove_by_rank Attribute.static_type_rank
+
   let get_unknown_effect =
     get_by_rank Attribute.unknown_effect_rank ~dest:(function [@warning "-partial-match"]
         | UnknownEffect (call, hist) -> (call, hist) )

@@ -114,6 +114,8 @@ module type S = sig
 
   val remove_allocation_attr : key -> t -> t
 
+  val remove_static_type_attr : key -> t -> t
+
   val remove_taint_attrs : key -> t -> t
 
   val remove_must_be_valid_attr : key -> t -> t

@@ -204,6 +204,10 @@ module AddressAttributes : sig
 
   val remove_allocation_attr : AbstractValue.t -> t -> t
 
+  val remove_static_type_attr : AbstractValue.t -> t -> t
+
+  val swap_static_type : Tenv.t -> Typ.name -> AbstractValue.t -> t -> t
+
   val remove_taint_attrs : AbstractValue.t -> t -> t
 
   val get_dynamic_type : AbstractValue.t -> t -> Typ.t option
