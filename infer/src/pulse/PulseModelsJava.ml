@@ -95,8 +95,8 @@ let check_not_instance tenv start no_ins_list =
 
 
 let java_cast (argv, _) typeexpr : model =
-        (* print_endline "cast";
-        *)
+        (* print_endline "cast"; *)
+       
         AbstractValue.pp Format.std_formatter argv;
         (* ValueHistory.pp Format.std_formatter hist; *)
         
@@ -111,6 +111,11 @@ let java_cast (argv, _) typeexpr : model =
           in
           
         let typ1 = AbductiveDomain.AddressAttributes.get_static_type argv astate in
+        (* let local_cast = match typ1 with
+        |Some _ ->  false
+        | _ -> true in
+         if (local_cast) then  astate |> Basic.ok_continue else *)
+           
         let name1 = match typ1 with
         |Some t ->  t
         | _ -> raise (Foo "None source type") in
@@ -149,6 +154,7 @@ let java_cast (argv, _) typeexpr : model =
         (* The type expr is sometimes a Var expr but this is not expected.
            This seems to be introduced by inline mechanism of Java synthetic methods during preanalysis *)
         | _ ->
+          
             astate |> Basic.ok_continue
 
 
