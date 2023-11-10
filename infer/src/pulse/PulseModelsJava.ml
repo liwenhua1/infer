@@ -51,21 +51,21 @@ let instance_of (argv, hist) typeexpr : model =
   | _ -> print_endline (Exp.to_string typeexpr));  *)
 
  fun {location; path; ret= ret_id, _} astate ->
-  let tenv = match (Tenv.load_global ()) with 
+  (* let tenv = match (Tenv.load_global ()) with 
     | Some t -> t 
     | None -> Tenv.create ()
-  in
+  in *)
  
   let event = Hist.call_event path location "Java.instanceof" in
   let res_addr = AbstractValue.mk_fresh () in
   match typeexpr with
   | Exp.Sizeof {typ} -> 
-    let name2 = match (Typ.name typ) with
+    (* let name2 = match (Typ.name typ) with
             | None -> raise (Foo "None target type")
-            | Some a -> a in
+            | Some a -> a in *)
       (* print_endline (Typ.to_string typ); *)
       (* AbductiveDomain.pp Format.std_formatter astate; *)
-      let astate = AbductiveDomain.AddressAttributes.swap_static_type tenv name2 argv astate in
+      (* let astate = AbductiveDomain.AddressAttributes.swap_static_type tenv name2 argv astate in *)
       (* AbductiveDomain.pp Format.std_formatter astate; *)
       let<++> astate = PulseArithmetic.and_equal_instanceof res_addr argv typ astate in
       PulseOperations.write_id ret_id (res_addr, Hist.add_event path event hist) astate
@@ -73,6 +73,26 @@ let instance_of (argv, hist) typeexpr : model =
      This seems to be introduced by inline mechanism of Java synthetic methods during preanalysis *)
   | _ ->
       astate |> Basic.ok_continue
+
+
+let find_last_subclass tenv start sub_list = 
+  let newlist = List.map sub_list ~f:(fun x -> match Typ.name x with |Some a -> a | None -> raise (Foo "not Typ.name")) in 
+  let compare_sub (a,_) b = if not(PatternMatch.is_subtype tenv a b) && not(PatternMatch.is_subtype tenv b a) then (a, false) else if PatternMatch.is_subtype tenv a b
+                            then (a, true) else (b, true) in 
+  let res = List.fold newlist ~init:(start, true) ~f:compare_sub in 
+  res
+
+let check_not_instance tenv start no_ins_list = 
+  
+  let rec helper is_possible list = 
+    match list with
+    | [] -> (is_possible, [])
+    | x::xs -> if not(PatternMatch.is_subtype tenv start x) && not(PatternMatch.is_subtype tenv x start) then helper true xs else if PatternMatch.is_subtype tenv x start then
+                 let res = helper true xs in (fst res, x:: snd res ) else (false, []) in
+  helper true no_ins_list 
+
+
+
 
 let java_cast (argv, _) typeexpr : model =
         (* print_endline "cast";
@@ -94,6 +114,13 @@ let java_cast (argv, _) typeexpr : model =
         let name1 = match typ1 with
         |Some t ->  t
         | _ -> raise (Foo "None source type") in
+        (* AbductiveDomain.pp Format.std_formatter astate; *)
+        let (instance,not_instance) = Formula.get_all_instance_constrains argv astate.path_condition in 
+        let not_instance = List.map not_instance ~f:(fun x -> match Typ.name x with |Some a -> a | None -> raise (Foo "not Typ.name")) in 
+        (* Utils.list_printer (fun x -> print_endline ("yes "^(Typ.to_string x))) a;
+        print_endline (Int.to_string (List.length a));
+        Utils.list_printer (fun x -> print_endline ("no "^(Typ.to_string x))) b;
+        print_endline (Int.to_string (List.length b)); *)
         (* let event = Hist.call_event path location "Java.cast" in
         let res_addr = AbstractValue.mk_fresh () in *)
         match typeexpr with
@@ -101,10 +128,21 @@ let java_cast (argv, _) typeexpr : model =
           let name2 = match (Typ.name typ) with
             | None -> raise (Foo "None target type")
             | Some a -> a in
-        
-            let res = PatternMatch.is_subtype tenv name1 name2 in 
-            
-            let () = if (Bool.equal res false) then (print_endline ("possible cast error detected at "^ (Location.to_string location))) else print_endline ("no cast error at "^ (Location.to_string location)) in
+            let (yinstance, b) = find_last_subclass tenv name1 instance in 
+            if b then let ninstance = check_not_instance tenv yinstance not_instance in 
+                if (fst ninstance) then 
+                  let res1 =  List.fold not_instance ~init:true ~f:(fun _ x -> if PatternMatch.is_subtype tenv name2 x then false else true) in 
+                  let res2 = PatternMatch.is_subtype tenv yinstance name2 in
+                let () = if not (res1) then (print_endline ("cast error detected at "^ (Location.to_string location))) 
+                         else if not (res2) then (print_endline ("possible cast error detected at "^ (Location.to_string location))) 
+                         else print_endline ("no cast error at "^ (Location.to_string location)) 
+                in
+                         astate |> Basic.ok_continue
+                else 
+                  let () =print_endline ("infeasible path so cast is safe at "^ (Location.to_string location)) in
+                  astate |> Basic.ok_continue
+            else
+            let () =print_endline ("infeasible path so cast is safe at "^ (Location.to_string location)) in
             astate |> Basic.ok_continue
            
             

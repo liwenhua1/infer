@@ -6,17 +6,22 @@ public class Supertype {
        //static //presumes this::Supertype<> achieves this::Supertype<> * res::Objec<>;
        //dynamic //presumes this::Supertype<> achieves this::Supertype<> * res::Objec<>;
        {
-        Subtype c = (Subtype) b;
+        Subtype q = (Subtype) b;
         if (b instanceof Subtype ) {
            {
-            
+            Subtype c = (Subtype) b;
+
+            if (b instanceof Subtype2) {
+                Subtype z = (Subtype) b;
+            }
             
             return "null";}
-        }
-        return null;
+        } else {
+            Subtype c = (Subtype) b;
+        return null;}
        }
 
-       public void test(Integer k) 
+       public void test() 
        //seems input parameter has no type, but constructed parameter has type
        //static //presumes this::Supertype<> achieves this::Supertype<> * res::Objec<>;
        //dynamic //presumes this::Supertype<> achieves this::Supertype<> * res::Objec<>;
@@ -56,6 +61,7 @@ public class Supertype {
    
      }
  class Subtype extends Supertype {}
+ class Subtype2 extends Supertype {}
  class Sub extends Supertype{}
  class Sub1 extends Sub{}
    

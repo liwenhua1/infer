@@ -16,6 +16,7 @@ module Q = QSafeCapped
 module Z = ZSafe
 open SatUnsat.Import
 
+exception Foo of string
 (** a humble debug mechanism: set [debug] to [true] and run [make -C infer/src runtest] to see the
     arithmetic engine at work in more details *)
 module Debug = struct
@@ -2337,6 +2338,38 @@ let pp_with_pp_var pp_var fmt {conditions; phi} =
 
 let pp = pp_with_pp_var Var.pp
 
+
+let get_all_instance_constrains (argv:Var.t) (path:t) = 
+  let yes = ref [] in 
+  let no = ref [] in 
+  let condition = path.conditions in 
+  let ph = path.phi in 
+  let term_eq = ph.term_eqs in 
+  let linear_var liva = 
+    match LinArith.get_as_var liva with
+    |Some a -> a
+    |None -> raise (Foo "not a linear bvar") in  
+  let iter_atom atom (vv, r) = 
+    match atom with 
+    | Atom.Equal (Linear a, _)->  if Var.equal (linear_var a) vv then (vv, false) else (vv, r)
+    | Atom.NotEqual (Linear a, _)->  if Var.equal (linear_var a) vv then (vv, true) else (vv, r)
+    | _ ->  (vv, r) in 
+
+  let is_instance v atoms = 
+    Atom.Set.fold iter_atom atoms (v,false) in 
+
+  let find_instance term var = 
+    
+      match term with 
+      
+      | Term.IsInstanceOf (abs_a, ty) -> if Var.equal argv abs_a then if snd (is_instance var condition) then yes := ty :: !yes else no := ty :: !no 
+                  else ()
+      |_ -> () in
+     
+  Term.VarMap.iter find_instance term_eq;
+  (!yes,!no)
+  
+
 let and_atom atom formula =
   let open SatUnsat.Import in
   let+ phi, new_eqs = Formula.Normalizer.and_atom atom (formula.phi, RevList.empty) in
@@ -2360,7 +2393,7 @@ let init_with_instanceof abs_ori typ condition =
   let empty_path_condition = condition in 
   let atoms = empty_path_condition.conditions in 
   let abs_new = Var.mk_fresh () in 
-  let atom = Atom.NotEqual (Var abs_new, Const (Q.zero)) in 
+  let atom = Atom.NotEqual (Term.Linear (LinArith.of_var abs_new), Const (Q.zero)) in 
   let new_atoms = Atom.Set.add atom atoms in 
   let eqs = empty_path_condition.phi.term_eqs in 
   let instanceof = Term.IsInstanceOf (abs_ori,typ) in 

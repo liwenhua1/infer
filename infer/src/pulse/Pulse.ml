@@ -719,7 +719,7 @@ module PulseTransferFunctions = struct
 
 
   let eval_function_call_args path call_exp actuals call_loc astate =
-    print_endline ("call name "^Exp.to_string call_exp);
+    (* print_endline ("call name "^Exp.to_string call_exp); *)
     
     let** astate, callee_pname = PulseOperations.eval_proc_name path call_loc call_exp astate in
     (* special case for objc dispatch models *)
