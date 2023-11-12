@@ -528,7 +528,7 @@ module PulseTransferFunctions = struct
   let rec dispatch_call_eval_args
       ({InterproceduralAnalysis.tenv; proc_desc; err_log; exe_env} as analysis_data) path ret
       call_exp actuals func_args call_loc flags astate callee_pname =
-       
+      (* print_endline (Exp.to_string call_exp); *)
     let method_info, astate =
       let default_info = Option.map ~f:Tenv.MethodInfo.mk_class callee_pname in
       if flags.CallFlags.cf_virtual then

@@ -95,9 +95,9 @@ let check_not_instance tenv start no_ins_list =
 
 
 let java_cast (argv, _) typeexpr : model =
-        (* print_endline "cast"; *)
+        print_endline "cast";
        
-        AbstractValue.pp Format.std_formatter argv;
+        (* AbstractValue.pp Format.std_formatter argv; *)
         (* ValueHistory.pp Format.std_formatter hist; *)
         
         (* (match typeexpr with
@@ -105,20 +105,43 @@ let java_cast (argv, _) typeexpr : model =
         | _ -> print_endline (Exp.to_string typeexpr));  *)
       
        fun {location; path = _; ret= _, _} (astate:AbductiveDomain.t) ->
+        
+      
           let tenv = match (Tenv.load_global ()) with 
             | Some t -> t 
             | None -> Tenv.create ()
           in
           
         let typ1 = AbductiveDomain.AddressAttributes.get_static_type argv astate in
+        
         (* let local_cast = match typ1 with
         |Some _ ->  false
         | _ -> true in
          if (local_cast) then  astate |> Basic.ok_continue else *)
+        
+        match typ1 with 
+        | None -> let get_dy_type abs_value = match AbductiveDomain.AddressAttributes.get_dynamic_type abs_value astate with 
+                          |Some a ->Typ.name a
+                          |None ->  raise (Foo "None source type") in  
+
+                  let name1 = match get_dy_type argv with
+                                  |Some t ->  t
+                                  | _ -> raise (Foo "None java type") in 
+                  (match typeexpr with
+                      | Exp.Sizeof {typ} -> 
+                        let name2 = match (Typ.name typ) with
+                            | None -> raise (Foo "None target type")
+                            | Some a -> a in
+            
+                  let res = PatternMatch.is_subtype tenv name1 name2 in
+                  let () = if not (res) then (print_endline ("cast error detected at "^ (Location.to_string location))) 
+                         else print_endline ("no cast error at "^ (Location.to_string location)) 
+                in
+                         astate |> Basic.ok_continue
+                         | _ ->
+                          astate |> Basic.ok_continue)
+        |Some t ->  let name1 = t in
            
-        let name1 = match typ1 with
-        |Some t ->  t
-        | _ -> raise (Foo "None source type") in
         (* AbductiveDomain.pp Format.std_formatter astate; *)
         let (instance,not_instance) = Formula.get_all_instance_constrains argv astate.path_condition in 
         let not_instance = List.map not_instance ~f:(fun x -> match Typ.name x with |Some a -> a | None -> raise (Foo "not Typ.name")) in 
@@ -154,7 +177,7 @@ let java_cast (argv, _) typeexpr : model =
         (* The type expr is sometimes a Var expr but this is not expected.
            This seems to be introduced by inline mechanism of Java synthetic methods during preanalysis *)
         | _ ->
-          
+        
             astate |> Basic.ok_continue
 
 
