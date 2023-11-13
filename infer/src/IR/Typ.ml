@@ -362,7 +362,8 @@ and pp_template_spec_info pe f = function
 
 
 (** Pretty print a type. Do nothing by default. *)
-let pp pe f te = if Config.print_types then pp_full pe f te
+let pp pe f te = if Config.print_types then pp_full pe f te else F.pp_print_string f (let pp fmt = pp_full Pp.text fmt te in
+F.asprintf "%t" pp)
 
 let to_string typ =
   let pp fmt = pp_full Pp.text fmt typ in

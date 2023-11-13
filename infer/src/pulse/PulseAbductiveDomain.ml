@@ -750,7 +750,7 @@ module Internal = struct
 
 
   let add_static_types tenv astate formals_and_captured =
-    let record_static_type astate (_var, typ, (src_addr, _)) =
+    let record_static_type astate (var, typ, (src_addr, _)) =
       match typ with
       | {Typ.desc= Tptr ({desc= Tstruct typ_name}, _)} ->
           let pre_heap = (astate.pre :> BaseDomain.t).heap in
@@ -770,8 +770,11 @@ module Internal = struct
               pre= PreDomain.update ~heap:pre_heap astate.pre
             ; post= PostDomain.update ~heap:post_heap astate.post }
           in
-          
-          add_static_type tenv typ_name addr astate
+
+          let is_this = Var.is_this var in
+          if is_this then  SafeAttributes.add_dynamic_type (Typ.mk_struct typ_name) addr astate
+          else 
+          add_static_type tenv typ_name addr astate 
       | _ ->
           astate
     in
@@ -1513,21 +1516,23 @@ let mk_initial tenv (proc_attrs : ProcAttributes.t) specialization =
             ValueHistory.Capture
               {captured_as= pvar; mode; location= proc_attrs.loc; timestamp= Timestamp.t0}
       in
-      (Var.of_pvar pvar, typ, (AbstractValue.mk_fresh (), ValueHistory.singleton event))
+      (* let (a,b,(c,d)) = *)
+      (Var.of_pvar pvar, typ, (AbstractValue.mk_fresh (), ValueHistory.singleton event)) 
+      (* if (Pvar.is_this pvar) then AbstractValue.pp F.std_formatter c else print_endline "not pvar";
+      (a,b,(c,d)) *)
     in
     let formals:(Var.t * Typ.t * (AbstractValue.t * ValueHistory.t)) list =
       List.map proc_attrs.formals ~f:(fun (mangled, typ, _) ->
           init_var `Formal (Pvar.mk mangled proc_name) typ )
     in
-   
+    (* Utils.list_printer (fun (a,_,(_,_))-> print_endline (Bool.to_string (Var.is_this a))) formals; *)
     let captured =
       List.map proc_attrs.captured ~f:(fun {CapturedVar.pvar; typ; capture_mode} ->
           init_var (`Captured capture_mode) pvar typ )
     in
-   
     let formals_and_captured = captured @ formals
   in
-  
+  (* Utils.list_printer (fun (v,t,(a,_)) -> Var.pp F.std_formatter v; print_endline (Typ.to_string t);AbstractValue.pp F.std_formatter a) formals_and_captured; *)
    (* let condi = 
       if Language.curr_language_is Java then 
         Formula.init_instanceof formals_and_captured Formula.ttrue
@@ -1586,7 +1591,8 @@ let mk_initial tenv (proc_attrs : ProcAttributes.t) specialization =
       add_static_types tenv astate formals_and_captured
     else 
        if (Language.curr_language_is Java)  then
-      add_static_types tenv astate formals_and_captured else
+      add_static_types tenv astate formals_and_captured 
+    else
       astate
   in
   let finial = 

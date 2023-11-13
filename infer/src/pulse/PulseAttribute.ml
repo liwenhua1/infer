@@ -283,7 +283,7 @@ module Attribute = struct
           (fun f -> if is_const_ref then F.pp_print_string f ":const&")
           CopyOrigin.pp from Location.pp copied_location
     | DynamicType (typ, source_file) ->
-        F.fprintf f "DynamicType %a, SourceFile %a" (Typ.pp Pp.text) typ (Pp.option SourceFile.pp)
+        F.fprintf f ("DynamicType %a, SourceFile %a") (Typ.pp Pp.text) typ (Pp.option SourceFile.pp)
           source_file
     | EndOfCollection ->
         F.pp_print_string f "EndOfCollection"

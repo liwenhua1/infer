@@ -112,7 +112,13 @@ let java_cast (argv, _) typeexpr : model =
             | None -> Tenv.create ()
           in
           
-        let typ1 = AbductiveDomain.AddressAttributes.get_static_type argv astate in
+        let typ1 = AbductiveDomain.AddressAttributes.get_dynamic_type argv astate in
+        (* AbstractValue.pp Format.std_formatter argv;
+        AbductiveDomain.pp Format.std_formatter astate; *)
+
+       (* let () = match typ1 with 
+        | None -> print_endline "not static type"
+        | Some a -> (Typ.print_name a) in *)
         
         (* let local_cast = match typ1 with
         |Some _ ->  false
@@ -120,11 +126,10 @@ let java_cast (argv, _) typeexpr : model =
          if (local_cast) then  astate |> Basic.ok_continue else *)
         
         match typ1 with 
-        | None -> let get_dy_type abs_value = match AbductiveDomain.AddressAttributes.get_dynamic_type abs_value astate with 
-                          |Some a ->Typ.name a
-                          |None ->  raise (Foo "None source type") in  
-
-                  let name1 = match get_dy_type argv with
+        | Some t ->
+                  let na1 = Typ.name t in
+                  let name1  = 
+                     match na1 with
                                   |Some t ->  t
                                   | _ -> raise (Foo "None java type") in 
                   (match typeexpr with
@@ -140,8 +145,10 @@ let java_cast (argv, _) typeexpr : model =
                          astate |> Basic.ok_continue
                          | _ ->
                           astate |> Basic.ok_continue)
-        |Some t ->  let name1 = t in
-           
+        |None ->  
+          let name1 = match AbductiveDomain.AddressAttributes.get_static_type argv astate with 
+                          |Some a -> a
+                          |None ->  raise (Foo "None source type") in   
         (* AbductiveDomain.pp Format.std_formatter astate; *)
         let (instance,not_instance) = Formula.get_all_instance_constrains argv astate.path_condition in 
         let not_instance = List.map not_instance ~f:(fun x -> match Typ.name x with |Some a -> a | None -> raise (Foo "not Typ.name")) in 

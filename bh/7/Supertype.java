@@ -9,7 +9,9 @@ public class Supertype {
         Subtype q = (Subtype) b;
         if (b instanceof Subtype ) {
            {
+            q.toString();
             Subtype c = (Subtype) b;
+            
 
             if (b instanceof Subtype2) {
                 Subtype z = (Subtype) b;
@@ -26,7 +28,8 @@ public class Supertype {
        //static //presumes this::Supertype<> achieves this::Supertype<> * res::Objec<>;
        //dynamic //presumes this::Supertype<> achieves this::Supertype<> * res::Objec<>;
        {
-        Object a = new Supertype();
+        
+        Sub1 a = (Sub1) this;
         String c = foo(a);
         c.toString();  }  
 
