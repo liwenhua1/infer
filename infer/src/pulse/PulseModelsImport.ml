@@ -82,6 +82,18 @@ module Basic = struct
   let continue astate = ContinueProgram astate
 
   let ok_continue post = [Ok (ContinueProgram post)]
+  let err_cast_abort name trace loc post = [FatalError ((
+                                    ReportableError
+                                 { diagnostic=
+                                     JavaCastError
+                                       { class_name = name ;
+                                       allocation_trace = trace ;
+                                       location = loc;                                      
+                                       }
+                                 ; astate= post }
+                             ) ,[]) ]
+
+
 
   let map_continue astate_result =
     let open PulseResult.Let_syntax in

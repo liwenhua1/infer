@@ -94,7 +94,7 @@ let check_not_instance tenv start no_ins_list =
 
 
 
-let java_cast (argv, _) typeexpr : model =
+let java_cast (argv, hist) typeexpr : model =
         print_endline "cast";
        
         (* AbstractValue.pp Format.std_formatter argv; *)
@@ -104,9 +104,9 @@ let java_cast (argv, _) typeexpr : model =
         | Exp.Sizeof a -> Exp.ppsz a
         | _ -> print_endline (Exp.to_string typeexpr));  *)
       
-       fun {location; path = _; ret= _, _} (astate:AbductiveDomain.t) ->
+       fun {location; path = _; ret= _, _;} (astate:AbductiveDomain.t) ->
         
-      
+        
           let tenv = match (Tenv.load_global ()) with 
             | Some t -> t 
             | None -> Tenv.create ()
@@ -134,16 +134,21 @@ let java_cast (argv, _) typeexpr : model =
                                   | _ -> raise (Foo "None java type") in 
                   (match typeexpr with
                       | Exp.Sizeof {typ} -> 
-                        let name2 = match (Typ.name typ) with
+                        let name2 = (match (Typ.name typ) with
                             | None -> raise (Foo "None target type")
-                            | Some a -> a in
+                            | Some a -> a) in
             
                   let res = PatternMatch.is_subtype tenv name1 name2 in
-                  let () = if not (res) then (print_endline ("cast error detected at "^ (Location.to_string location))) 
-                         else print_endline ("no cast error at "^ (Location.to_string location)) 
-                in
+                  let access_trace = Trace.Immediate {location; history = hist} in 
+                  let javaname = JavaClassName.from_string (Typ.to_string t) in
+                  if not (res) then 
+                        let () = (print_endline ("cast error detected at "^ (Location.to_string location))) in
+                            astate |> Basic.err_cast_abort javaname access_trace location
+                  else
+                  let () = print_endline ("no cast error at "^ (Location.to_string location)) in
+                
                          astate |> Basic.ok_continue
-                         | _ ->
+                        | _ ->
                           astate |> Basic.ok_continue)
         |None ->  
           let name1 = match AbductiveDomain.AddressAttributes.get_static_type argv astate with 

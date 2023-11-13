@@ -79,6 +79,10 @@ module Basic : sig
 
   val ok_continue : 'a -> ('a execution_domain_base_t, 'b) pulse_result list
 
+  val err_cast_abort : JavaClassName.t ->
+    Trace.t ->
+    Location.t -> AbductiveDomain.t -> (base_error, 'a) pulse_result list
+
   val map_continue : ('a, 'b) pulse_result -> ('a execution_domain_base_t, 'b) pulse_result
 
   val shallow_copy_value :
