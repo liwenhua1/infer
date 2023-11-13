@@ -82,7 +82,7 @@ module Basic = struct
   let continue astate = ContinueProgram astate
 
   let ok_continue post = [Ok (ContinueProgram post)]
-  let err_cast_abort name trace loc post = [FatalError ((
+  let err_cast_abort name trace loc post = [Recoverable (ContinueProgram (
                                     ReportableError
                                  { diagnostic=
                                      JavaCastError

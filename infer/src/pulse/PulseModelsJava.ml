@@ -94,7 +94,7 @@ let check_not_instance tenv start no_ins_list =
 
 
 
-let java_cast (argv, hist) typeexpr : model =
+let java_cast (argv, _hist) typeexpr : model =
         print_endline "cast";
        
         (* AbstractValue.pp Format.std_formatter argv; *)
@@ -139,11 +139,11 @@ let java_cast (argv, hist) typeexpr : model =
                             | Some a -> a) in
             
                   let res = PatternMatch.is_subtype tenv name1 name2 in
-                  let access_trace = Trace.Immediate {location; history = hist} in 
-                  let javaname = JavaClassName.from_string (Typ.to_string t) in
+                  (* let access_trace = Trace.Immediate {location; history = hist} in 
+                  let javaname = JavaClassName.from_string (Typ.to_string t) in *)
                   if not (res) then 
                         let () = (print_endline ("cast error detected at "^ (Location.to_string location))) in
-                            astate |> Basic.err_cast_abort javaname access_trace location
+                            astate |> Basic.ok_continue
                   else
                   let () = print_endline ("no cast error at "^ (Location.to_string location)) in
                 
