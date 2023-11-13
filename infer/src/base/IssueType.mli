@@ -135,6 +135,8 @@ val checkers_printf_args : t
 
 val class_cast_exception : t
 
+val pulse_class_cast_exception_latent : latent:bool -> t
+
 val complexity_increase : kind:CostKind.t -> is_on_ui_thread:bool -> t
 
 val condition_always_false : t

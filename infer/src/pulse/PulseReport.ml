@@ -134,6 +134,7 @@ let is_constant_deref_without_invalidation_diagnostic (diagnostic : Diagnostic.t
   | CSharpResourceLeak _
   | ErlangError _
   | JavaResourceLeak _
+  | JavaCastError _
   | HackUnawaitedAwaitable _
   | MemoryLeak _
   | ReadonlySharedPtrParameter _

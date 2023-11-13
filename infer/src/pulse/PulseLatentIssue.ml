@@ -101,6 +101,7 @@ let should_report (astate : AbductiveDomain.Summary.t) (diagnostic : Diagnostic.
   | ConstRefableParameter _
   | CSharpResourceLeak _
   | JavaResourceLeak _
+  | JavaCastError _
   | HackUnawaitedAwaitable _
   | MemoryLeak _
   | ReadonlySharedPtrParameter _

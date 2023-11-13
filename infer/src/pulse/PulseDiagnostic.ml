@@ -131,6 +131,7 @@ type t =
   | JavaResourceLeak of
       {class_name: JavaClassName.t; allocation_trace: Trace.t; location: Location.t}
     (* TODO: add more data to HackUnawaitedAwaitable tracking the parameter type *)
+  | JavaCastError of {class_name: JavaClassName.t; allocation_trace: Trace.t; location: Location.t}
   | HackUnawaitedAwaitable of {allocation_trace: Trace.t; location: Location.t}
   | MemoryLeak of {allocator: Attribute.allocator; allocation_trace: Trace.t; location: Location.t}
   | ReadonlySharedPtrParameter of
@@ -181,6 +182,9 @@ let pp fmt diagnostic =
       ErlangError.pp fmt erlang_error
   | JavaResourceLeak {class_name; allocation_trace; location} ->
       F.fprintf fmt "ResourceLeak {@[class_name=%a;@;allocation_trace:%a;@;location:%a@]}"
+        JavaClassName.pp class_name (Trace.pp ~pp_immediate) allocation_trace Location.pp location
+  | JavaCastError {class_name; allocation_trace; location} ->
+      F.fprintf fmt "JavaCastError {@[class_name=%a;@;allocation_trace:%a;@;location:%a@]}"
         JavaClassName.pp class_name (Trace.pp ~pp_immediate) allocation_trace Location.pp location
   | HackUnawaitedAwaitable {allocation_trace; location} ->
       F.fprintf fmt "UnawaitedAwaitable {@[allocation_trace:%a;@;location:%a@]}"
@@ -269,6 +273,7 @@ let get_location = function
   | ConstRefableParameter {location}
   | CSharpResourceLeak {location}
   | JavaResourceLeak {location}
+  | JavaCastError {location}
   | HackUnawaitedAwaitable {location}
   | MemoryLeak {location}
   | ReadonlySharedPtrParameter {location}
@@ -317,6 +322,7 @@ let aborts_execution = function
   | ConstRefableParameter _
   | CSharpResourceLeak _
   | JavaResourceLeak _
+  | JavaCastError _
   | HackUnawaitedAwaitable _
   | MemoryLeak _
   | ReadonlySharedPtrParameter _
@@ -540,6 +546,24 @@ let get_message_and_suggestion diagnostic =
       F.asprintf "Resource dynamically allocated %a is not closed after the last access at %a"
         pp_allocation_trace allocation_trace Location.pp location
       |> no_suggestion
+  | JavaCastError {class_name; location; allocation_trace} ->
+        let allocation_line =
+          let {Location.line; _} = Trace.get_outer_location allocation_trace in
+          line
+        in
+        let pp_allocation_trace fmt (trace : Trace.t) =
+          match trace with
+          | Immediate _ ->
+              F.fprintf fmt "by constructor %a() on line %d" JavaClassName.pp class_name
+                allocation_line
+          | ViaCall {f; _} ->
+              F.fprintf fmt "by constructor %a(), indirectly via call to %a on line %d"
+                JavaClassName.pp class_name CallEvent.describe f allocation_line
+        in
+        F.asprintf "Inproper Cast by %a, at %a"
+          pp_allocation_trace allocation_trace Location.pp location
+        |> no_suggestion
+
   | HackUnawaitedAwaitable {location; allocation_trace} ->
       (* NOTE: this is very similar to the MemoryLeak case *)
       let allocation_line =
@@ -889,6 +913,16 @@ let get_trace = function
              F.fprintf fmt "allocated by constructor %a() here" JavaClassName.pp class_name )
            allocation_trace
       @@ [Errlog.make_trace_element 0 location "memory becomes unreachable here" []]
+  | JavaCastError {class_name; location; allocation_trace} ->
+        
+        let access_start_location = Trace.get_start_location allocation_trace in
+        add_errlog_header ~nesting:0 ~title:"Inproper cast here"
+          access_start_location
+        @@ Trace.add_to_errlog ~nesting:1
+             ~pp_immediate:(fun fmt ->
+               F.fprintf fmt "Inside constructor %a() here" JavaClassName.pp class_name )
+             allocation_trace
+        @@ [Errlog.make_trace_element 0 location "casting error here" []]
   | HackUnawaitedAwaitable {location; allocation_trace} ->
       (* NOTE: this is very similar to the MemoryLeak case *)
       let access_start_location = Trace.get_start_location allocation_trace in
@@ -993,8 +1027,11 @@ let get_issue_type ~latent issue_type =
         L.die InternalError
           "Memory leaks should not have a Java resource, Hack async, C sharp, or Objective-C alloc \
            as allocator" )
+  | JavaCastError _, _ ->
+      IssueType.pulse_class_cast_exception_latent ~latent
   | ReadonlySharedPtrParameter _, false ->
       IssueType.readonly_shared_ptr_param
+  
   | ReadUninitializedValue _, _ ->
       IssueType.uninitialized_value_pulse ~latent
   | RetainCycle _, false ->
