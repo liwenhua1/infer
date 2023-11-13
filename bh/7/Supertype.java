@@ -23,6 +23,19 @@ public class Supertype {
         return "null";}
        }
 
+       public Supertype sre(){
+            return new Supertype();
+
+       }
+        public Supertype test3() 
+       //seems input parameter has no type, but constructed parameter has type
+       //static //presumes this::Supertype<> achieves this::Supertype<> * res::Objec<>;
+       //dynamic //presumes this::Supertype<> achieves this::Supertype<> * res::Objec<>;
+       {
+        
+        Supertype a = sre();
+        return a; }  
+
        public void test() 
        //seems input parameter has no type, but constructed parameter has type
        //static //presumes this::Supertype<> achieves this::Supertype<> * res::Objec<>;
@@ -30,7 +43,7 @@ public class Supertype {
        {
         
         Sub1 a = (Sub1) this;
-        String c = foo(a);
+        Object c = foo(a);
         c.toString();  }  
 
         
