@@ -42,6 +42,11 @@ let rec astate_of_error = function
 
 type 'a t = ('a, error) PulseResult.t
 
+(* FatalError (ReportableError {astate: AbductiveDomain.t; diagnostic: Diagnostic.t} , []) *)
+(*ExecutionDomain.t AccessResult.t  = (ExecutionDomain.t , error) PulseResult.t*)
+(*type 'a t = ('a, error) PulseResult.t*)
+(**)
+
 type abductive_error =
   [ `PotentialInvalidAccess of
     AbductiveDomain.t * AbstractValue.t * (Trace.t * Invalidation.must_be_valid_reason option) ]
