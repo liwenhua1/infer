@@ -179,3 +179,7 @@ val is_term_dumb : unit -> bool
 val unitf_on_list:'a list -> ('a -> unit) -> unit
 
 val list_printer: ('a -> unit) -> 'a list -> unit
+
+val print_bool : bool -> unit
+
+val print_int : int -> unit

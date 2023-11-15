@@ -313,7 +313,9 @@ let aborts_execution = function
       | Function_clause _
       | If_clause _
       | Try_clause _ )
-  | ReadUninitializedValue _ ->
+  | ReadUninitializedValue _
+  | JavaCastError _
+  ->
       (* these errors either abort the whole program or, if they are false positives, mean that
          pulse is confused and the current abstract state has stopped making sense; either way,
          abort! *)
@@ -322,7 +324,6 @@ let aborts_execution = function
   | ConstRefableParameter _
   | CSharpResourceLeak _
   | JavaResourceLeak _
-  | JavaCastError _
   | HackUnawaitedAwaitable _
   | MemoryLeak _
   | ReadonlySharedPtrParameter _

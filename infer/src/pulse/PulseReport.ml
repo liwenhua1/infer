@@ -187,6 +187,7 @@ let summary_of_error_post tenv proc_desc location mk_error astate =
   | Sat (Error (`RetainCycle (summary, _, _, _, _, _))) ->
       (* ignore potential memory leaks: error'ing in the middle of a function will typically produce
          spurious leaks *)
+      (* AbductiveDomain.Summary.pp F.std_formatter summary; *)
       Sat (mk_error summary)
   | Sat (Error (`PotentialInvalidAccessSummary (summary, astate, addr, trace))) ->
       (* ignore the error we wanted to report (with [mk_error]): the abstract state contained a
@@ -232,7 +233,9 @@ let report_summary_error tenv proc_desc err_log ((access_error : AccessResult.er
              ; access_trace
              ; must_be_valid_reason= snd must_be_valid } ) ;
       Some (LatentInvalidAccess {astate= summary; address; must_be_valid; calling_context= []})
-  | ReportableError {diagnostic} -> (
+  | ReportableError {diagnostic} -> 
+    
+    (
       let is_nullptr_dereference =
         match diagnostic with AccessToInvalidAddress _ -> true | _ -> false
       in
@@ -247,6 +250,7 @@ let report_summary_error tenv proc_desc err_log ((access_error : AccessResult.er
       | `ReportNow ->
           if is_suppressed then L.d_printfln "ReportNow suppressed error" ;
           report ~latent:false ~is_suppressed proc_desc err_log diagnostic ;
+          (* Utils.print_bool (Diagnostic.aborts_execution diagnostic); *)
           if Diagnostic.aborts_execution diagnostic then Some (AbortProgram summary) else None
       | `DelayReport latent_issue ->
           if is_suppressed then L.d_printfln "DelayReport suppressed error" ;

@@ -16,6 +16,12 @@ let rec list_printer f alist =
   | [] -> print_endline ""
   | x::xs -> f x ; list_printer f xs 
 
+let print_bool b = 
+  print_endline (Bool.to_string b)
+
+let print_int b = 
+    print_endline (Int.to_string b)
+
 let fold_file_tree ~init ~f_dir ~f_reg ~path =
   let rec traverse_dir_aux acc dir_path =
     let aux base_path acc' rel_path =
