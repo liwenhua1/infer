@@ -86,7 +86,8 @@ module Basic = struct
                                     ReportableError
                                  { diagnostic=
                                      JavaCastError
-                                       { class_name = name ;
+                                       {calling_context= [] ;
+                                        class_name = name ;
                                        allocation_trace = trace ;
                                        location = loc;                                      
                                        }

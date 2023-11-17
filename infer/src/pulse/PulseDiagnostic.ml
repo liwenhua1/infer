@@ -56,7 +56,7 @@ let pp_access_to_invalid_address fmt
     Invalidation.pp invalidation (Trace.pp ~pp_immediate) invalidation_trace
     (Trace.pp ~pp_immediate) access_trace Invalidation.pp_must_be_valid_reason must_be_valid_reason
 
-type cast_err = {class_name: JavaClassName.t; allocation_trace: Trace.t; location: Location.t}
+type cast_err = {calling_context: calling_context; class_name: JavaClassName.t; allocation_trace: Trace.t; location: Location.t}
     [@@deriving compare, equal]
     
 let yojson_of_cast_err= [%yojson_of: _]
@@ -187,9 +187,9 @@ let pp fmt diagnostic =
   | JavaResourceLeak {class_name; allocation_trace; location} ->
       F.fprintf fmt "ResourceLeak {@[class_name=%a;@;allocation_trace:%a;@;location:%a@]}"
         JavaClassName.pp class_name (Trace.pp ~pp_immediate) allocation_trace Location.pp location
-  | JavaCastError {class_name; allocation_trace; location} ->
-      F.fprintf fmt "JavaCastError {@[class_name=%a;@;allocation_trace:%a;@;location:%a@]}"
-        JavaClassName.pp class_name (Trace.pp ~pp_immediate) allocation_trace Location.pp location
+  | JavaCastError {calling_context; class_name; allocation_trace; location} ->
+      F.fprintf fmt "JavaCastError {@[calling_context=%a;@;class_name=%a;@;allocation_trace:%a;@;location:%a@]}"
+       pp_calling_context calling_context JavaClassName.pp class_name (Trace.pp ~pp_immediate) allocation_trace Location.pp location
   | HackUnawaitedAwaitable {allocation_trace; location} ->
       F.fprintf fmt "UnawaitedAwaitable {@[allocation_trace:%a;@;location:%a@]}"
         (Trace.pp ~pp_immediate) allocation_trace Location.pp location
@@ -551,7 +551,7 @@ let get_message_and_suggestion diagnostic =
       F.asprintf "Resource dynamically allocated %a is not closed after the last access at %a"
         pp_allocation_trace allocation_trace Location.pp location
       |> no_suggestion
-  | JavaCastError {class_name; location; allocation_trace} ->
+  | JavaCastError {calling_context; class_name; location; allocation_trace} ->
         let allocation_line =
           let {Location.line; _} = Trace.get_outer_location allocation_trace in
           line
@@ -559,14 +559,16 @@ let get_message_and_suggestion diagnostic =
         let pp_allocation_trace fmt (trace : Trace.t) =
           match trace with
           | Immediate _ ->
+            print_endline "immed";
               F.fprintf fmt "by constructor %a() on line %d" JavaClassName.pp class_name
                 allocation_line
           | ViaCall {f; _} ->
+            print_endline "via call";
               F.fprintf fmt "by constructor %a(), indirectly via call to %a on line %d"
                 JavaClassName.pp class_name CallEvent.describe f allocation_line
         in
-        F.asprintf "Inproper Cast by %a, at %a"
-          pp_allocation_trace allocation_trace Location.pp location
+        F.asprintf "%a Inproper Cast by %a, at %a"
+        pp_calling_context_prefix calling_context pp_allocation_trace allocation_trace Location.pp location
         |> no_suggestion
 
   | HackUnawaitedAwaitable {location; allocation_trace} ->

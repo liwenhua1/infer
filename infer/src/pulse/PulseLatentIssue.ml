@@ -82,7 +82,7 @@ let add_call_to_calling_context call_and_loc = function
   | ReadUninitializedValue read ->
       ReadUninitializedValue {read with calling_context= call_and_loc :: read.calling_context}
   | JavaCastError cast_e -> 
-      JavaCastError (cast_e)
+      JavaCastError {cast_e with calling_context= call_and_loc :: cast_e.calling_context}
 
 
 let add_call call_and_loc call_subst astate latent_issue =
