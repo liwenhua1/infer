@@ -105,8 +105,6 @@ let java_cast (argv, hist) typeexpr : model =
         | _ -> print_endline (Exp.to_string typeexpr));  *)
       
        fun {location; path = _; ret= _, _;} (astate:AbductiveDomain.t) ->
-        
-        
           let tenv = match (Tenv.load_global ()) with 
             | Some t -> t 
             | None -> Tenv.create ()

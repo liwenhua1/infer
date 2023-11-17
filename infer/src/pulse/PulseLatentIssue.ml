@@ -82,6 +82,7 @@ let add_call_to_calling_context call_and_loc = function
   | ReadUninitializedValue read ->
       ReadUninitializedValue {read with calling_context= call_and_loc :: read.calling_context}
   | JavaCastError cast_e -> 
+    (* print_endline (Location.to_string (snd(call_and_loc))); *)
       JavaCastError {cast_e with calling_context= call_and_loc :: cast_e.calling_context}
 
 

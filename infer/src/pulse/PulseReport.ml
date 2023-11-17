@@ -12,6 +12,7 @@ open PulseBasicInterface
 open PulseDomainInterface
 
 let report ~is_suppressed ~latent proc_desc err_log diagnostic =
+  (*reporting isssue*)
   let open Diagnostic in
   if is_suppressed && not Config.pulse_report_issues_for_tests then ()
   else
@@ -85,6 +86,7 @@ let report ~is_suppressed ~latent proc_desc err_log diagnostic =
     let issue_type = get_issue_type ~latent diagnostic in
     let message, suggestion = get_message_and_suggestion diagnostic in
     L.d_printfln ~color:Red "Reporting issue: %a: %s" IssueType.pp issue_type message ;
+    (* print_endline (Location.to_string (get_location diagnostic)^" LOCATION"); *)
     Reporting.log_issue proc_desc err_log ~loc:(get_location diagnostic) ?loc_instantiated
       ~ltr:(extra_trace @ get_trace diagnostic)
       ~extras ?suggestion Pulse issue_type message
@@ -280,6 +282,7 @@ let report_errors tenv proc_desc err_log location errors =
 
 
 let report_exec_results tenv proc_desc err_log location results =
+  (* print_endline (Location.to_string location); *)
   List.filter_map results ~f:(fun exec_result ->
       match PulseResult.to_result exec_result with (*pulse_result to result*)
       | Ok post ->

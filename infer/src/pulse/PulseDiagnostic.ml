@@ -248,7 +248,13 @@ let pp fmt diagnostic =
 let get_location = function
   | AccessToInvalidAddress {calling_context= []; access_trace}
   | ReadUninitializedValue {calling_context= []; trace= access_trace} ->
+  
       Trace.get_outer_location access_trace
+  | JavaCastError {calling_context;location} -> 
+      (match List.hd calling_context with 
+        |None -> location
+        |Some a -> snd a
+      )
   | ErlangError (Badarg {location; calling_context= []})
   | ErlangError (Badkey {location; calling_context= []})
   | ErlangError (Badmap {location; calling_context= []})
@@ -277,7 +283,6 @@ let get_location = function
   | ConstRefableParameter {location}
   | CSharpResourceLeak {location}
   | JavaResourceLeak {location}
-  | JavaCastError {location}
   | HackUnawaitedAwaitable {location}
   | MemoryLeak {location}
   | ReadonlySharedPtrParameter {location}
@@ -428,6 +433,7 @@ let get_message_and_suggestion diagnostic =
                    (pp_invalidation_trace invalidation_line)
                    invalidation_trace
              in
+             (* Utils.print_int invalidation_line; *)
              match must_be_valid_reason with
              | Some (SelfOfNonPODReturnMethod non_pod_typ) ->
                  F.fprintf fmt
@@ -559,11 +565,9 @@ let get_message_and_suggestion diagnostic =
         let pp_allocation_trace fmt (trace : Trace.t) =
           match trace with
           | Immediate _ ->
-            print_endline "immed";
               F.fprintf fmt "by constructor %a() on line %d" JavaClassName.pp class_name
                 allocation_line
           | ViaCall {f; _} ->
-            print_endline "via call";
               F.fprintf fmt "by constructor %a(), indirectly via call to %a on line %d"
                 JavaClassName.pp class_name CallEvent.describe f allocation_line
         in
