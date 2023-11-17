@@ -557,8 +557,8 @@ let get_message_and_suggestion diagnostic =
       F.asprintf "Resource dynamically allocated %a is not closed after the last access at %a"
         pp_allocation_trace allocation_trace Location.pp location
       |> no_suggestion
-  | JavaCastError {calling_context; class_name; location; allocation_trace} ->
-        let allocation_line =
+  | JavaCastError {calling_context; location} ->
+        (* let allocation_line =
           let {Location.line; _} = Trace.get_outer_location allocation_trace in
           line
         in
@@ -570,9 +570,9 @@ let get_message_and_suggestion diagnostic =
           | ViaCall {f; _} ->
               F.fprintf fmt "by constructor %a(), indirectly via call to %a on line %d"
                 JavaClassName.pp class_name CallEvent.describe f allocation_line
-        in
-        F.asprintf "%a Inproper Cast by %a, at %a"
-        pp_calling_context_prefix calling_context pp_allocation_trace allocation_trace Location.pp location
+        in *)
+        F.asprintf "%aInproper Cast at %a"
+        pp_calling_context_prefix calling_context Location.pp location
         |> no_suggestion
 
   | HackUnawaitedAwaitable {location; allocation_trace} ->
