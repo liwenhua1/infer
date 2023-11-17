@@ -35,10 +35,12 @@ let add_call_to_access_to_invalid_address call_subst astate invalid_access =
   {invalid_access with Diagnostic.invalid_address= expr_caller}
 
 
+
 type t =
   | AccessToInvalidAddress of Diagnostic.access_to_invalid_address
   | ErlangError of Diagnostic.ErlangError.t
   | ReadUninitializedValue of Diagnostic.read_uninitialized_value
+  | JavaCastError of Diagnostic.cast_err
 [@@deriving compare, equal, yojson_of]
 
 let to_diagnostic = function
@@ -48,6 +50,8 @@ let to_diagnostic = function
       Diagnostic.ErlangError erlang_error
   | ReadUninitializedValue read_uninitialized_value ->
       Diagnostic.ReadUninitializedValue read_uninitialized_value
+  | JavaCastError cast_e -> 
+      Diagnostic.JavaCastError cast_e
 
 
 let pp fmt latent_issue = Diagnostic.pp fmt (to_diagnostic latent_issue)
@@ -77,6 +81,8 @@ let add_call_to_calling_context call_and_loc = function
       ErlangError (Try_clause {calling_context= call_and_loc :: calling_context; location})
   | ReadUninitializedValue read ->
       ReadUninitializedValue {read with calling_context= call_and_loc :: read.calling_context}
+  | JavaCastError cast_e -> 
+      JavaCastError (cast_e)
 
 
 let add_call call_and_loc call_subst astate latent_issue =
@@ -101,7 +107,6 @@ let should_report (astate : AbductiveDomain.Summary.t) (diagnostic : Diagnostic.
   | ConstRefableParameter _
   | CSharpResourceLeak _
   | JavaResourceLeak _
-  | JavaCastError _
   | HackUnawaitedAwaitable _
   | MemoryLeak _
   | ReadonlySharedPtrParameter _
@@ -112,7 +117,9 @@ let should_report (astate : AbductiveDomain.Summary.t) (diagnostic : Diagnostic.
       (* these issues are reported regardless of the calling context, not sure if that's the right
          decision yet *)
       `ReportNow
-  | AccessToInvalidAddress latent ->
+  | JavaCastError latent -> if PulseArithmetic.is_manifest astate then `ReportNow
+                                else `DelayReport (JavaCastError latent)
+  | AccessToInvalidAddress latent -> 
       if PulseArithmetic.is_manifest astate then `ReportNow
       else `DelayReport (AccessToInvalidAddress latent)
   | ErlangError latent ->

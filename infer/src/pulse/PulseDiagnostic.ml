@@ -56,6 +56,10 @@ let pp_access_to_invalid_address fmt
     Invalidation.pp invalidation (Trace.pp ~pp_immediate) invalidation_trace
     (Trace.pp ~pp_immediate) access_trace Invalidation.pp_must_be_valid_reason must_be_valid_reason
 
+type cast_err = {class_name: JavaClassName.t; allocation_trace: Trace.t; location: Location.t}
+    [@@deriving compare, equal]
+    
+let yojson_of_cast_err= [%yojson_of: _]
 
 module ErlangError = struct
   type t =
@@ -131,7 +135,7 @@ type t =
   | JavaResourceLeak of
       {class_name: JavaClassName.t; allocation_trace: Trace.t; location: Location.t}
     (* TODO: add more data to HackUnawaitedAwaitable tracking the parameter type *)
-  | JavaCastError of {class_name: JavaClassName.t; allocation_trace: Trace.t; location: Location.t}
+  | JavaCastError of cast_err
   | HackUnawaitedAwaitable of {allocation_trace: Trace.t; location: Location.t}
   | MemoryLeak of {allocator: Attribute.allocator; allocation_trace: Trace.t; location: Location.t}
   | ReadonlySharedPtrParameter of

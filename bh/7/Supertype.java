@@ -1,4 +1,4 @@
-// public class Supertype {
+public class Supertype {
   
      
 //     //      public String foo(Object b) 
@@ -36,15 +36,22 @@
 //     //     Supertype a = sre();
 //     //     return a; }  
 
-//     //    public void test() 
-//     //    //seems input parameter has no type, but constructed parameter has type
-//     //    //static //presumes this::Supertype<> achieves this::Supertype<> * res::Objec<>;
-//     //    //dynamic //presumes this::Supertype<> achieves this::Supertype<> * res::Objec<>;
-//     //    {
-        
-//     //     Sub1 a = (Sub1) this;
-//     //     Object c = foo(a);
-//     //     c.toString();  }  
+       public void test(int x) 
+       //seems input parameter has no type, but constructed parameter has type
+       //static //presumes this::Supertype<> achieves this::Supertype<> * res::Objec<>;
+       //dynamic //presumes this::Supertype<> achieves this::Supertype<> * res::Objec<>;
+       {
+        if (x>0){
+        Sub1 a = (Sub1) this;}
+        }  
+
+         public void test2(int x) 
+       //seems input parameter has no type, but constructed parameter has type
+       //static //presumes this::Supertype<> achieves this::Supertype<> * res::Objec<>;
+       //dynamic //presumes this::Supertype<> achieves this::Supertype<> * res::Objec<>;
+       {
+        test(10);
+        }  
 
         
 //     //      public void test2(Subtype a) 
@@ -58,19 +65,19 @@
 
         
        
-//        public Integer foo(int b) 
-//        //seems input parameter has no type, but constructed parameter has type
-//        //static //presumes this::Supertype<> achieves this::Supertype<> * res::Objec<>;
-//        //dynamic //presumes this::Supertype<> achieves this::Supertype<> * res::Objec<>;
-//        {
+    //    public Integer foo(int b) 
+    //    //seems input parameter has no type, but constructed parameter has type
+    //    //static //presumes this::Supertype<> achieves this::Supertype<> * res::Objec<>;
+    //    //dynamic //presumes this::Supertype<> achieves this::Supertype<> * res::Objec<>;
+    //    {
       
-//         if ( 8 > b ) {
-//             Object a = null;
-//             a.toString();
-//             return null;
-//         }
-//         return 100;
-//        }
+    //     if ( 8 > b ) {
+    //         Object a = null;
+    //         a.toString();
+    //         return null;
+    //     }
+    //     return 100;
+    //    }
 
 //        public void test5() {
 //         Integer k = foo(4);
@@ -93,7 +100,7 @@
 //     //    }
        
    
-//      }
+     }
 //  class Subtype extends Supertype {
 //     // public void test() 
 //     //    //seems input parameter has no type, but constructed parameter has type
@@ -135,31 +142,31 @@
      
 // }
 
-class I {
-        public Object defaultMethod1() 
-        //static //presumes this::I<> achieves ok this::I<> & res = null;
-        //dynamic //presumes this::I<> achieves ok this::I<> & res = null;
-        {
-          return new Object();
-        }
-      }
+// class I {
+//         public Object defaultMethod1() 
+//         //static //presumes this::I<> achieves ok this::I<> & res = null;
+//         //dynamic //presumes this::I<> achieves ok this::I<> & res = null;
+//         {
+//           return new Object();
+//         }
+//       }
     
-     class A extends I {
+//      class A extends I {
     
       
     
-        public Object defaultMethod1() 
-        //static //presumes this::A<> achieves ok this::A<> & res = null;
-        //dynamic //presumes this::I<>A<>  achieves ok this::I<>A<> & res = null;
-        {
-            return null;
-        }
+//         public Object defaultMethod1() 
+//         //static //presumes this::A<> achieves ok this::A<> & res = null;
+//         //dynamic //presumes this::I<>A<>  achieves ok this::I<>A<> & res = null;
+//         {
+//             return null;
+//         }
     
-        public void defaultCallNPE(I i) 
-        //static //presumes this::A<> achieves err this::A<> & temp = null;
-        {
-          Object temp = i.defaultMethod1();
-          temp.toString();
-        }
+//         public void defaultCallNPE(I i) 
+//         //static //presumes this::A<> achieves err this::A<> & temp = null;
+//         {
+//           Object temp = i.defaultMethod1();
+//           temp.toString();
+//         }
     
-      }
+//       }

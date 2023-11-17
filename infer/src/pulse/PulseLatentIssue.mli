@@ -15,10 +15,12 @@ module Diagnostic = PulseDiagnostic
     but we want to delay reporting until we see the conditions for the bug manifest themselves in
     some calling context. *)
 
+
 type t =
   | AccessToInvalidAddress of Diagnostic.access_to_invalid_address
   | ErlangError of Diagnostic.ErlangError.t
   | ReadUninitializedValue of Diagnostic.read_uninitialized_value
+  | JavaCastError of Diagnostic.cast_err
 [@@deriving compare, equal, yojson_of]
 
 val pp : F.formatter -> t -> unit

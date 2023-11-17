@@ -34,6 +34,9 @@ type access_to_invalid_address =
   ; must_be_valid_reason: Invalidation.must_be_valid_reason option }
 [@@deriving compare, equal, yojson_of]
 
+type cast_err = {class_name: JavaClassName.t; allocation_trace: Trace.t; location: Location.t}
+    [@@deriving compare, equal, yojson_of]
+
 module ErlangError : sig
   type t =
     | Badarg of {calling_context: calling_context; location: Location.t}
@@ -75,7 +78,7 @@ type t =
   | ErlangError of ErlangError.t
   | JavaResourceLeak of
       {class_name: JavaClassName.t; allocation_trace: Trace.t; location: Location.t}
-  | JavaCastError of {class_name: JavaClassName.t; allocation_trace: Trace.t; location: Location.t}
+  | JavaCastError of cast_err
   | HackUnawaitedAwaitable of {allocation_trace: Trace.t; location: Location.t}
   | MemoryLeak of {allocator: Attribute.allocator; allocation_trace: Trace.t; location: Location.t}
   | ReadonlySharedPtrParameter of

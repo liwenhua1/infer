@@ -115,11 +115,14 @@ let recoverable_of_result ~ok_of_error = function
 let fatal_of_result = function (Ok x : _ result) -> Ok x | Error err -> FatalError (err, [])
 
 let to_result : _ t -> _ result = function
-  | Ok astate ->
+  | Ok astate -> 
+    (* print_endline "Ok state"; *)
       Ok astate
-  | Recoverable (_, errors) ->
+  | Recoverable (_, errors) -> 
+    (* print_endline "Recoverable state"; *)
       Error errors
-  | FatalError (error, errors) ->
+  | FatalError (error, errors) -> 
+    (* print_endline "FatalError state"; *)
       Error (error :: errors)
 
 

@@ -281,7 +281,7 @@ let report_errors tenv proc_desc err_log location errors =
 
 let report_exec_results tenv proc_desc err_log location results =
   List.filter_map results ~f:(fun exec_result ->
-      match PulseResult.to_result exec_result with
+      match PulseResult.to_result exec_result with (*pulse_result to result*)
       | Ok post ->
           Some post
       | Error errors -> (
