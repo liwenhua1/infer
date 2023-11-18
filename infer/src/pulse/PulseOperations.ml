@@ -330,7 +330,8 @@ let realloc_pvar tenv ({PathContext.timestamp} as path) ~set_uninitialized pvar 
   else astate
 
 
-let write_id id new_addr_loc astate = Stack.add (Var.of_id id) new_addr_loc astate
+let write_id id new_addr_loc astate = 
+    let res = Stack.add (Var.of_id id) new_addr_loc astate in res
 
 let read_id id astate = Stack.find_opt (Var.of_id id) astate
 

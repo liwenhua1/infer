@@ -109,7 +109,7 @@ let java_cast (argv, hist) typeexpr : model =
             | Some t -> t 
             | None -> Tenv.create ()
           in
-          
+        let access_trace = Trace.Immediate {location; history = hist} in 
         let typ1 = AbductiveDomain.AddressAttributes.get_dynamic_type argv astate in
         (* AbstractValue.pp Format.std_formatter argv;
         AbductiveDomain.pp Format.std_formatter astate; *)
@@ -137,14 +137,14 @@ let java_cast (argv, hist) typeexpr : model =
                             | Some a -> a) in
             
                   let res = PatternMatch.is_subtype tenv name1 name2 in
-                  let access_trace = Trace.Immediate {location; history = hist} in 
+               
                   let javaname = JavaClassName.from_string (Typ.to_string t) in
                   if not (res) then 
-                        let () = (print_endline ("cast error detected at "^ (Location.to_string location))) in
+                        (* let () = (print_endline ("cast error detected at "^ (Location.to_string location))) in *)
                             astate |> Basic.err_cast_abort javaname access_trace location
                             (* Basic.ok_continue *)
                   else
-                  let () = print_endline ("no cast error at "^ (Location.to_string location)) in
+                  (* let () = print_endline ("no cast error at "^ (Location.to_string location)) in *)
                 
                          astate |> Basic.ok_continue
                         | _ ->
@@ -164,6 +164,7 @@ let java_cast (argv, hist) typeexpr : model =
         let res_addr = AbstractValue.mk_fresh () in *)
         match typeexpr with
         | Exp.Sizeof {typ} -> 
+          let javaname = JavaClassName.from_string (Typ.to_string typ) in
           let name2 = match (Typ.name typ) with
             | None -> raise (Foo "None target type")
             | Some a -> a in
@@ -172,9 +173,18 @@ let java_cast (argv, hist) typeexpr : model =
                 if (fst ninstance) then 
                   let res1 =  List.fold not_instance ~init:true ~f:(fun _ x -> if PatternMatch.is_subtype tenv name2 x then false else true) in 
                   let res2 = PatternMatch.is_subtype tenv yinstance name2 in
-                let () = if not (res1) then (print_endline ("cast error detected at "^ (Location.to_string location))) 
-                         else if not (res2) then (print_endline ("possible cast error detected at "^ (Location.to_string location))) 
-                         else print_endline ("no cast error at "^ (Location.to_string location)) 
+
+                if not (res1) then
+                            astate |> Basic.err_cast_abort javaname access_trace location
+                         else if not (res2) then 
+                              
+                              if not ( PatternMatch.is_subtype tenv name2 yinstance) then astate |> Basic.err_cast_abort javaname access_trace location
+                              else
+                          
+                          
+                          (* let () =(print_endline ("possible cast error detected at "^ (Location.to_string location))) in  *)
+                         astate |> Basic.ok_continue
+                         else let () = print_endline ("no cast error at "^ (Location.to_string location)) 
                 in
                          astate |> Basic.ok_continue
                 else 

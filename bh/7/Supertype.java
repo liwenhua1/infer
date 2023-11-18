@@ -1,27 +1,36 @@
 public class Supertype {
   
      
-//     //      public String foo(Object b) 
-//     //    //seems input parameter has no type, but constructed parameter has type
-//     //    //static //presumes this::Supertype<> achieves this::Supertype<> * res::Objec<>;
-//     //    //dynamic //presumes this::Supertype<> achieves this::Supertype<> * res::Objec<>;
-//     //    {
-//     //     Subtype q = (Subtype) b;
-//     //     if (b instanceof Subtype ) {
-//     //        {
-//     //         q.toString();
-//     //         Subtype c = (Subtype) b;
+         public String foo(Object b) 
+       //seems input parameter has no type, but constructed parameter has type
+       //static //presumes this::Supertype<> achieves this::Supertype<> * res::Objec<>;
+       //dynamic //presumes this::Supertype<> achieves this::Supertype<> * res::Objec<>;
+       {
+        // Subtype q = (Subtype) b;
+        if (b instanceof Subtype ) {
+           {
+            // q.toString();
+            Subtype2 c = (Subtype2) b;
             
 
-//     //         if (b instanceof Subtype2) {
-//     //             Subtype z = (Subtype) b;
-//     //         }
+            // if (b instanceof Subtype2) {
+            //     Subtype z = (Subtype) b;
+            // }
             
-//     //         return null;}
-//     //     } else {
-//     //         Subtype c = (Subtype) b;
-//     //     return "null";}
-//     //    }
+            return null;}
+        } else {
+            Subtype c = (Subtype) b;
+        return "null";}
+       }
+
+      public void tt() {
+        Supertype a = new Supertype();
+        foo (a);
+      }
+       public void tt2() {
+        Supertype a = new Subtype();
+        foo (a);
+      }
 
 //     //    public Supertype sre(){
 //     //         return new Supertype();
@@ -36,30 +45,32 @@ public class Supertype {
 //     //     Supertype a = sre();
 //     //     return a; }  
 
-       public void test(int x) 
-       //seems input parameter has no type, but constructed parameter has type
-       //static //presumes this::Supertype<> achieves this::Supertype<> * res::Objec<>;
-       //dynamic //presumes this::Supertype<> achieves this::Supertype<> * res::Objec<>;
-       {
-        if (x>0){
-        Sub1 a = (Sub1) this;}
-        }  
+      //  public void test(int x) 
+      //  //seems input parameter has no type, but constructed parameter has type
+      //  //static //presumes this::Supertype<> achieves this::Supertype<> * res::Objec<>;
+      //  //dynamic //presumes this::Supertype<> achieves this::Supertype<> * res::Objec<>;
+      //  {
+      //   if (x>0){
+      //   Sub1 a = (Sub1) this;}
+      //   }  
 
-         public void test2(int x) 
-       //seems input parameter has no type, but constructed parameter has type
-       //static //presumes this::Supertype<> achieves this::Supertype<> * res::Objec<>;
-       //dynamic //presumes this::Supertype<> achieves this::Supertype<> * res::Objec<>;
-       {
-        test(10);
-        }  
+      //    public void test2(int x) 
+      //  //seems input parameter has no type, but constructed parameter has type
+      //  //static //presumes this::Supertype<> achieves this::Supertype<> * res::Objec<>;
+      //  //dynamic //presumes this::Supertype<> achieves this::Supertype<> * res::Objec<>;
+      //  {
+      //   test(10);
+      //   }  
 
         
-//     //      public void test2(Subtype a) 
-//     //    //seems input parameter has no type, but constructed parameter has type
-//     //    //static //presumes this::Supertype<> achieves this::Supertype<> * res::Objec<>;
-//     //    //dynamic //presumes this::Supertype<> achieves this::Supertype<> * res::Objec<>;
-//     //    {
-//     //    a.test(); }  
+      //    public void test2() 
+      //  //seems input parameter has no type, but constructed parameter has type
+      //  //static //presumes this::Supertype<> achieves this::Supertype<> * res::Objec<>;
+      //  //dynamic //presumes this::Supertype<> achieves this::Supertype<> * res::Objec<>;
+      //  {
+      //   Sub x = new Sub();
+      //  String a = foo(x);
+      // a.toString(); }  
 
        
 
@@ -101,17 +112,17 @@ public class Supertype {
        
    
      }
-//  class Subtype extends Supertype {
-//     // public void test() 
-//     //    //seems input parameter has no type, but constructed parameter has type
-//     //    //static //presumes this::Supertype<> achieves this::Supertype<> * res::Objec<>;
-//     //    //dynamic //presumes this::Supertype<> achieves this::Supertype<> * res::Objec<>;
-//     //    {
-//     //     Object a = null;
-//     //      a.toString();}  
-//  }
-//  class Subtype2 extends Supertype {}
-//  class Sub extends Supertype{}
+ class Subtype extends Supertype {
+    // public void test() 
+    //    //seems input parameter has no type, but constructed parameter has type
+    //    //static //presumes this::Supertype<> achieves this::Supertype<> * res::Objec<>;
+    //    //dynamic //presumes this::Supertype<> achieves this::Supertype<> * res::Objec<>;
+    //    {
+    //     Object a = null;
+    //      a.toString();}  
+ }
+ class Subtype2 extends Supertype {}
+ class Sub extends Subtype{}
 //  class Sub1 extends Sub{}
    
 //        public Object foo() 
