@@ -53,8 +53,10 @@ type operand =
 
 let pp_operand fmt = function
   | AbstractValueOperand v ->
+      
       Var.pp fmt v
   | ConstOperand i ->
+    
       Const.pp Pp.text fmt i
   | FunctionApplicationOperand {f; actuals} ->
       F.fprintf fmt "%a(%a)" pp_function_symbol f (Pp.seq ~sep:"," Var.pp) actuals

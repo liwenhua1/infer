@@ -1167,13 +1167,17 @@ module PulseTransferFunctions = struct
           
           (astates, path, astate_n)
       | Prune (condition, loc, is_then_branch, if_kind) ->
+        (* Exp.pp F.std_formatter condition; *)
+        (* AbductiveDomain.pp F.std_formatter astate; *)
           let prune_result =
             let=* astate = check_config_usage analysis_data loc condition astate in
-            PulseOperations.prune path loc ~condition astate
+              (* AbductiveDomain.pp F.std_formatter astate; *)
+            PulseOperations.prune path loc ~(condition:Exp.t) astate
           in
           let path =
             match PulseOperationResult.sat_ok prune_result with
             | None ->
+              PathContext.pp F.std_formatter path;
                 path
             | Some (_, hist) ->
                 if Sil.is_terminated_if_kind if_kind then
@@ -1182,11 +1186,18 @@ module PulseTransferFunctions = struct
                       (ConditionPassed {if_kind; is_then_branch; location= loc; timestamp})
                       hist
                   in
+                 
                   {path with conditions= hist :: path.conditions}
-                else path
+                else 
+                  (* let () =
+                   print_endline "zzzz";
+                  PathContext.pp F.std_formatter path;
+                  print_endline "zzz" in  *)
+                  path
           in
           let results =
             let<++> astate, _ = prune_result in
+            (* AbductiveDomain.pp F.std_formatter astate; *)
             astate
           in
           (PulseReport.report_exec_results tenv proc_desc err_log loc results, path, astate_n)

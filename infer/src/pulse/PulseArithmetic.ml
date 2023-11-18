@@ -13,11 +13,12 @@ module AccessResult = PulseAccessResult
 let map_path_condition_common ~f astate =
   let open SatUnsat.Import in
   let* phi, new_eqs = f astate.AbductiveDomain.path_condition in
+  (* let new_eqs = RevList.map new_eqs ~f:(fun x -> Formula.pp_new_eq Format.std_formatter x; x)  in *)
   let astate = AbductiveDomain.set_path_condition phi astate in
   let+ result =
     AbductiveDomain.incorporate_new_eqs new_eqs astate >>| AccessResult.of_abductive_result
   in
-  (result, new_eqs)
+  (result, (new_eqs:Formula.new_eqs))
 
 
 let map_path_condition ~f astate =

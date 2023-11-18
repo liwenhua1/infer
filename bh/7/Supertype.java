@@ -6,11 +6,12 @@ public class Supertype {
        //static //presumes this::Supertype<> achieves this::Supertype<> * res::Objec<>;
        //dynamic //presumes this::Supertype<> achieves this::Supertype<> * res::Objec<>;
        {
-        // Subtype q = (Subtype) b;
+        
+        Supertype q = (Supertype) b;
         if (b instanceof Subtype ) {
            {
             // q.toString();
-            Subtype2 c = (Subtype2) b;
+            // Subtype2 c = (Subtype2) b;
             
 
             // if (b instanceof Subtype2) {
@@ -19,7 +20,7 @@ public class Supertype {
             
             return null;}
         } else {
-            Subtype c = (Subtype) b;
+            // Subtype c = (Subtype) b;
         return "null";}
        }
 
@@ -27,10 +28,10 @@ public class Supertype {
         Supertype a = new Supertype();
         foo (a);
       }
-       public void tt2() {
-        Supertype a = new Subtype();
-        foo (a);
-      }
+      //  public void tt2() {
+      //   Supertype a = new Subtype();
+      //   foo (a);
+      // }
 
 //     //    public Supertype sre(){
 //     //         return new Supertype();

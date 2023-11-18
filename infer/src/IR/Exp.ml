@@ -202,6 +202,7 @@ let rec pp_ pe pp_t f e =
   in
   match (e : t) with
   | Var id ->
+   
       Ident.pp f id
   | Const c ->
       (Const.pp pe) f c
@@ -210,9 +211,11 @@ let rec pp_ pe pp_t f e =
   | UnOp (op, e, _) ->
       F.fprintf f "%s%a" (Unop.to_string op) pp_exp e
   | BinOp (op, Const c, e2) when Config.smt_output ->
+      (* print_endline "binOp"; *)
       print_binop_stm_output (Const c) op e2
   | BinOp (op, e1, e2) ->
-      F.fprintf f "(%a %s %a)" pp_exp e1 (Binop.str pe op) pp_exp e2
+    (* print_endline "binOp"; *)
+    F.fprintf f "(%a %s %a)" pp_exp e1 (Binop.str pe op) pp_exp e2
   | Exn e ->
       F.fprintf f "EXN %a" pp_exp e
   | Closure closure ->
