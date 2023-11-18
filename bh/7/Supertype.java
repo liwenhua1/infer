@@ -25,7 +25,7 @@ public class Supertype {
        }
 
       public void tt() {
-        Supertype a = new Supertype();
+        Object a = new Object();
         foo (a);
       }
       //  public void tt2() {

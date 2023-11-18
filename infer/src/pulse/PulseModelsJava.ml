@@ -75,7 +75,7 @@ let instance_of (argv, hist) typeexpr : model =
   | _ ->
       astate |> Basic.ok_continue
 
-let add_instance_of_info is_instance argv typ astate = 
+let add_instance_of_info_succ is_instance argv typ astate = 
    
     let res_addr = AbstractValue.mk_fresh () in 
     let astate = PulseArithmetic.and_equal_instanceof res_addr argv typ astate in
@@ -97,7 +97,42 @@ let add_instance_of_info is_instance argv typ astate =
     
     (* (PulseResult.map ~f) sat_result *)
     
+    let add_instance_of_info_fail is_instance argv typ astate1 javaname access_trace location :  (AbductiveDomain.t execution_domain_base_t, base_error) pulse_result list= 
+      let astate = astate1 in
+      let res_addr = AbstractValue.mk_fresh () in 
+      let astate = PulseArithmetic.and_equal_instanceof res_addr argv typ astate in
+        (* AbductiveDomain.pp Format.std_formatter astate; *)
+      let lhs_op = Formula.AbstractValueOperand res_addr in 
+      let rhs_op = Formula.ConstOperand (Const.Cint IntLit.zero) in
+      let bop = Binop.Eq in
+      (* let hist =ValueHistory.binary_op bop ValueHistory.epoch ValueHistory.epoch in *)
+    
+      let (astate) = astate >>== (fun x -> (PulseArithmetic.prune_binop ~negated:is_instance bop lhs_op rhs_op x)) in
+      (* let apply :(AbductiveDomain.t AccessResult.t -> (AbductiveDomain.t * ValueHistory.t) AccessResult.t)
+        = PulseResult.map ~f:(fun x -> (x,hist)) in *)
+      let res1 = match SatUnsat.sat astate with 
+                  | None -> raise (Foo "impossible") 
+                  | Some a -> let fc x = (match (List.hd (Basic.err_cast_abort javaname access_trace location x)) with 
+                                           |None -> raise (Foo "impossible") 
+                                           |Some a -> a  ) in
+                    
+                     a >>= fc in 
+            [res1]
+
+      (* let res2 = match SatUnsat.sat res1 with 
+                | None -> [] 
+                | Some a -> let fc = PulseResult.map ~f:(fun (x,_)-> x) in let res3 = fc a in  *)
+      (* let result =  let<++> astate, _ = res in astate in result *)
+         
+
+
+      
+
+    (* AbductiveDomain.pp F.std_formatter astate; *)
+      
+    
      
+
        
 
 
@@ -210,10 +245,10 @@ let java_cast (argv, hist) typeexpr : model =
                               
                               if not ( PatternMatch.is_subtype tenv name2 yinstance) then astate |> Basic.err_cast_abort javaname access_trace location
                               else
-
-                              add_instance_of_info true argv typ astate
-                          
-                          
+                              
+                              let exe1 = add_instance_of_info_succ true argv typ astate in 
+                              let exe2 = add_instance_of_info_fail false argv typ astate javaname access_trace location in 
+                              exe1 @ exe2
                           (* let () =(print_endline ("possible cast error detected at "^ (Location.to_string location))) in  *)
                          (* astate |> Basic.ok_continue *)
                          else let () = print_endline ("no cast error at "^ (Location.to_string location)) 
