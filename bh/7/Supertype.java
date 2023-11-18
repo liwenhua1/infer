@@ -20,7 +20,7 @@ public class Supertype {
             
             return null;}
         } else {
-            // Subtype c = (Subtype) b;
+            Subtype c = (Subtype) b;
         return "null";}
        }
 
@@ -28,10 +28,16 @@ public class Supertype {
         Object a = new Object();
         foo (a);
       }
-      //  public void tt2() {
-      //   Supertype a = new Subtype();
-      //   foo (a);
-      // }
+       public void tt2() {
+        Supertype a = new Subtype();
+        String x = foo (a);
+        x.toString();
+      }
+
+      public void tt3() {
+        Subtype2 a = new Subtype2();
+        foo (a);
+      }
 
 //     //    public Supertype sre(){
 //     //         return new Supertype();

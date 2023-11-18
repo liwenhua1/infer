@@ -277,9 +277,9 @@ let prune path location ~condition astate =
     | BinOp ((bop:Binop.t), (exp_lhs:Exp.t), exp_rhs) ->
         let** astate, lhs_op, lhs_hist = eval_to_operand path location exp_lhs astate in
         
-        Formula.pp_operand Format.std_formatter lhs_op;
+        (* Formula.pp_operand Format.std_formatter lhs_op; *)
         let** astate, rhs_op, rhs_hist = eval_to_operand path location exp_rhs astate in
-        Formula.pp_operand Format.std_formatter rhs_op;
+        (* Formula.pp_operand Format.std_formatter rhs_op; *)
         let++ astate = PulseArithmetic.prune_binop ~negated bop lhs_op rhs_op astate in
         let hist =
           match (lhs_hist, rhs_hist) with
