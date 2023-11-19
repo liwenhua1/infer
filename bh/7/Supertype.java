@@ -26,17 +26,27 @@ public class Supertype {
 
       public void tt() {
         Object a = new Object();
-        foo (a);
+        foo (a); 
       }
        public void tt2() {
          this.a = new Subtype();
         String x = foo (this.a);
-        x.toString();
+        x.toString(); 
+      }
+
+       public void tt5() {
+         
+        String x = foo (tt4());
+        x.toString(); 
       }
 
       public void tt3() {
         Subtype2 a = new Subtype2();
-        foo (a);
+        foo (a); 
+      }
+
+      public Object tt4() {
+        return new Object();
       }
 
 //     //    public Supertype sre(){
