@@ -1450,7 +1450,7 @@ let analyze specialization
 let checker ?specialization ({InterproceduralAnalysis.proc_desc} as analysis_data) =
   (* Procdesc.pp_with_instrs ~print_types:true F.std_formatter proc_desc; *)
   (* Tenv.pp_per_file F.std_formatter (Tenv.FileLocal analysis_data.tenv); *)
-  print_endline "====================";
+  (* print_endline "===================="; *)
   let open IOption.Let_syntax in
   if should_analyze proc_desc then (
     try
