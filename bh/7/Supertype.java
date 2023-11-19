@@ -1,5 +1,5 @@
 public class Supertype {
-  
+        Subtype a;
      
          public String foo(Object b) 
        //seems input parameter has no type, but constructed parameter has type
@@ -29,8 +29,8 @@ public class Supertype {
         foo (a);
       }
        public void tt2() {
-        Supertype a = new Subtype();
-        String x = foo (a);
+         this.a = new Subtype();
+        String x = foo (this.a);
         x.toString();
       }
 
