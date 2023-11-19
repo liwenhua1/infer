@@ -1259,12 +1259,16 @@ module Atom = struct
     let pp_term = Term.pp_paren pp_var ~needs_paren in
     match atom with
     | LessEqual (t1, t2) ->
+         print_endline "<="; 
         F.fprintf fmt "%a ≤ %a" pp_term t1 pp_term t2
     | LessThan (t1, t2) ->
+          print_endline ">"; 
         F.fprintf fmt "%a < %a" pp_term t1 pp_term t2
     | Equal (t1, t2) ->
+        (* print_endline "="; *)
         F.fprintf fmt "%a = %a" pp_term t1 pp_term t2
     | NotEqual (t1, t2) ->
+      (* print_endline "not ="; *)
         F.fprintf fmt "%a ≠ %a" pp_term t1 pp_term t2
 
 
@@ -2529,6 +2533,7 @@ let and_equal_binop v (bop : Binop.t) x y formula =
 
 
 let prune_atom (atom:Atom.t) (formula, (new_eqs:new_eqs)) =
+  (*entailment?*)
   (*formula -> caller*)
   (* Use [phi] to normalize [atom] here to take previous [prune]s into account. *)
   let* normalized_atoms = Formula.Normalizer.normalize_atom formula.phi atom in
@@ -2716,6 +2721,8 @@ let and_conditions_fold_subst_variables phi0 ~up_to_f:phi_foreign ~init ~f:f_var
     match norm with Unsat -> raise_notrace Contradiction | Sat x -> x
   in
   let add_conditions conditions_foreign init =
+    (* print_endline "=="; *)
+    (* Atom.Set.iter (fun x -> Atom.pp_with_pp_var Var.pp F.std_formatter x) conditions_foreign; *)
     IContainer.fold_of_pervasives_set_fold Atom.Set.fold conditions_foreign ~init
       ~f:(fun (acc_f, phi_new_eqs) atom_foreign ->
         let acc_f, atom = Atom.fold_subst_variables atom_foreign ~init:acc_f ~f:f_subst in

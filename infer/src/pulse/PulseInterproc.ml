@@ -20,6 +20,8 @@ open PulseDomainInterface
 module AddressSet = AbstractValue.Set
 module AddressMap = AbstractValue.Map
 
+(* exception Foo of string *)
+
 (** stuff we carry around when computing the result of applying one pre/post pair *)
 type call_state =
   { astate: AbductiveDomain.t  (** caller's abstract state computed so far *)
@@ -84,6 +86,8 @@ let pp_contradiction fmt = function
       F.fprintf fmt "formals have length %d but actuals have length %d" (List.length formals)
         (List.length actuals)
   | PathCondition ->
+      (* print_endline "contradiction"; *)
+      (*raise (Foo "here") *)
       F.pp_print_string fmt "path condition evaluates to false"
 
 
@@ -119,7 +123,8 @@ exception Contradiction of contradiction
 let raise_if_unsat contradiction = function
   | Sat x ->
       x
-  | Unsat ->
+  | Unsat -> 
+    (* let () = print_endline "unsat" in  *)
       raise_notrace (Contradiction contradiction)
 
 
@@ -1041,12 +1046,14 @@ let apply_summary path callee_proc_name call_location ~callee_summary ~captured_
         
         (* can't make sense of the pre-condition in the current context: give up on that particular
            pre/post pair *)
-           print_endline "??????????????????";
-           pp_contradiction F.std_formatter reason;
+           (* print_endline "xxxxxxx"; *)
+           (* pp_contradiction F.std_formatter reason; *)
         L.d_printfln ~color:Orange "Cannot apply precondition: %a@\n" pp_contradiction reason ;
         log_contradiction reason ;
         (Unsat, Some reason)
-    | result -> (
+    | result -> 
+      (* print_endline "??????????????????"; *)
+      (
       try
         let subst =
           (let open IOption.Let_syntax in
@@ -1060,6 +1067,9 @@ let apply_summary path callee_proc_name call_location ~callee_summary ~captured_
           (* pp_call_state Format.std_formatter call_state; *)
           L.d_printfln "Pre applied successfully, call_state after = %a" pp_call_state call_state ;
           let pre = AbductiveDomain.Summary.get_pre callee_summary in
+          (* AbductiveDomain.Summary.pp F.std_formatter callee_summary;
+          print_endline "";
+          print_endline "=============================================="; *)
           (* BaseDomain.pp F.std_formatter pre; *)
           let* astate =
             check_all_valid path callee_proc_name call_location ~pre call_state
@@ -1125,8 +1135,11 @@ let apply_summary path callee_proc_name call_location ~callee_summary ~captured_
             in
             Some (DynamicTypeNeeded caller_heap_paths)
         in
+
+        (* Option.iter contradiciton ~f:(pp_contradiction F.std_formatter); *)
         (Sat res, contradiciton)
       with Contradiction reason ->
+        
         L.d_printfln "Cannot apply post-condition: %a" pp_contradiction reason ;
         log_contradiction reason ;
         (Unsat, Some reason) )

@@ -1,53 +1,72 @@
 public class Supertype {
-        Subtype a;
-     
-         public String foo(Object b) 
+
+         public Integer foo(int b) 
        //seems input parameter has no type, but constructed parameter has type
        //static //presumes this::Supertype<> achieves this::Supertype<> * res::Objec<>;
        //dynamic //presumes this::Supertype<> achieves this::Supertype<> * res::Objec<>;
        {
-        
-        Supertype q = (Supertype) b;
-        if (b instanceof Subtype ) {
-           {
-            // q.toString();
-            // Subtype2 c = (Subtype2) b;
+      
+        if ( 8 > b ) {
             
-
-            // if (b instanceof Subtype2) {
-            //     Subtype z = (Subtype) b;
-            // }
-            
-            return null;}
-        } else {
-            Subtype c = (Subtype) b;
-        return "null";}
+            return null;
+        }
+        return 100;
        }
 
-      public void tt() {
-        Object a = new Object();
-        foo (a); 
-      }
-       public void tt2() {
-         this.a = new Subtype();
-        String x = foo (this.a);
-        x.toString(); 
-      }
+       public void test5() {
+        Integer k = foo(4);
+        k.toString();
+       }
+     
+      //    public String foo(Object b) 
+      //  //seems input parameter has no type, but constructed parameter has type
+      //  //static //presumes this::Supertype<> achieves this::Supertype<> * res::Objec<>;
+      //  //dynamic //presumes this::Supertype<> achieves this::Supertype<> * res::Objec<>;
+      //  {
+        
+      //   Supertype q = (Supertype) b;
+      //   if (b instanceof Subtype ) {
+      //      {
+      //       // q.toString();
+      //       // Subtype2 c = (Subtype2) b;
+            
 
-       public void tt5() {
+      //       // if (b instanceof Subtype2) {
+      //       //     Subtype z = (Subtype) b;
+      //       // }
+            
+      //       return null;}
+      //   } else {
+      //       // Subtype c = (Subtype) b;
+      //   return "null";}
+      //  }
+
+      // public void tt() {
+      //   Subtype a = new Subtype();
+      //   String b = foo (a);
+      //   b.toString(); 
+      // }
+      //  public void tt2() {
+      //    this.a = new Subtype();
+      //   String x = foo (this.a);
+      //   x.toString(); 
+      // }
+
+      //  public void tt5() {
          
-        String x = foo (tt4());
-        x.toString(); 
-      }
+      //   String x = foo (tt4());
+      //   x.toString(); 
+      // }
 
-      public void tt3() {
-        Subtype2 a = new Subtype2();
-        foo (a); 
-      }
+      // public String tt3() {
+      //   Object a = new Object();
+      //   String b =foo (a);
+      //   return b; 
+      // }
 
-      public Object tt4() {
-        return new Object();
-      }
+      // public Object tt4() {
+      //   return new Object();
+      // }
 
 //     //    public Supertype sre(){
 //     //         return new Supertype();
@@ -93,23 +112,7 @@ public class Supertype {
 
         
        
-    //    public Integer foo(int b) 
-    //    //seems input parameter has no type, but constructed parameter has type
-    //    //static //presumes this::Supertype<> achieves this::Supertype<> * res::Objec<>;
-    //    //dynamic //presumes this::Supertype<> achieves this::Supertype<> * res::Objec<>;
-    //    {
-      
-    //     if ( 8 > b ) {
-    //         Object a = null;
-    //         a.toString();
-    //         return null;
-    //     }
-    //     return 100;
-    //    }
 
-//        public void test5() {
-//         Integer k = foo(4);
-//        }
 
 //        public void wrap() {
 //         test5();
