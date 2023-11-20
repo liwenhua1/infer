@@ -141,6 +141,7 @@ let tenv = match (Tenv.load_global ()) with
               let typ2 = match c with 
                             | None -> raise (Foo "impossible")
                             | Some b -> Formula.ty_name b in 
+              (* Typ.print_name typ2; *)
               let res = PatternMatch.is_subtype tenv typ1 typ2 in 
               res else false
 
