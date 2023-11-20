@@ -320,7 +320,7 @@ let process_instance_info argv formu =
 let process_instance_infos (argvs:(AbstractValue.t * ValueHistory.t) AddressMap.t) = 
     AddressMap.iter (fun a _ -> AbstractValue.pp F.std_formatter a) argvs
 
-let callee_type_constrain argv formu = 
+let call_type_constrain argv formu = 
     (*to do dynamic type*)
     process_instance_info argv formu 
 
@@ -337,18 +337,24 @@ let check_dynamic_type_sat ty1 ty_list =
   (* Utils.print_bool (res1 && res2) ; *)
   res1 && res2 
 
-let caller_type_constrain_sat argv_key argv_caller formu astate = 
+let caller_type_constrain_sat argv_key argv_caller formu (astate:AbductiveDomain.t) = 
   let typ1 = AbductiveDomain.AddressAttributes.get_dynamic_type argv_caller astate in 
    match typ1 with 
   | Some t ->
             let na1 = match Typ.name t with 
                       | None -> raise (Foo "None source type") 
                       | Some a -> a in
-            let callee_constrain = callee_type_constrain argv_key formu in 
+            let callee_constrain = call_type_constrain argv_key formu in 
             if fst callee_constrain then
             let res = check_dynamic_type_sat na1 (snd callee_constrain) in res 
             else true
-  |None ->  true
+  |None -> true  
+    
+    (* let typ2 = AbductiveDomain.AddressAttributes.get_static_type argv_caller astate in 
+            
+              match typ2 with 
+              |None -> raise (Foo "None source type") 
+              |Some a -> let caller_constrain = call_type_constrain argv_caller (astate.path_condition:Formula.t) in  *)
 
 
 let conjoin_callee_arith pre_or_post callee_path_condition (call_state:call_state) =
