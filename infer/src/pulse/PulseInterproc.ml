@@ -374,11 +374,9 @@ let conjoin_callee_arith pre_or_post callee_path_condition (call_state:call_stat
       
   
       (* AddressMap.pp ~pp_value:(fun fmt (addr, _) -> AbstractValue.pp fmt addr) F.std_formatter call_state.subst;  *)
-        let r = Formula.and_callee_pre call_state.subst call_state.astate.path_condition
-          ~callee:callee_path_condition in 
-          (match r with  
-          | Unsat -> r 
-          | Sat _ ->r )
+        Formula.and_callee_pre call_state.subst call_state.astate.path_condition
+          ~callee:callee_path_condition 
+          
         |> raise_if_unsat PathCondition
     | `Post ->
         Formula.and_callee_post call_state.subst call_state.astate.path_condition

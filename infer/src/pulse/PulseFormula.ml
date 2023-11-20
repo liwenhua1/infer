@@ -1259,10 +1259,10 @@ module Atom = struct
     let pp_term = Term.pp_paren pp_var ~needs_paren in
     match atom with
     | LessEqual (t1, t2) ->
-         print_endline "<="; 
+         (* print_endline "<=";  *)
         F.fprintf fmt "%a ≤ %a" pp_term t1 pp_term t2
     | LessThan (t1, t2) ->
-          print_endline ">"; 
+          (* print_endline ">";  *)
         F.fprintf fmt "%a < %a" pp_term t1 pp_term t2
     | Equal (t1, t2) ->
         (* print_endline "="; *)
