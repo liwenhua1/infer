@@ -20,7 +20,7 @@ open PulseDomainInterface
 module AddressSet = AbstractValue.Set
 module AddressMap = AbstractValue.Map
 
-(* exception Foo of string *)
+exception Foo of string
 
 (** stuff we carry around when computing the result of applying one pre/post pair *)
 type call_state =
@@ -310,21 +310,75 @@ let materialize_pre_for_globals path call_location ~pre call_state =
       materialize_pre_from_address ~pre ~addr_pre ~addr_hist_caller call_state )
 
 
-let conjoin_callee_arith pre_or_post callee_path_condition call_state =
+
+let process_instance_info argv formu = 
+  let res = Formula.get_all_instance_constrains argv formu in 
+  match res with 
+  |([],[]) -> (false,res)
+  |_ -> (true, res)
+
+let process_instance_infos (argvs:(AbstractValue.t * ValueHistory.t) AddressMap.t) = 
+    AddressMap.iter (fun a _ -> AbstractValue.pp F.std_formatter a) argvs
+
+let callee_type_constrain argv formu = 
+    (*to do dynamic type*)
+    process_instance_info argv formu 
+
+let check_dynamic_type_sat ty1 ty_list = 
+  let tenv = match (Tenv.load_global ()) with 
+    | Some t -> t 
+    | None -> Tenv.create ()
+  in
+  let (yes,no) = ty_list in 
+  let not_instance = List.map no ~f:(fun x -> match Typ.name x with |Some a -> a | None -> raise (Foo "not Typ.name")) in 
+  let yes_instance = List.map yes ~f:(fun x -> match Typ.name x with |Some a -> a | None -> raise (Foo "not Typ.name")) in 
+  let res1 = List.fold not_instance ~init:(true) ~f:(fun acc x -> acc && if PatternMatch.is_subtype tenv ty1 x then false else true) in 
+  let res2 = List.fold yes_instance ~init:(true) ~f:(fun acc x -> acc && if PatternMatch.is_subtype tenv ty1 x then true else false) in
+  (* Utils.print_bool (res1 && res2) ; *)
+  res1 && res2 
+
+let caller_type_constrain_sat argv_key argv_caller formu astate = 
+  let typ1 = AbductiveDomain.AddressAttributes.get_dynamic_type argv_caller astate in 
+   match typ1 with 
+  | Some t ->
+            let na1 = match Typ.name t with 
+                      | None -> raise (Foo "None source type") 
+                      | Some a -> a in
+            let callee_constrain = callee_type_constrain argv_key formu in 
+            if fst callee_constrain then
+            let res = check_dynamic_type_sat na1 (snd callee_constrain) in res 
+            else true
+  |None ->  true
+
+
+let conjoin_callee_arith pre_or_post callee_path_condition (call_state:call_state) =
   let open PulseResult.Let_syntax in
   (* pp_call_state F.std_formatter call_state; *)
   (* Formula.pp F.std_formatter callee_path_condition; *)
-  (* print_endline "/////////////////";
-  AddressMap.pp ~pp_value:(fun fmt (addr, _) -> AbstractValue.pp fmt addr) F.std_formatter call_state.subst; *)
+  (* print_endline "/////////////////";*)
+  
   L.d_printfln "applying callee path condition: (%a)[%a]" Formula.pp callee_path_condition
     (AddressMap.pp ~pp_value:(fun fmt (addr, _) -> AbstractValue.pp fmt addr))
     call_state.subst ;
-    
+    (* pp_call_state F.std_formatter call_state; *)
   let subst, path_condition, new_eqs =
     match pre_or_post with
-    | `Pre ->
-        Formula.and_callee_pre call_state.subst call_state.astate.path_condition
-          ~callee:callee_path_condition
+    | `Pre ->  
+      let type_checking = AddressMap.fold (fun x _ acc -> acc && caller_type_constrain_sat x (fst (AddressMap.find x call_state.subst)) callee_path_condition call_state.astate) call_state.subst true in 
+      (* Utils.print_bool type_checking; *)
+      if not (type_checking) then  raise_notrace (Contradiction PathCondition) else
+
+      (* if (Language.curr_language_is Java) then  
+          if raise_notrace (Contradiction PathCondition) else *)
+      
+      
+  
+      (* AddressMap.pp ~pp_value:(fun fmt (addr, _) -> AbstractValue.pp fmt addr) F.std_formatter call_state.subst;  *)
+        let r = Formula.and_callee_pre call_state.subst call_state.astate.path_condition
+          ~callee:callee_path_condition in 
+          (match r with  
+          | Unsat -> r 
+          | Sat _ ->r )
         |> raise_if_unsat PathCondition
     | `Post ->
         Formula.and_callee_post call_state.subst call_state.astate.path_condition

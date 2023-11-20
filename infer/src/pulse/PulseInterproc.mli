@@ -59,3 +59,8 @@ val apply_summary :
     - otherwise, the result is a new abstract state, an optional return value, and a substitution
       [callee_abstract_value -> caller_abstract_value] mapping callee's abstract values to what they
       became in the new (caller) state *)
+
+  (* val process_instance_info: AbstractValue.t ->
+        Formula.t ->
+        bool * (Typ.t list * Typ.t list)
+  val process_instance_infos: (AbstractValue.t * ValueHistory.t) AddressMap.t -> unit *)

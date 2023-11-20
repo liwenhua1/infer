@@ -75,3 +75,90 @@ Called from Absint__AbstractInterpreter.MakeWTONode.exec_wto_partition in file "
 Called from Absint__AbstractInterpreter.AbstractInterpreterCommon.make_compute_post_including_exceptional in file "src/absint/AbstractInterpreter.ml", line 665, characters 18-86
 Called from Pulselib__Pulse.analyze in file "src/pulse/Pulse.ml", line 1359, characters 6-93
 Called from Pulselib__Pulse.checker in file "src/pulse/Pulse.ml", line 1447, characters 31-57
+
+{ v3 -> v4, v4 -> v7, v5 -> v5 }
+conditions: (empty) phi: linear_eqs: v7 = a1 +1
+                                            && term_eqs: Object.<init>()([v7])=v9∧[a1 +1]=v7
+                                            && intervals: v7≥1
+
+
+conditions:  {[v11] = 0}
+                                                                phi: 
+                                                                linear_eqs: 
+                                                                v11 = 0 ∧ v13 = 4
+                                                                && term_eqs: 
+                                                                0=v11
+                                                                ∧4=v13
+                                                                ∧((v4 instanceof Subtype))=v11
+                                                                && intervals: 
+                                                                v11=0 ∧ v13=4
+                                                                && atoms: 
+                                                                {(v4 instanceof Subtype) = 0}
+{ v3 -> v4, v4 -> v7, v5 -> v5 }
+conditions: (empty)
+phi: linear_eqs: v7 = a1 +1 && term_eqs: Object.<init>()([v7])=v9∧[a1 +1]=v7 && intervals: v7≥1
+conditions: {[v7] ≠ 0}
+phi: linear_eqs: v8 = 0
+     && term_eqs: 0=v8∧((v4 instanceof Subtype))=v7
+     && intervals: v7≠0 ∧ v8=null
+     && atoms: {[v7] ≠ 0}
+
+Supertype.tt
+1 disjuncts:
+#0: (conditions: {[v10] = 0}
+     phi: linear_eqs: v7 = a1 +1 ∧ v10 = 0 ∧ v12 = 4
+          && term_eqs: 0=v10∧4=v12∧Object.<init>()([v7])=v9∧String String.toString()([v11])=v16
+                       ∧[a1 +1]=v7∧((v7 instanceof Subtype))=v10
+          && intervals: v7≥1 ∧ v10=0 ∧ v12=4
+          && atoms: {(v7 instanceof Subtype) = 0}
+     { roots={ &this=v1 };
+       mem  ={ v1 -> { * -> v4 },
+               v2 -> { * -> v11 },
+               v3 -> { * -> v7 },
+               v4 -> { * -> v5 },
+               v7 -> { * -> v8 },
+               v11 -> { * -> v15, __infer_model_string_length -> v12 },
+               v17 -> { * -> v16 } };
+       attrs={ v1 -> { MustBeValid(, None, t=0) },
+               v2 -> { s&b (variable `b` declared here at line 45 :t0 ) at line 48,
+                       MustBeValid(, None, t=9),
+                       WrittenTo (9, ) },
+               v3 -> { s&a (variable `a` declared here at line 45 :t0 ) at line 47,
+                       MustBeValid(, None, t=3),
+                       WrittenTo (3, ) },
+               v4 -> { DynamicType Supertype, SourceFile [None], MustBeValid(, None, t=0) },
+               v7 -> { DynamicType Object2, SourceFile [None],
+                       MustBeValid(, None, t=2),
+                       StaticType class java.lang.Object,
+                       UnknownEffect(function `Object.<init>()` with no summary,
+                                     in call to `Object2.<init>()` at line 46 :t2
+                                     [in call to function `Object.<init>()` with no summary at line 1 :t2
+                                      [] ]
+                                     ) },
+               v11 -> { ConstString (null),
+                        MustBeValid(, None, t=14),
+                        UnknownEffect(function `String String.toString()` with no summary,
+                                      in call to function `String String.toString()` with no summary at line 48 :t15
+                                      [] ) },
+               v16 -> { PropagateTaintFrom([{v= v11}]), ReturnedFromUnknown([v11]) },
+               v17 -> { MustBeValid(, None, t=16), WrittenTo (16, ) } };}
+     PRE=[{ roots={ &this=v1 };
+            mem  ={ v1 -> { * -> v4 }, v4 -> { * -> v5 }, v5 -> { } };
+            attrs={ v1 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                    v4 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) } };}]
+     need_closure_specialization=false
+     need_dynamic_type_specialization={ v11 }
+     skipped_calls={ Object.<init>() -> call to skipped function occurs here,
+                     String String.toString() -> call to skipped function occurs here }
+     Topl={len=0;content=
+            [  ]},
+    conditions= [] timestamp= 22)
+
+Non-disj state:
+  copy map: { }, parameter map: { }, destructor checked: { }, captured: { }, 
+  locked: false,
+  loads: ({ n$2 -> { this }, n$4 -> { a }, n$6 -> { b } },
+  { b -> { line 48 -> { 13 } }, a -> { line 47 -> { 7 } }, this -> { line 47 -> { 5 } } }),
+  passed to: { b -> { String String.toString() -> { line 48 -> { 15 } } },
+               a -> { String Supertype.foo(Object) -> { line 47 -> { 8 } } },
+               this -> { String Supertype.foo(Object) -> { line 47 -> { 8 } } } }process analysis end

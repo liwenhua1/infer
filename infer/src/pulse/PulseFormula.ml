@@ -1268,7 +1268,7 @@ module Atom = struct
         (* print_endline "="; *)
         F.fprintf fmt "%a = %a" pp_term t1 pp_term t2
     | NotEqual (t1, t2) ->
-      (* print_endline "not ="; *)
+     
         F.fprintf fmt "%a ≠ %a" pp_term t1 pp_term t2
 
 
@@ -1632,9 +1632,13 @@ type new_eq = EqZero of Var.t | Equal of Var.t * Var.t
 
 let pp_new_eq fmt = function
   | EqZero v ->
+    (* Var.pp fmt v; *)
+    (* print_endline "=0"; *)
       F.fprintf fmt "%a=0" Var.pp v
   | Equal (v1, v2) ->
-      F.fprintf fmt "%a=%a" Var.pp v1 Var.pp v2
+    (* Var.pp fmt v1; Var.pp fmt v2 *)
+    (* print_endline "v1=v2"; *)
+      F.fprintf fmt "%a=%a" Var.pp v1 Var.pp v2 
 
 
 type new_eqs = new_eq RevList.t
@@ -1716,6 +1720,7 @@ module Formula = struct
   let pp_with_pp_var pp_var fmt
       ( ({var_eqs; linear_eqs; term_eqs; tableau; intervals; atoms}
       [@warning "+missing-record-field-pattern"] ) as phi ) =
+     
     let is_first = ref true in
     let pp_if condition header pp fmt x =
       let pp_and fmt = if not !is_first then F.fprintf fmt "@;&& " else is_first := false in
@@ -1729,12 +1734,15 @@ module Formula = struct
        "linear_eqs"
        (pp_var_map ~arrow:" = " (LinArith.pp pp_var) pp_var) )
       fmt linear_eqs ;
+      
     (pp_if (not (Term.VarMap.is_empty term_eqs)) "term_eqs" (Term.VarMap.pp_with_pp_var pp_var))
       fmt term_eqs ;
+      
     (pp_if (not (Var.Map.is_empty tableau)) "tableau" (Tableau.pp pp_var)) fmt tableau ;
     (pp_if (not (Var.Map.is_empty intervals)) "intervals" (pp_var_map ~arrow:"" CItv.pp pp_var))
       fmt intervals ;
     (pp_if (not (Atom.Set.is_empty atoms)) "atoms" (Atom.Set.pp_with_pp_var pp_var)) fmt atoms ;
+    
     F.pp_close_box fmt ()
 
 
@@ -2533,10 +2541,30 @@ let and_equal_binop v (bop : Binop.t) x y formula =
 
 
 let prune_atom (atom:Atom.t) (formula, (new_eqs:new_eqs)) =
+  (*new_eqs empty list*)
+  (* Utils.list_printer (fun x -> pp_new_eq F.std_formatter x) (RevList.to_list new_eqs) ; *)
+  (* print_endline "ATOM";
+  Atom.pp_with_pp_var Var.pp F.std_formatter atom;
+  print_endline "";
+  print_endline "atom end";
+  print_endline "==================================="; 
+  print_endline "Formual";
+  pp_with_pp_var Var.pp  F.std_formatter formula; 
+  print_endline "";
+  print_endline "Formual end"; *)
+  (*formula from caller*)
   (*entailment?*)
   (*formula -> caller*)
   (* Use [phi] to normalize [atom] here to take previous [prune]s into account. *)
-  let* normalized_atoms = Formula.Normalizer.normalize_atom formula.phi atom in
+ 
+  let* normalized_atoms = 
+    
+   let r = Formula.Normalizer.normalize_atom formula.phi atom 
+  in r in
+   (* match r with 
+  |Unsat -> print_endline "Unsat" ;r 
+  |Sat _ -> print_endline "Sat" ;r
+  in *)
   let+ phi, new_eqs =
     Formula.Normalizer.and_normalized_atoms (formula.phi, new_eqs) normalized_atoms
   in
@@ -2544,7 +2572,9 @@ let prune_atom (atom:Atom.t) (formula, (new_eqs:new_eqs)) =
     List.fold normalized_atoms ~init:formula.conditions ~f:(fun conditions atom ->
         Atom.Set.add atom conditions )
   in
-  ({phi; conditions}, new_eqs)
+    ({phi; conditions}, new_eqs) 
+
+    
 
 
 let prune_atoms atoms formula_new_eqs =
@@ -2709,8 +2739,11 @@ let and_fold_subst_variables formula0 ~up_to_f:formula_foreign ~init ~f:f_var =
 
 
 let and_conditions_fold_subst_variables phi0 ~up_to_f:phi_foreign ~init ~f:f_var =
-  (* pp F.std_formatter phi0;
-  pp F.std_formatter phi_foreign; *)
+  (* pp F.std_formatter phi0;  *)
+  (*phi0 = caller*)
+  (* pp F.std_formatter phi_foreign; *)
+    (* phi_foreign = callee *)
+  (* print_endline "======================="; *)
   let f_subst acc v =
     let acc', v' = f_var acc v in
     (acc', VarSubst v')
