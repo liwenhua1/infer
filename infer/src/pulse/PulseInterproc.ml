@@ -324,37 +324,85 @@ let call_type_constrain argv formu =
     (*to do dynamic type*)
     process_instance_info argv formu 
 
-let check_dynamic_type_sat ty1 ty_list = 
-  let tenv = match (Tenv.load_global ()) with 
-    | Some t -> t 
-    | None -> Tenv.create ()
-  in
+let type_list_conversion alist =
+  List.map alist ~f:(fun x -> match Typ.name x with |Some a -> a | None -> raise (Foo "not Typ.name")) 
+
+let find_last_subclass tenv start newlist = 
+    
+    let compare_sub (a,acc) b = if not(PatternMatch.is_subtype tenv a b) && not(PatternMatch.is_subtype tenv b a) then (a, acc && false) else if PatternMatch.is_subtype tenv a b
+                              then (a, true && acc) else (b, true && acc) in 
+    let res = List.fold newlist ~init:(start, true) ~f:compare_sub in 
+    res
+
+let check_not_instance tenv start no_ins_list = 
+  
+      let rec helper is_possible list = 
+        match list with
+        | [] -> (is_possible, [])
+        | x::xs -> if not(PatternMatch.is_subtype tenv start x) && not(PatternMatch.is_subtype tenv x start) then helper true xs else if PatternMatch.is_subtype tenv start x then
+                      (false, []) else let res = helper true xs in (fst res, x:: snd res ) in
+      helper true no_ins_list 
+
+let check_static_type_sat start lists tenv= 
+  let (yes,no) = lists in 
+  let res1 = find_last_subclass tenv start yes in 
+  (* Typ.print_name (fst res1); *)
+  if not (snd res1) then (false,(start,[])) 
+  else let least_sub_class = fst res1 in 
+       let not_instance = check_not_instance tenv least_sub_class no in 
+       if not (fst not_instance) then (false,(start,[])) else (true, (start, snd not_instance))
+
+
+
+
+let check_dynamic_type_sat ty1 ty_list tenv= 
+ 
   let (yes,no) = ty_list in 
-  let not_instance = List.map no ~f:(fun x -> match Typ.name x with |Some a -> a | None -> raise (Foo "not Typ.name")) in 
-  let yes_instance = List.map yes ~f:(fun x -> match Typ.name x with |Some a -> a | None -> raise (Foo "not Typ.name")) in 
-  let res1 = List.fold not_instance ~init:(true) ~f:(fun acc x -> acc && if PatternMatch.is_subtype tenv ty1 x then false else true) in 
-  let res2 = List.fold yes_instance ~init:(true) ~f:(fun acc x -> acc && if PatternMatch.is_subtype tenv ty1 x then true else false) in
+  
+  let res1 = List.fold no ~init:(true) ~f:(fun acc x -> acc && if PatternMatch.is_subtype tenv ty1 x then false else true) in 
+  let res2 = List.fold yes ~init:(true) ~f:(fun acc x -> acc && if PatternMatch.is_subtype tenv ty1 x then true else false) in
   (* Utils.print_bool (res1 && res2) ; *)
   res1 && res2 
 
 let caller_type_constrain_sat argv_key argv_caller formu (astate:AbductiveDomain.t) = 
+  let tenv = match (Tenv.load_global ()) with 
+  | Some t -> t 
+  | None -> Tenv.create ()
+  in
+  let callee_constrain = call_type_constrain argv_key formu in 
+  let callee_yes_instance = type_list_conversion (fst (snd (callee_constrain))) in 
+  let callee_not_instance = type_list_conversion (snd (snd (callee_constrain))) in 
+  
   let typ1 = AbductiveDomain.AddressAttributes.get_dynamic_type argv_caller astate in 
    match typ1 with 
   | Some t ->
             let na1 = match Typ.name t with 
                       | None -> raise (Foo "None source type") 
                       | Some a -> a in
-            let callee_constrain = call_type_constrain argv_key formu in 
             if fst callee_constrain then
-            let res = check_dynamic_type_sat na1 (snd callee_constrain) in res 
+            let res = check_dynamic_type_sat na1 (callee_yes_instance, callee_not_instance ) tenv in res 
             else true
-  |None -> true  
-    
-    (* let typ2 = AbductiveDomain.AddressAttributes.get_static_type argv_caller astate in 
+  |None -> 
+    (* AbstractValue.pp F.std_formatter argv_caller;
+    AbductiveDomain.pp F.std_formatter astate; *)
+    let typ2 = AbductiveDomain.AddressAttributes.get_static_type argv_caller astate in 
             
               match typ2 with 
-              |None -> raise (Foo "None source type") 
-              |Some a -> let caller_constrain = call_type_constrain argv_caller (astate.path_condition:Formula.t) in  *)
+              |None -> true
+              |Some a ->  
+                          (* Typ.print_name a;
+                          print_endline "//////////////////"; *)
+                          let caller_constrain = call_type_constrain argv_caller (astate.path_condition:Formula.t) in 
+                          let caller_yes_instance = type_list_conversion (fst (snd (caller_constrain))) in 
+                          let caller_not_instance = type_list_conversion (snd (snd (caller_constrain))) in 
+                          let join_constrain = ((caller_yes_instance@callee_yes_instance),caller_not_instance@callee_not_instance) in 
+                          (* Utils.list_printer (fun x-> Typ.print_name x) (fst join_constrain); *)
+                          (* print_endline "============"; *)
+                          (* Utils.list_printer (fun x-> Typ.print_name x) (snd join_constrain); *)
+                          (* print_endline "**************"; *)
+                          let join_constrain_sat = check_static_type_sat a join_constrain tenv in 
+                          (* Utils.print_bool (fst join_constrain_sat);  *)
+                          (fst join_constrain_sat)
 
 
 let conjoin_callee_arith pre_or_post callee_path_condition (call_state:call_state) =

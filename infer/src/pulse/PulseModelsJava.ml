@@ -152,8 +152,8 @@ let check_not_instance tenv start no_ins_list =
   let rec helper is_possible list = 
     match list with
     | [] -> (is_possible, [])
-    | x::xs -> if not(PatternMatch.is_subtype tenv start x) && not(PatternMatch.is_subtype tenv x start) then helper true xs else if PatternMatch.is_subtype tenv x start then
-                 let res = helper true xs in (fst res, x:: snd res ) else (false, []) in
+    | x::xs -> if not(PatternMatch.is_subtype tenv start x) && not(PatternMatch.is_subtype tenv x start) then helper true xs else if PatternMatch.is_subtype tenv start x then
+      (false, []) else let res = helper true xs in (fst res, x:: snd res ) in
   helper true no_ins_list 
 
 
@@ -215,9 +215,10 @@ let java_cast (argv, hist) typeexpr : model =
                         | _ ->
                           astate |> Basic.ok_continue)
         |None ->  
-          let name1 = match AbductiveDomain.AddressAttributes.get_static_type argv astate with 
-                          |Some a -> a
-                          |None ->  raise (Foo "None source type") in   
+          match AbductiveDomain.AddressAttributes.get_static_type argv astate with 
+                |None ->  astate |> Basic.ok_continue
+                |Some a -> let name1 = a in
+                          
         (* AbductiveDomain.pp Format.std_formatter astate; *)
         let (instance,not_instance) = Formula.get_all_instance_constrains argv astate.path_condition in 
         let not_instance = List.map not_instance ~f:(fun x -> match Typ.name x with |Some a -> a | None -> raise (Foo "not Typ.name")) in 

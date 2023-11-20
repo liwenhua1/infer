@@ -1698,6 +1698,17 @@ module Summary = struct
   let leq = leq
 
   let get_pre = get_pre
+  let get_dynamic_type v astate =
+    SafeAttributes.get_dynamic_type (CanonValue.canon' astate v) astate
+
+
+  let get_dynamic_type_source_file v astate =
+    SafeAttributes.get_dynamic_type_source_file (CanonValue.canon' astate v) astate
+
+
+  let get_static_type v astate = SafeAttributes.get_static_type (CanonValue.canon' astate v) astate
+
+  
 
   let get_post = get_post
 

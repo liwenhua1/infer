@@ -372,6 +372,12 @@ module Summary : sig
 
   val get_topl : summary -> PulseTopl.state
 
+  val get_dynamic_type : AbstractValue.t -> summary -> Typ.t option
+
+  val get_dynamic_type_source_file : AbstractValue.t -> summary -> (Typ.t * SourceFile.t option) option
+
+  val get_static_type : AbstractValue.t -> summary -> Typ.Name.t option
+
   val need_closure_specialization : summary -> bool
 
   val heap_paths_that_need_dynamic_type_specialization :

@@ -10,6 +10,8 @@ open PulseBasicInterface
 module AbductiveDomain = PulseAbductiveDomain
 module AccessResult = PulseAccessResult
 
+exception Foo of string
+
 let map_path_condition_common ~f astate =
   let open SatUnsat.Import in
   let* phi, new_eqs = f astate.AbductiveDomain.path_condition in
@@ -109,8 +111,51 @@ let prune_eq_one v astate =
 
 let is_known_zero astate v = Formula.is_known_zero astate.AbductiveDomain.path_condition v
 
+(* let instance_check argv (summary:AbductiveDomain.Summary.t)= 
+    let staic_ty = AbductiveDomain.Summary.get_static_type argv in 
+    match staic_ty with 
+    | None -> 
+
+let is_instanceof_var var (summary:AbductiveDomain.Summary.t) = 
+  let path = AbductiveDomain.Summary.get_path_condition summary in 
+  
+
+  let iter_atom atom (vv, r) = 
+    match atom with 
+    | Atom.Equal (Linear a, _)->  if Var.equal (linear_var a) vv then (vv, false) else (vv, r)
+    | Atom.NotEqual (Linear a, _)->  if Var.equal (linear_var a) vv then (vv, true) else (vv, r)
+    | _ ->  (vv, r) in 
+let checking_instanceof_var var (formula:t) static_type = 
+  let is_instance v atoms = 
+    Atom.Set.fold iter_atom atoms (v,false) in  *)
+
+let check_instance argv path summary= 
+let tenv = match (Tenv.load_global ()) with 
+            | Some t -> t 
+            | None -> Tenv.create ()
+          in
+  let (a,b,c) = Formula.checking_instanceof_var argv path in 
+  if (a) then let typ1 = match AbductiveDomain.Summary.get_static_type b summary with 
+                            | None -> raise (Foo "impossible")
+                            | Some a -> a in 
+              let typ2 = match c with 
+                            | None -> raise (Foo "impossible")
+                            | Some b -> Formula.ty_name b in 
+              let res = PatternMatch.is_subtype tenv typ1 typ2 in 
+              res else false
+
+
+
+
+
+
 let is_manifest summary =
+  (* AbductiveDomain.Summary.pp Format.std_formatter summary; *)
+  let path = AbductiveDomain.Summary.get_path_condition summary in 
+
+
   Formula.is_manifest (AbductiveDomain.Summary.get_path_condition summary) ~is_allocated:(fun v ->
+      if check_instance v path summary then true else
       AbductiveDomain.Summary.is_heap_allocated summary v
       || AbductiveDomain.Summary.get_must_be_valid v summary |> Option.is_some )
 

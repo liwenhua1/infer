@@ -64,3 +64,16 @@ val apply_summary :
         Formula.t ->
         bool * (Typ.t list * Typ.t list)
   val process_instance_infos: (AbstractValue.t * ValueHistory.t) AddressMap.t -> unit *)
+
+val process_instance_info: AbstractValue.t -> Formula.t -> bool * (Typ.t list * Typ.t list)
+ 
+val process_instance_infos: (AbstractValue.t * ValueHistory.t) AbstractValue.Map.t -> unit
+ 
+val call_type_constrain : AbstractValue.t -> Formula.t -> bool * (Typ.t list * Typ.t list)
+
+val check_static_type_sat: Typ.name ->
+  Typ.name list * Typ.name list -> Tenv.t -> bool * (Typ.name * Typ.name list)
+
+val check_dynamic_type_sat : Typ.name -> Typ.name list * Typ.name list -> Tenv.t -> bool
+ 
+val caller_type_constrain_sat : AbstractValue.t -> AbstractValue.t -> Formula.t -> AbductiveDomain.t -> bool

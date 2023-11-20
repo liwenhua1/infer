@@ -2352,6 +2352,10 @@ let pp_with_pp_var pp_var fmt {conditions; phi} =
 
 let pp = pp_with_pp_var Var.pp
 
+let linear_var liva = 
+  match LinArith.get_as_var liva with
+  |Some a -> a
+  |None -> raise (Foo "not a linear bvar") 
 
 let get_all_instance_constrains (argv:Var.t) (path:t) = 
   let yes = ref [] in 
@@ -2359,10 +2363,7 @@ let get_all_instance_constrains (argv:Var.t) (path:t) =
   let condition = path.conditions in 
   let ph = path.phi in 
   let term_eq = ph.term_eqs in 
-  let linear_var liva = 
-    match LinArith.get_as_var liva with
-    |Some a -> a
-    |None -> raise (Foo "not a linear bvar") in  
+ 
   let iter_atom atom (vv, r) = 
     match atom with 
     | Atom.Equal (Linear a, _)->  if Var.equal (linear_var a) vv then (vv, false) else (vv, r)
@@ -2382,6 +2383,37 @@ let get_all_instance_constrains (argv:Var.t) (path:t) =
      
   Term.VarMap.iter find_instance term_eq;
   (!yes,!no)
+let ty_name t = 
+  match Typ.name t with 
+  |None -> raise (Foo "not java type")
+  |Some a -> a
+let is_intanceof_var var term_eqs atom= 
+  
+  let find_instance argv term var acc= 
+    let (a,b,c) = acc in 
+    match term with 
+    
+    | Term.IsInstanceOf (abs, ty) -> if Var.equal argv var then (a || true,abs,Some ty) else (false || a,b,c)
+    | _ -> (false || a,b,c) in
+
+
+  match atom with 
+ 
+  | Atom.NotEqual (Linear a, Const b)-> if Var.equal (linear_var a) var && Q.is_zero b then Term.VarMap.fold (find_instance (linear_var a)) term_eqs (false,var,None) else (false,var,None)
+
+  (* | Atom. (Linear a, _)->  if Var.equal (linear_var a) vv then (vv, true) else (vv, r) *)
+  | _ -> (false,var,None)
+
+let checking_instanceof_var var (formula:t)  = 
+  
+  let condi = formula.conditions in 
+  let ph = formula.phi in 
+  let term_eq = ph.term_eqs in 
+          
+  let res = Atom.Set.fold (fun x (a,b,c)-> if a then (a,b,c) else  (is_intanceof_var var term_eq x) ) condi (false, var, None)
+     in res
+
+
   
 
 let and_atom atom formula =

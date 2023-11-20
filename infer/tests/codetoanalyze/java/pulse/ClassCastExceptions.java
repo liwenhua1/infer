@@ -38,7 +38,7 @@ public class ClassCastExceptions {
 
   public void classCastExceptionBad() {
     SuperClass a = new SubClassA();
-    SubClassB b = (SubClassB) a;
+    SubClassB b = (SubClassB) a; //cast err
   }
 
   public int classCastExceptionImplementsInterfaceCalleeOk(MyInterface i) {
@@ -47,7 +47,7 @@ public class ClassCastExceptions {
   }
 
   public int classCastExceptionImplementsInterfaceBad() {
-    return classCastExceptionImplementsInterfaceCalleeOk(new AnotherImplementationOfInterface());
+    return classCastExceptionImplementsInterfaceCalleeOk(new AnotherImplementationOfInterface());//cast err
   }
 
   public String getURL() {
@@ -60,7 +60,7 @@ public class ClassCastExceptions {
     connection.disconnect();
   }
 
-  public void castingArrayOfPrimitiveTypeOk(int[] a) {
-    int[] b = (int[]) a;
+  public void castingArrayOfPrimitiveTypeOk(String a) {
+    String b = (String) a;
   }
 }
