@@ -25,7 +25,7 @@ public class Supertype {
        //dynamic //presumes this::Supertype<> achieves this::Supertype<> * res::Objec<>;
        {
         
-        Supertype q = (Supertype) b;
+        // Supertype q = (Supertype) b;
         if (b instanceof Subtype ) {
            {
             // q.toString();
@@ -35,18 +35,28 @@ public class Supertype {
             // if (b instanceof Subtype2) {
             //     Subtype z = (Subtype) b;
             // }
-            
             return null;}
         } else {
             // Subtype c = (Subtype) b;
         return "null";}
        }
 
-      public void tt() {
-        Object a = new Object();
-       foo (a); //cast err 1 disj
+        public void tt3(Object a) {
+        
+        String b =foo (a); //three disj all latent
+        b.toString();
+        }
+      public void tt4(Subtype a) {
+        
+        tt3 (a); //1 disj cast err
         
       }
+
+      // public void tt() {
+      //   Object a = new Object();
+      //  foo (a); //cast err 1 disj
+        
+      // }
       //  public void tt2() {
       //    Subtype a = new Subtype();
       //    foo (a); // cast err 1 disj
@@ -60,18 +70,7 @@ public class Supertype {
       //   x.toString(); 
       // }
 
-      public void tt3(Object a) {
-        
-        String b =foo (a); //three disj all latent
-        b.toString();
-        
-      }
-
-      public void tt4(Subtype a) {
-        
-        tt3 (a); //1 disj cast err
-        
-      }
+     
 
       // public void tt5(Subtype a) {
       //   if (a instanceof Object) {
