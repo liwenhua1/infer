@@ -2413,7 +2413,48 @@ let checking_instanceof_var is_instance var (formula:t)  =
   let res = Atom.Set.fold (fun x (a,b,c)-> if a then (a,b,c) else  (is_intanceof_var is_instance var term_eq x) ) condi (false, var, None)
      in res
 
+let get_all_instance_pvar formu = 
+      let ph = formu.phi in 
+      let term_eq = ph.term_eqs in 
+      Term.VarMap.fold (fun x _ acc -> match x with 
+                                        | Term.IsInstanceOf (abs, _) -> abs :: acc 
+                                        | _ -> acc
+       
+       ) term_eq []
 
+
+let find_last_subclass tenv start sub_list = 
+        let newlist = List.map sub_list ~f:(fun x -> match Typ.name x with |Some a -> a | None -> raise (Foo "not Typ.name")) in 
+        let compare_sub (a,acc) b = if not(PatternMatch.is_subtype tenv a b) && not(PatternMatch.is_subtype tenv b a) then (a, acc && false) else if PatternMatch.is_subtype tenv a b
+                                  then (a, true && acc) else (b, true && acc) in 
+        let res = List.fold newlist ~init:(start, true) ~f:compare_sub in 
+        res
+      
+
+let check_not_instance tenv start no_ins_list = 
+  
+          let rec helper is_possible list = 
+            match list with
+            | [] -> (is_possible, [])
+            | x::xs -> if not(PatternMatch.is_subtype tenv start x) && not(PatternMatch.is_subtype tenv x start) then helper true xs else if PatternMatch.is_subtype tenv start x then
+              (false, []) else let res = helper true xs in (fst res, x:: snd res ) in
+          helper true no_ins_list 
+
+(* let prune_instance formula =
+      Atom.Set.fold
+        (fun atom _->
+          (* ignore [x≠0] when [x] is known to be allocated: pointers being allocated doesn't make an
+             issue latent and we still need to remember that [x≠0] was tested by the program explicitly
+          *)
+          match Atom.get_as_var_ne_or_gt_zero atom with None -> (false,None) 
+                                                        | Some x -> (false,None)
+                                                        
+                                                        
+                                                        
+                                                        
+                                                        )
+        
+    formula.conditions (false, None) *)
   
 
 let and_atom atom formula =

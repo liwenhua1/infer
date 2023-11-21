@@ -13,6 +13,9 @@ open PulseOperationResult.Import
 
 type t = AbductiveDomain.t
 
+exception Fo of string
+exception Goo of string
+
 let check_addr_access path ?must_be_valid_reason access_mode location (address, history) astate =
   let access_trace = Trace.Immediate {location; history} in
   let* astate =
@@ -270,11 +273,38 @@ let eval_to_operand path location exp astate =
       let++ astate, (value, hist) = eval path Read location exp astate in
       (astate, PulseArithmetic.AbstractValueOperand value, hist)
 
+let need_prune_for_instance astate_value  = 
+  let tenv = match (Tenv.load_global ()) with 
+            | Some t -> t 
+            | None -> Tenv.create ()
+          in
+  let ((astate:AbductiveDomain.t),_) = astate_value in 
+  let (path:Formula.t) = astate.path_condition in 
+  try
+  (let var_list = Formula.get_all_instance_pvar path in 
+  let check var = 
+      let constrains = Formula.get_all_instance_constrains var path in 
+      let static_type = (match AbductiveDomain.AddressAttributes.get_static_type var astate with 
+                            | None -> (match (List.hd (fst constrains)) with | Some a -> Formula.ty_name a | None -> raise (Fo ""))
+                            | Some a -> a) in 
+      let least_subclass = Formula.find_last_subclass tenv static_type (fst constrains) in 
+      if not (snd least_subclass) then (true,astate_value) else 
+        let not_instance = List.map (snd constrains) ~f:(fun x -> match Typ.name x with |Some a -> a | None -> raise (Goo "not Typ.name")) in 
+        let res = Formula.check_not_instance tenv (fst least_subclass) not_instance in 
+        if not (fst res) then (true,astate_value) else (false,astate_value) in
+  List.fold var_list ~init:(false,astate_value) ~f:(fun (acc,_bcc) x -> let (a,b) = check x in (acc||a, b)) )
+  
+  with Fo _ ->  (false,astate_value)
+  
 
-let prune path location ~condition astate =
+
+
+let prune path location ~(condition:Exp.t) astate =
+  (* AbductiveDomain.pp Format.std_formatter astate; *)
   let rec prune_aux ~negated exp astate =
     match (exp : Exp.t) with
     | BinOp ((bop:Binop.t), (exp_lhs:Exp.t), exp_rhs) ->
+       
         let** astate, lhs_op, lhs_hist = eval_to_operand path location exp_lhs astate in
         
         (* Formula.pp_operand Format.std_formatter lhs_op; *)
@@ -296,7 +326,15 @@ let prune path location ~condition astate =
     | exp ->
         prune_aux ~negated (Exp.BinOp (Ne, exp, Exp.zero)) astate
   in
-  prune_aux ~negated:false condition astate
+  let res = prune_aux ~negated:false condition astate in 
+        match PulseOperationResult.sat_ok res with 
+                  | None -> res
+                  | Some a -> let need_prune_instance = need_prune_for_instance a in 
+                              match (fst need_prune_instance) with 
+                              |true -> Unsat
+                              |false ->
+                                 res
+
 
 
 let eval_deref_with_path path ?must_be_valid_reason location exp astate =

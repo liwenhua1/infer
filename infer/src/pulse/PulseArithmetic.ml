@@ -129,7 +129,9 @@ let checking_instanceof_var var (formula:t) static_type =
   let is_instance v atoms = 
     Atom.Set.fold iter_atom atoms (v,false) in  *)
 
-let check_instance argv path summary= 
+let check_instance argv path summary=
+(* print_endline "yes";
+AbstractValue.pp Format.std_formatter argv;  *)
 let tenv = match (Tenv.load_global ()) with 
             | Some t -> t 
             | None -> Tenv.create ()

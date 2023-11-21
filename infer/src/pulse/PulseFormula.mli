@@ -29,6 +29,9 @@ val pp_with_pp_var : (F.formatter -> Var.t -> unit) -> F.formatter -> t -> unit
 (** only used for unit tests *)
 val checking_instanceof_var: bool -> Var.t -> t -> bool * Var.t * Typ.t option
 val ty_name : Typ.t -> Typ.name
+val get_all_instance_pvar : t -> Var.t list
+val find_last_subclass : Tenv.t -> Typ.name -> Typ.t list -> Typ.name * bool
+val check_not_instance : Tenv.t -> Typ.name -> Typ.name list -> bool * Typ.name list
 type function_symbol = Unknown of Var.t | Procname of Procname.t [@@deriving compare, equal]
 
 type operand =

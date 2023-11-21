@@ -1,4 +1,4 @@
-class Object2 extends Object{}
+
 public class Supertype {
 
     //      public Integer foo(int b) 
@@ -25,11 +25,11 @@ public class Supertype {
        //dynamic //presumes this::Supertype<> achieves this::Supertype<> * res::Objec<>;
        {
         
-        Supertype q = (Supertype) b;
+        // Supertype q = (Supertype) b;
         if (b instanceof Subtype ) {
            {
             // q.toString();
-            Subtype2 c = (Subtype2) b;
+            // Subtype c = (Subtype) b;
             
 
             // if (b instanceof Subtype2) {
@@ -38,20 +38,20 @@ public class Supertype {
             
             return null;}
         } else {
-            Subtype c = (Subtype) b;
+            // Subtype c = (Subtype) b;
         return "null";}
        }
 
-      public void tt() {
-        Object a = new Object();
-       foo (a); //cast err 1 disj
+      // public void tt() {
+      //   Object a = new Object();
+      //  foo (a); //cast err 1 disj
         
-      }
-       public void tt2() {
-         Subtype a = new Subtype();
-         foo (a); // cast err 1 disj
+      // }
+      //  public void tt2() {
+      //    Subtype a = new Subtype();
+      //    foo (a); // cast err 1 disj
          
-      }
+      // }
      
 
       //  public void tt5() {
@@ -63,20 +63,21 @@ public class Supertype {
       public void tt3(Object a) {
         
         String b =foo (a); //three disj all latent
+        b.toString();
         
       }
 
       public void tt4(Subtype a) {
         
-        String b =foo (a); //1 disj cast err
+        tt3 (a); //1 disj cast err
         
       }
 
-      public void tt5(Subtype a) {
-        if (a instanceof Object) {
-        String b =foo (a);} //2 disj cast err
-        
-      }
+      // public void tt5(Subtype a) {
+      //   if (a instanceof Object) {
+      //   a.toString();} //2 disj cast err
+      //   else {a.toString();}
+      // }
 
       //  public void tt4() {
       //   Supertype a = new Supertype();

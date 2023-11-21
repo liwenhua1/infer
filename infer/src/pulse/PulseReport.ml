@@ -285,9 +285,10 @@ let report_exec_results tenv proc_desc err_log location results =
   (* print_endline (Location.to_string location); *)
   List.filter_map results ~f:(fun exec_result ->
       match PulseResult.to_result exec_result with (*pulse_result to result*)
-      | Ok post ->
+      | Ok post -> 
           Some post
-      | Error errors -> (
+      | Error errors -> 
+        (
         match report_errors tenv proc_desc err_log location errors with
         | Unsat ->
             L.d_printfln "UNSAT discovered during error reporting" ;
@@ -299,7 +300,8 @@ let report_exec_results tenv proc_desc err_log location results =
                 "report_errors returned None but the result was not a recoverable error"
           | Recoverable (exec_state, _) ->
               Some exec_state )
-        | Sat (Some exec_state) ->
+        | Sat (Some exec_state) -> 
+          
             Some exec_state ) )
 
 

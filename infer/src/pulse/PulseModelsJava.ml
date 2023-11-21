@@ -140,21 +140,6 @@ let add_instance_of_info_succ is_instance argv typ astate =
 
 
 
-let find_last_subclass tenv start sub_list = 
-  let newlist = List.map sub_list ~f:(fun x -> match Typ.name x with |Some a -> a | None -> raise (Foo "not Typ.name")) in 
-  let compare_sub (a,acc) b = if not(PatternMatch.is_subtype tenv a b) && not(PatternMatch.is_subtype tenv b a) then (a, acc && false) else if PatternMatch.is_subtype tenv a b
-                            then (a, true && acc) else (b, true && acc) in 
-  let res = List.fold newlist ~init:(start, true) ~f:compare_sub in 
-  res
-
-let check_not_instance tenv start no_ins_list = 
-  
-  let rec helper is_possible list = 
-    match list with
-    | [] -> (is_possible, [])
-    | x::xs -> if not(PatternMatch.is_subtype tenv start x) && not(PatternMatch.is_subtype tenv x start) then helper true xs else if PatternMatch.is_subtype tenv start x then
-      (false, []) else let res = helper true xs in (fst res, x:: snd res ) in
-  helper true no_ins_list 
 
 
 
@@ -234,8 +219,8 @@ let java_cast (argv, hist) typeexpr : model =
           let name2 = match (Typ.name typ) with
             | None -> raise (Foo "None target type")
             | Some a -> a in
-            let (yinstance, b) = find_last_subclass tenv name1 instance in 
-            if b then let ninstance = check_not_instance tenv yinstance not_instance in 
+            let (yinstance, b) = Formula.find_last_subclass tenv name1 instance in 
+            if b then let ninstance = Formula.check_not_instance tenv yinstance not_instance in 
                 if (fst ninstance) then 
                   let res1 =  List.fold not_instance ~init:true ~f:(fun acc x -> acc && if PatternMatch.is_subtype tenv name2 x then false else true) in 
                   let res2 = PatternMatch.is_subtype tenv yinstance name2 in
@@ -252,8 +237,7 @@ let java_cast (argv, hist) typeexpr : model =
                               exe1 @ exe2
                           (* let () =(print_endline ("possible cast error detected at "^ (Location.to_string location))) in  *)
                          (* astate |> Basic.ok_continue *)
-                         else let () = print_endline ("no cast error at "^ (Location.to_string location)) 
-                in
+                         else 
                          astate |> Basic.ok_continue
                 else 
                   let () =print_endline ("infeasible path so cast is safe at "^ (Location.to_string location)) in
