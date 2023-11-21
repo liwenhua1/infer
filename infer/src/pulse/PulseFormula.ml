@@ -2387,7 +2387,7 @@ let ty_name t =
   match Typ.name t with 
   |None -> raise (Foo "not java type")
   |Some a -> a
-let is_intanceof_var var term_eqs atom= 
+let is_intanceof_var is_instance var term_eqs atom= 
   
   let find_instance argv term var acc= 
     let (a,b,c) = acc in 
@@ -2397,20 +2397,20 @@ let is_intanceof_var var term_eqs atom=
     | _ -> (false || a,b,c) in
 
 
-  match atom with 
+  match is_instance, atom with 
  
-  | Atom.NotEqual (Linear a, Const b)-> if Var.equal (linear_var a) var && Q.is_zero b then Term.VarMap.fold (find_instance (linear_var a)) term_eqs (false,var,None) else (false,var,None)
-
+  | (true, Atom.NotEqual (Linear a, Const b))-> if Var.equal (linear_var a) var && Q.is_zero b then Term.VarMap.fold (find_instance (linear_var a)) term_eqs (false,var,None) else (false,var,None)
+  | (false, Atom.Equal (Linear a, Const b))-> if Var.equal (linear_var a) var && Q.is_zero b then Term.VarMap.fold (find_instance (linear_var a)) term_eqs (false,var,None) else (false,var,None)
   (* | Atom. (Linear a, _)->  if Var.equal (linear_var a) vv then (vv, true) else (vv, r) *)
   | _ -> (false,var,None)
 
-let checking_instanceof_var var (formula:t)  = 
+let checking_instanceof_var is_instance var (formula:t)  = 
   
   let condi = formula.conditions in 
   let ph = formula.phi in 
   let term_eq = ph.term_eqs in 
           
-  let res = Atom.Set.fold (fun x (a,b,c)-> if a then (a,b,c) else  (is_intanceof_var var term_eq x) ) condi (false, var, None)
+  let res = Atom.Set.fold (fun x (a,b,c)-> if a then (a,b,c) else  (is_intanceof_var is_instance var term_eq x) ) condi (false, var, None)
      in res
 
 

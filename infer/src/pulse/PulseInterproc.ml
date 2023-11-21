@@ -380,7 +380,7 @@ let caller_type_constrain_sat argv_key argv_caller formu (astate:AbductiveDomain
                       | None -> raise (Foo "None source type") 
                       | Some a -> a in
             if fst callee_constrain then
-            let res = check_dynamic_type_sat na1 (callee_yes_instance, callee_not_instance ) tenv in res 
+            let res = check_dynamic_type_sat na1 (callee_yes_instance, callee_not_instance ) tenv in res (*TODO,CALLER AND CALLEE ARE BOTH DYNAMIC*)
             else true
   |None -> 
     (* AbstractValue.pp F.std_formatter argv_caller;
@@ -395,7 +395,7 @@ let caller_type_constrain_sat argv_key argv_caller formu (astate:AbductiveDomain
                           let caller_constrain = call_type_constrain argv_caller (astate.path_condition:Formula.t) in 
                           let caller_yes_instance = type_list_conversion (fst (snd (caller_constrain))) in 
                           let caller_not_instance = type_list_conversion (snd (snd (caller_constrain))) in 
-                          let join_constrain = ((caller_yes_instance@callee_yes_instance),caller_not_instance@callee_not_instance) in 
+                          let join_constrain = ((caller_yes_instance@callee_yes_instance),caller_not_instance@callee_not_instance) in (*TODO,CALLER static CALLEE ARE DYNAMIC*)
                           (* Utils.list_printer (fun x-> Typ.print_name x) (fst join_constrain); *)
                           (* print_endline "============"; *)
                           (* Utils.list_printer (fun x-> Typ.print_name x) (snd join_constrain); *)

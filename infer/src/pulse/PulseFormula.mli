@@ -27,7 +27,7 @@ val get_all_instance_constrains : Var.t -> t -> Typ.t list * Typ.t list
 val pp_with_pp_var : (F.formatter -> Var.t -> unit) -> F.formatter -> t -> unit
   [@@warning "-unused-value-declaration"]
 (** only used for unit tests *)
-val checking_instanceof_var: Var.t -> t -> bool * Var.t * Typ.t option
+val checking_instanceof_var: bool -> Var.t -> t -> bool * Var.t * Typ.t option
 val ty_name : Typ.t -> Typ.name
 type function_symbol = Unknown of Var.t | Procname of Procname.t [@@deriving compare, equal]
 

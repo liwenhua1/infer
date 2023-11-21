@@ -134,16 +134,27 @@ let tenv = match (Tenv.load_global ()) with
             | Some t -> t 
             | None -> Tenv.create ()
           in
-  let (a,b,c) = Formula.checking_instanceof_var argv path in 
-  if (a) then let typ1 = match AbductiveDomain.Summary.get_static_type b summary with 
-                            | None -> raise (Foo "impossible")
-                            | Some a -> a in 
-              let typ2 = match c with 
-                            | None -> raise (Foo "impossible")
-                            | Some b -> Formula.ty_name b in 
+  let (a,b,c) = Formula.checking_instanceof_var true argv path in 
+  if (a) then match AbductiveDomain.Summary.get_static_type b summary with 
+                            | None -> false (*should consider dynamic type?*)
+                            | Some typ1 -> 
+                                        let typ2 = match c with 
+                                            | None -> raise (Foo "impossible")
+                                            | Some b -> Formula.ty_name b in 
               (* Typ.print_name typ2; *)
-              let res = PatternMatch.is_subtype tenv typ1 typ2 in 
-              res else false
+                                            let res = PatternMatch.is_subtype tenv typ1 typ2 in 
+                                            res 
+                                        (* else let (a2,b2,c2) = Formula.checking_instanceof_var false argv path in
+                                                      if (a2) then match AbductiveDomain.Summary.get_static_type b2 summary with 
+                                                        | None -> false (*should consider dynamic type?*)
+                                                        | Some typ1 -> 
+                                                                    let typ2 = match c2 with 
+                                                                        | None -> raise (Foo "impossible")
+                                                                        | Some t -> Formula.ty_name t in 
+                                          (* Typ.print_name typ2; *)
+                                                                        let res = (not(PatternMatch.is_subtype tenv typ1 typ2)) && (not(PatternMatch.is_subtype tenv typ2 typ1)) in 
+                                                                        res                                              *)
+    else false
 
 
 
