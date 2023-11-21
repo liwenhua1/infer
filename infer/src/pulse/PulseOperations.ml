@@ -14,7 +14,7 @@ open PulseOperationResult.Import
 type t = AbductiveDomain.t
 
 exception Fo of string
-exception Goo of string
+
 
 let check_addr_access path ?must_be_valid_reason access_mode location (address, history) astate =
   let access_trace = Trace.Immediate {location; history} in
@@ -273,6 +273,7 @@ let eval_to_operand path location exp astate =
       let++ astate, (value, hist) = eval path Read location exp astate in
       (astate, PulseArithmetic.AbstractValueOperand value, hist)
 
+    
 let need_prune_for_instance astate_value  = 
   let tenv = match (Tenv.load_global ()) with 
             | Some t -> t 
@@ -284,14 +285,21 @@ let need_prune_for_instance astate_value  =
   (let var_list = Formula.get_all_instance_pvar path in 
   let check var = 
       let constrains = Formula.get_all_instance_constrains var path in 
+      let yes_instance = Formula.type_list_conversion (fst constrains) in 
+      let not_instance = Formula.type_list_conversion (snd constrains) in 
+      (match AbductiveDomain.AddressAttributes.get_dynamic_type var astate with 
+              | Some a -> let ty = Formula.ty_name a in 
+                          let r = Formula.check_dynamic_type_sat ty (yes_instance,not_instance) tenv in 
+                          if r then (false, astate_value) else (true, astate_value)
+              | None ->            
       let static_type = (match AbductiveDomain.AddressAttributes.get_static_type var astate with 
                             | None -> (match (List.hd (fst constrains)) with | Some a -> Formula.ty_name a | None -> raise (Fo ""))
                             | Some a -> a) in 
       let least_subclass = Formula.find_last_subclass tenv static_type (fst constrains) in 
       if not (snd least_subclass) then (true,astate_value) else 
-        let not_instance = List.map (snd constrains) ~f:(fun x -> match Typ.name x with |Some a -> a | None -> raise (Goo "not Typ.name")) in 
+        
         let res = Formula.check_not_instance tenv (fst least_subclass) not_instance in 
-        if not (fst res) then (true,astate_value) else (false,astate_value) in
+        if not (fst res) then (true,astate_value) else (false,astate_value)) in
   List.fold var_list ~init:(false,astate_value) ~f:(fun (acc,_bcc) x -> let (a,b) = check x in (acc||a, b)) )
   
   with Fo _ ->  (false,astate_value)

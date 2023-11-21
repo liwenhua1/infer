@@ -71,6 +71,8 @@ val process_instance_infos: (AbstractValue.t * ValueHistory.t) AbstractValue.Map
  
 val call_type_constrain : AbstractValue.t -> Formula.t -> bool * (Typ.t list * Typ.t list)
 
+val type_list_conversion : Typ.t list -> Typ.name list
+
 val check_static_type_sat: Typ.name ->
   Typ.name list * Typ.name list -> Tenv.t -> bool * (Typ.name * Typ.name list)
 

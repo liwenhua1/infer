@@ -309,7 +309,16 @@ let materialize_pre_for_globals path call_location ~pre call_state =
     ~f:(fun _var ~stack_value:(addr_pre, _) ~addr_hist_caller call_state ->
       materialize_pre_from_address ~pre ~addr_pre ~addr_hist_caller call_state )
 
-
+let type_list_conversion alist =
+        List.map alist ~f:(fun x -> match Typ.name x with |Some a -> a | None -> raise (Foo "not Typ.name")) 
+let check_dynamic_type_sat ty1 ty_list tenv= 
+    
+        let (yes,no) = ty_list in 
+    
+        let res1 = List.fold no ~init:(true) ~f:(fun acc x -> acc && if PatternMatch.is_subtype tenv ty1 x then false else true) in 
+        let res2 = List.fold yes ~init:(true) ~f:(fun acc x -> acc && if PatternMatch.is_subtype tenv ty1 x then true else false) in
+    (* Utils.print_bool (res1 && res2) ; *)
+        res1 && res2 
 
 let process_instance_info argv formu = 
   let res = Formula.get_all_instance_constrains argv formu in 
@@ -324,8 +333,7 @@ let call_type_constrain argv formu =
     (*to do dynamic type*)
     process_instance_info argv formu 
 
-let type_list_conversion alist =
-  List.map alist ~f:(fun x -> match Typ.name x with |Some a -> a | None -> raise (Foo "not Typ.name")) 
+
 
 let find_last_subclass tenv start newlist = 
     
@@ -343,6 +351,7 @@ let check_not_instance tenv start no_ins_list =
                       (false, []) else let res = helper true xs in (fst res, x:: snd res ) in
       helper true no_ins_list 
 
+
 let check_static_type_sat start lists tenv= 
   let (yes,no) = lists in 
   let res1 = find_last_subclass tenv start yes in 
@@ -355,14 +364,6 @@ let check_static_type_sat start lists tenv=
 
 
 
-let check_dynamic_type_sat ty1 ty_list tenv= 
- 
-  let (yes,no) = ty_list in 
-  
-  let res1 = List.fold no ~init:(true) ~f:(fun acc x -> acc && if PatternMatch.is_subtype tenv ty1 x then false else true) in 
-  let res2 = List.fold yes ~init:(true) ~f:(fun acc x -> acc && if PatternMatch.is_subtype tenv ty1 x then true else false) in
-  (* Utils.print_bool (res1 && res2) ; *)
-  res1 && res2 
 
 let caller_type_constrain_sat argv_key argv_caller formu (astate:AbductiveDomain.t) = 
   let tenv = match (Tenv.load_global ()) with 
@@ -372,12 +373,13 @@ let caller_type_constrain_sat argv_key argv_caller formu (astate:AbductiveDomain
   let callee_constrain = call_type_constrain argv_key formu in 
   let callee_yes_instance = type_list_conversion (fst (snd (callee_constrain))) in 
   let callee_not_instance = type_list_conversion (snd (snd (callee_constrain))) in 
-  
+  try
   let typ1 = AbductiveDomain.AddressAttributes.get_dynamic_type argv_caller astate in 
    match typ1 with 
   | Some t ->
+            
             let na1 = match Typ.name t with 
-                      | None -> raise (Foo "None source type") 
+                      | None -> raise (Foo "None source type") (*TODO Only support dynamic with Tstruct now of name now*)
                       | Some a -> a in
             if fst callee_constrain then
             let res = check_dynamic_type_sat na1 (callee_yes_instance, callee_not_instance ) tenv in res (*TODO,CALLER AND CALLEE ARE BOTH DYNAMIC*)
@@ -403,7 +405,7 @@ let caller_type_constrain_sat argv_key argv_caller formu (astate:AbductiveDomain
                           let join_constrain_sat = check_static_type_sat a join_constrain tenv in 
                           (* Utils.print_bool (fst join_constrain_sat);  *)
                           (fst join_constrain_sat)
-
+    with Foo _ -> true 
 
 let conjoin_callee_arith pre_or_post callee_path_condition (call_state:call_state) =
   let open PulseResult.Let_syntax in

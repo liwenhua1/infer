@@ -2387,6 +2387,17 @@ let ty_name t =
   match Typ.name t with 
   |None -> raise (Foo "not java type")
   |Some a -> a
+
+let type_list_conversion alist =
+    List.map alist ~f:(fun x -> match Typ.name x with |Some a -> a | None -> raise (Foo "not Typ.name")) 
+let check_dynamic_type_sat ty1 ty_list tenv= 
+
+    let (yes,no) = ty_list in 
+
+    let res1 = List.fold no ~init:(true) ~f:(fun acc x -> acc && if PatternMatch.is_subtype tenv ty1 x then false else true) in 
+    let res2 = List.fold yes ~init:(true) ~f:(fun acc x -> acc && if PatternMatch.is_subtype tenv ty1 x then true else false) in
+(* Utils.print_bool (res1 && res2) ; *)
+    res1 && res2 
 let is_intanceof_var is_instance var term_eqs atom= 
   
   let find_instance argv term var acc= 

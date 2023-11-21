@@ -32,6 +32,8 @@ val ty_name : Typ.t -> Typ.name
 val get_all_instance_pvar : t -> Var.t list
 val find_last_subclass : Tenv.t -> Typ.name -> Typ.t list -> Typ.name * bool
 val check_not_instance : Tenv.t -> Typ.name -> Typ.name list -> bool * Typ.name list
+val type_list_conversion : Typ.t list -> Typ.name list
+val check_dynamic_type_sat : Typ.name -> Typ.name list * Typ.name list -> Tenv.t -> bool
 type function_symbol = Unknown of Var.t | Procname of Procname.t [@@deriving compare, equal]
 
 type operand =
