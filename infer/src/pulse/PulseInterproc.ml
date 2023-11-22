@@ -20,6 +20,7 @@ open PulseDomainInterface
 module AddressSet = AbstractValue.Set
 module AddressMap = AbstractValue.Map
 
+exception F of string
 exception Foo of string
 
 (** stuff we carry around when computing the result of applying one pre/post pair *)
@@ -310,7 +311,7 @@ let materialize_pre_for_globals path call_location ~pre call_state =
       materialize_pre_from_address ~pre ~addr_pre ~addr_hist_caller call_state )
 
 let type_list_conversion alist =
-        List.map alist ~f:(fun x -> match Typ.name x with |Some a -> a | None -> raise (Foo "not Typ.name")) 
+        List.map alist ~f:(fun x -> match Typ.name x with |Some a -> a | None -> raise (F "not Typ.name")) 
 let check_dynamic_type_sat ty1 ty_list tenv= 
     
         let (yes,no) = ty_list in 
@@ -363,27 +364,39 @@ let check_static_type_sat start lists tenv=
 
 
 
+let static_var_to_dynamic_mapping = ref []
 
+let ty_name t = 
+  match Typ.name t with 
+  |None -> raise (Foo "not java type")
+  |Some a -> a
 
-let caller_type_constrain_sat argv_key argv_caller formu (astate:AbductiveDomain.t) = 
+let caller_type_constrain_sat argv_key argv_caller callee_summary (astate:AbductiveDomain.t) = 
+  let formu =  (AbductiveDomain.Summary.get_path_condition callee_summary) in
   let tenv = match (Tenv.load_global ()) with 
   | Some t -> t 
   | None -> Tenv.create ()
   in
+  let callee_dynamic_type = AbductiveDomain.Summary.get_dynamic_type argv_key callee_summary in 
+  let callee_static_type = match AbductiveDomain.Summary.get_static_type argv_key callee_summary with 
+                          |None -> []
+                          |Some st -> [st] in
   let callee_constrain = call_type_constrain argv_key formu in 
-  let callee_yes_instance = type_list_conversion (fst (snd (callee_constrain))) in 
+  let callee_yes_instance = callee_static_type @ type_list_conversion (fst (snd (callee_constrain))) in 
   let callee_not_instance = type_list_conversion (snd (snd (callee_constrain))) in 
   try
   let typ1 = AbductiveDomain.AddressAttributes.get_dynamic_type argv_caller astate in 
    match typ1 with 
-  | Some t ->
-            
+  | Some t -> (match callee_dynamic_type with 
+              |Some t1 -> let type_match = Typ.equal t t1 in 
+                          if type_match then true else false
+              |None ->
             let na1 = match Typ.name t with 
-                      | None -> raise (Foo "None source type") (*TODO Only support dynamic with Tstruct now of name now*)
+                      | None -> raise (F "None source type") (*TODO Only support dynamic with Tstruct now of name now*)
                       | Some a -> a in
             if fst callee_constrain then
             let res = check_dynamic_type_sat na1 (callee_yes_instance, callee_not_instance ) tenv in res (*TODO,CALLER AND CALLEE ARE BOTH DYNAMIC*)
-            else true
+            else true)
   |None -> 
     (* AbstractValue.pp F.std_formatter argv_caller;
     AbductiveDomain.pp F.std_formatter astate; *)
@@ -391,12 +404,18 @@ let caller_type_constrain_sat argv_key argv_caller formu (astate:AbductiveDomain
             
               match typ2 with 
               |None -> true
-              |Some a ->  
-                          (* Typ.print_name a;
-                          print_endline "//////////////////"; *)
-                          let caller_constrain = call_type_constrain argv_caller (astate.path_condition:Formula.t) in 
+              |Some a ->  let caller_constrain = call_type_constrain argv_caller (astate.path_condition:Formula.t) in 
                           let caller_yes_instance = type_list_conversion (fst (snd (caller_constrain))) in 
                           let caller_not_instance = type_list_conversion (snd (snd (caller_constrain))) in 
+                (match callee_dynamic_type with 
+                          |Some dty -> 
+                            let matching = Formula.check_dynamic_type_sat (ty_name dty) (a::caller_yes_instance, caller_not_instance) tenv in 
+                            static_var_to_dynamic_mapping := (argv_caller, dty)::!static_var_to_dynamic_mapping ;matching 
+
+                          |None -> 
+                          (* Typ.print_name a;
+                          print_endline "//////////////////"; *)
+                         
                           let join_constrain = ((caller_yes_instance@callee_yes_instance),caller_not_instance@callee_not_instance) in (*TODO,CALLER static CALLEE ARE DYNAMIC*)
                           (* Utils.list_printer (fun x-> Typ.print_name x) (fst join_constrain); *)
                           (* print_endline "============"; *)
@@ -404,15 +423,15 @@ let caller_type_constrain_sat argv_key argv_caller formu (astate:AbductiveDomain
                           (* print_endline "**************"; *)
                           let join_constrain_sat = check_static_type_sat a join_constrain tenv in 
                           (* Utils.print_bool (fst join_constrain_sat);  *)
-                          (fst join_constrain_sat)
-    with Foo _ -> true 
+                          (fst join_constrain_sat))
+    with F _ -> true 
 
-let conjoin_callee_arith pre_or_post callee_path_condition (call_state:call_state) =
+let conjoin_callee_arith pre_or_post (callee_summary:AbductiveDomain.Summary.t) (call_state:call_state) =
   let open PulseResult.Let_syntax in
   (* pp_call_state F.std_formatter call_state; *)
   (* Formula.pp F.std_formatter callee_path_condition; *)
   (* print_endline "/////////////////";*)
-  
+  let callee_path_condition = (AbductiveDomain.Summary.get_path_condition callee_summary) in
   L.d_printfln "applying callee path condition: (%a)[%a]" Formula.pp callee_path_condition
     (AddressMap.pp ~pp_value:(fun fmt (addr, _) -> AbstractValue.pp fmt addr))
     call_state.subst ;
@@ -420,7 +439,7 @@ let conjoin_callee_arith pre_or_post callee_path_condition (call_state:call_stat
   let subst, path_condition, new_eqs =
     match pre_or_post with
     | `Pre ->  
-      let type_checking = AddressMap.fold (fun x _ acc -> acc && caller_type_constrain_sat x (fst (AddressMap.find x call_state.subst)) callee_path_condition call_state.astate) call_state.subst true in 
+      let type_checking = AddressMap.fold (fun x _ acc -> acc && caller_type_constrain_sat x (fst (AddressMap.find x call_state.subst)) callee_summary call_state.astate) call_state.subst true in 
       (* Utils.print_bool type_checking; *)
       if not (type_checking) then  raise_notrace (Contradiction PathCondition) else
 
@@ -440,6 +459,7 @@ let conjoin_callee_arith pre_or_post callee_path_condition (call_state:call_stat
         |> raise_if_unsat PathCondition
   in
   let astate = AbductiveDomain.set_path_condition path_condition call_state.astate in
+  let astate = List.fold !static_var_to_dynamic_mapping ~init:astate ~f:(fun acc (a,b) -> AbductiveDomain.AddressAttributes.add_dynamic_type b a acc) in
   let+ astate =
     AbductiveDomain.incorporate_new_eqs new_eqs astate
     |> raise_if_unsat PathCondition |> AccessResult.of_abductive_result
@@ -480,7 +500,7 @@ let apply_arithmetic_constraints pre_or_post {PathContext.timestamp} callee_proc
   in
   let+ call_state =
     conjoin_callee_arith pre_or_post
-      (AbductiveDomain.Summary.get_path_condition callee_summary)
+      callee_summary
       call_state
   in
   AddressMap.fold
@@ -1013,7 +1033,7 @@ let apply_post path callee_proc_name call_location callee_summary ~captured_form
       record_post_remaining_attributes path callee_proc_name call_location callee_summary call_state
       |> record_skipped_calls callee_proc_name call_location callee_summary
       |> record_need_closure_specialization callee_summary
-      |> conjoin_callee_arith `Post (AbductiveDomain.Summary.get_path_condition callee_summary)
+      |> conjoin_callee_arith `Post callee_summary
       (* normalize subst again now that we know more arithmetic facts *)
       >>| normalize_subst_for_post
     in
