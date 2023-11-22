@@ -1110,7 +1110,8 @@ module PulseTransferFunctions = struct
           let astate_n = NonDisjDomain.set_captured_variables rhs_exp astate_n in
           let results = SatUnsat.to_list result in
           (PulseReport.report_results tenv proc_desc err_log loc results, path, astate_n)
-      | Call (ret, call_exp, actuals, loc, call_flags) ->
+      | Call (ret, call_exp, actuals, loc, (call_flags:CallFlags.t)) ->
+        (* CallFlags.pp F.std_formatter call_flags; *)
         (* print_endline "start";
           print_endline ("ret ident "^Ident.to_string (fst ret));
           print_endline ("ret type "^Typ.to_string (snd ret)); *)

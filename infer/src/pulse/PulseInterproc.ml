@@ -389,7 +389,7 @@ let caller_type_constrain_sat argv_key argv_caller callee_summary (astate:Abduct
    match typ1 with 
   | Some t -> (match callee_dynamic_type with 
               |Some t1 -> let type_match = Typ.equal t t1 in 
-                          if type_match then true else false
+                          if type_match then true else let () = ( print_endline ((Typ.to_string t)^"unmatchinggggggggggggggg"^(Typ.to_string t1))) in false
               |None ->
             let na1 = match Typ.name t with 
                       | None -> raise (F "None source type") (*TODO Only support dynamic with Tstruct now of name now*)
@@ -459,7 +459,7 @@ let conjoin_callee_arith pre_or_post (callee_summary:AbductiveDomain.Summary.t) 
         |> raise_if_unsat PathCondition
   in
   let astate = AbductiveDomain.set_path_condition path_condition call_state.astate in
-  let astate = List.fold !static_var_to_dynamic_mapping ~init:astate ~f:(fun acc (a,b) -> AbductiveDomain.AddressAttributes.add_dynamic_type b a acc) in
+  (* let astate = List.fold !static_var_to_dynamic_mapping ~init:astate ~f:(fun acc (a,b) -> AbductiveDomain.AddressAttributes.add_dynamic_type b a acc) in *)
   let+ astate =
     AbductiveDomain.incorporate_new_eqs new_eqs astate
     |> raise_if_unsat PathCondition |> AccessResult.of_abductive_result
