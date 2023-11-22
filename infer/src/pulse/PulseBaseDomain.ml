@@ -29,6 +29,12 @@ let empty =
 
 type cell = Memory.Edges.t * Attributes.t
 
+let find_this_var_mapping stk  =   
+  let helper (k:Var.t) v acc = 
+      if Var.is_this k then Some v else acc in
+  
+     match (Stack.fold helper stk None)  with |None -> None |Some a -> Some (Stack.get_abs_value a)
+
 let find_cell_opt addr {heap; attrs} =
   match (Memory.find_opt addr heap, AddressAttributes.find_opt addr attrs) with
   | None, None ->

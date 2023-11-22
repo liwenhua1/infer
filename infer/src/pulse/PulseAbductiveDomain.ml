@@ -130,6 +130,11 @@ let set_path_condition path_condition astate = {astate with path_condition}
 let set_need_closure_specialization astate = {astate with need_closure_specialization= true}
 
 let unset_need_closure_specialization astate = {astate with need_closure_specialization= false}
+(* 
+let find_this_mapping (astate) = 
+    let (pre:PreDomain.t) = astate.pre in  
+    let stack = 
+       *)
 
 let map_decompiler astate ~f = {astate with decompiler= f astate.decompiler}
 
@@ -1938,6 +1943,7 @@ module Stack = struct
 
 
   let find_opt var astate = SafeStack.find_opt var astate |> Option.map ~f:downcast_fst
+  
 
   let eval origin var astate = SafeStack.eval origin var astate |> downcast_snd_fst
 

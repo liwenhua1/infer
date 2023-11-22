@@ -19,6 +19,8 @@ end
 
 include S with type value = AbstractValue.t * ValueHistory.t
 
+val get_abs_value : value -> AbstractValue.t
+
 val yojson_of_t : t -> Yojson.Safe.t
 
 val canonicalize : get_var_repr:(AbstractValue.t -> AbstractValue.t) -> t -> t SatUnsat.t

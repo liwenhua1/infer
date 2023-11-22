@@ -33,6 +33,8 @@ end
 module AddrHistPair = struct
   type t = AbstractValue.t * ValueHistory.t [@@deriving compare, equal, yojson_of]
 
+ 
+
   let pp f addr_trace =
     if Config.debug_level_analysis >= 3 then
       Pp.pair ~fst:AbstractValue.pp ~snd:ValueHistory.pp f addr_trace
@@ -40,6 +42,8 @@ module AddrHistPair = struct
 end
 
 module M = PrettyPrintable.MakePPMonoMap (VarAddress) (AddrHistPair)
+
+let get_abs_value (stk_value:AddrHistPair.t) = fst stk_value
 
 let yojson_of_t m = [%yojson_of: (VarAddress.t * AddrHistPair.t) list] (M.bindings m)
 
