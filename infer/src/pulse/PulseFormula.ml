@@ -17,6 +17,7 @@ module Z = ZSafe
 open SatUnsat.Import
 
 exception Foo of string
+exception Linear
 (** a humble debug mechanism: set [debug] to [true] and run [make -C infer/src runtest] to see the
     arithmetic engine at work in more details *)
 module Debug = struct
@@ -2355,7 +2356,7 @@ let pp = pp_with_pp_var Var.pp
 let linear_var liva = 
   match LinArith.get_as_var liva with
   |Some a -> a
-  |None -> raise (Foo "not a linear bvar") 
+  |None -> raise Linear
 
 let get_all_instance_constrains (argv:Var.t) (path:t) = 
   let yes = ref [] in 
@@ -2365,10 +2366,13 @@ let get_all_instance_constrains (argv:Var.t) (path:t) =
   let term_eq = ph.term_eqs in 
  
   let iter_atom atom (vv, r) = 
+    try
     match atom with 
     | Atom.Equal (Linear a, _)->  if Var.equal (linear_var a) vv then (vv, false) else (vv, r)
     | Atom.NotEqual (Linear a, _)->  if Var.equal (linear_var a) vv then (vv, true) else (vv, r)
-    | _ ->  (vv, r) in 
+    | _ ->  (vv, r) 
+    with Linear -> (vv,r)
+    in 
 
   let is_instance v atoms = 
     Atom.Set.fold iter_atom atoms (v,false) in 
@@ -2407,13 +2411,15 @@ let is_intanceof_var is_instance var term_eqs atom=
     | Term.IsInstanceOf (abs, ty) -> if Var.equal argv var then (a || true,abs,Some ty) else (false || a,b,c)
     | _ -> (false || a,b,c) in
 
-
-  match is_instance, atom with 
- 
+  try
+  (match is_instance, atom with 
+  
   | (true, Atom.NotEqual (Linear a, Const b))-> if Var.equal (linear_var a) var && Q.is_zero b then Term.VarMap.fold (find_instance (linear_var a)) term_eqs (false,var,None) else (false,var,None)
   | (false, Atom.Equal (Linear a, Const b))-> if Var.equal (linear_var a) var && Q.is_zero b then Term.VarMap.fold (find_instance (linear_var a)) term_eqs (false,var,None) else (false,var,None)
   (* | Atom. (Linear a, _)->  if Var.equal (linear_var a) vv then (vv, true) else (vv, r) *)
   | _ -> (false,var,None)
+  
+  ) with Linear -> (false,var,None)
 
 let checking_instanceof_var is_instance var (formula:t)  = 
   

@@ -19,45 +19,45 @@ public class Supertype {
     //     k.toString();
     //    }
      
-      //    public String foo(Object b) 
-      //  //seems input parameter has no type, but constructed parameter has type
-      //  //static //presumes this::Supertype<> achieves this::Supertype<> * res::Objec<>;
-      //  //dynamic //presumes this::Supertype<> achieves this::Supertype<> * res::Objec<>;
-      //  {
+         public Supertype foo(Object b) 
+       //seems input parameter has no type, but constructed parameter has type
+       //static //presumes this::Supertype<> achieves this::Supertype<> * res::Objec<>;
+       //dynamic //presumes this::Supertype<> achieves this::Supertype<> * res::Objec<>;
+       {
         
-      //   // Supertype q = (Supertype) b;
-      //   if (b instanceof Subtype ) {
-      //      {
-      //       // q.toString();
-      //       // Subtype c = (Subtype) b;
+        Supertype q = (Supertype) b;
+        if (b instanceof Subtype ) {
+           {
+            // q.toString();
+            // Subtype c = (Subtype) b;
             
 
-      //       // if (b instanceof Subtype2) {
-      //       //     Subtype z = (Subtype) b;
-      //       // }
-      //       return null;}
-      //   } else {
-      //       // Subtype c = (Subtype) b;
-      //   return "null";}
-      //  }
+            // if (b instanceof Subtype2) {
+            //     Subtype z = (Subtype) b;
+            // }
+            return null;}
+        } else {
+            // Subtype c = (Subtype) b;
+        return new Subtype();}
+       }
 
-        // public void tt3(Object a) {
+        public void tt3(Object a) {
         
-        // String b =foo (a); //three disj all latent
-        // b.toString();
-        // }
+        Supertype b =foo (a); //three disj all latent
+        b.toString();
+        }
       // public void tt4(Subtype a) {
         
       //   tt3 (a); //1 disj cast err
         
       // }
 
-       public void tt3() {
-        Supertype a = new Supertype();
-        if (a instanceof Object) {
-          a.toString();
-        } else {a.toString();}
-        }
+      //  public void tt3() {
+      //   Supertype a = new Supertype();
+      //   if (a instanceof Object) {
+      //     a.toString();
+      //   } else {a.toString();}
+      //   }
 
       // public void tt() {
       //   Object a = new Object();

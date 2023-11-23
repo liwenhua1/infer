@@ -15,6 +15,7 @@ module GenericArrayBackedCollection = PulseModelsGenericArrayBackedCollection
 module StringSet = Caml.Set.Make (String)
 
 exception Foo of string
+exception UnsupportCast
 let mk_java_field pkg clazz field =
   Fieldname.make (Typ.JavaClass (JavaClassName.make ~package:(Some pkg) ~classname:clazz)) field
 
@@ -155,11 +156,15 @@ let java_cast (argv, hist) typeexpr : model =
         | _ -> print_endline (Exp.to_string typeexpr));  *)
       
        fun {location; path = _; ret= _, _;} (astate:AbductiveDomain.t) ->
+        AbductiveDomain.pp Format.std_formatter astate;
           let tenv = match (Tenv.load_global ()) with 
             | Some t -> t 
             | None -> Tenv.create ()
           in
         let access_trace = Trace.Immediate {location; history = hist} in 
+        print_endline "..............";
+        AbstractValue.pp Format.std_formatter argv;
+        print_endline "..............";
         let typ1 = AbductiveDomain.AddressAttributes.get_dynamic_type argv astate in
         (* AbstractValue.pp Format.std_formatter argv;
         AbductiveDomain.pp Format.std_formatter astate; *)
@@ -213,12 +218,16 @@ let java_cast (argv, hist) typeexpr : model =
         print_endline (Int.to_string (List.length b)); *)
         (* let event = Hist.call_event path location "Java.cast" in
         let res_addr = AbstractValue.mk_fresh () in *)
+        try
         match typeexpr with
         | Exp.Sizeof {typ} -> 
           let javaname = JavaClassName.from_string (Typ.to_string typ) in
-          let name2 = match (Typ.name typ) with
-            | None -> raise (Foo "None target type")
+          let name2 =
+            
+            match (Typ.name typ) with
+            | None -> raise (UnsupportCast) (*todo*)
             | Some a -> a in
+
             let (yinstance, b) = Formula.find_last_subclass tenv name1 instance in 
             if b then let ninstance = Formula.check_not_instance tenv yinstance not_instance in 
                 if (fst ninstance) then 
@@ -253,7 +262,7 @@ let java_cast (argv, hist) typeexpr : model =
         
             astate |> Basic.ok_continue
 
-
+        with UnsupportCast -> astate |> Basic.ok_continue
 let call_may_throw_exception (exn : JavaClassName.t) : model =
  fun {location; path; analysis_data} astate ->
   let ret_addr = AbstractValue.mk_fresh () in
