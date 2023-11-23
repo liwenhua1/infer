@@ -21,6 +21,8 @@ module type S = sig
     val is_strong_access : Tenv.t -> t -> bool
 
     val canonicalize : get_var_repr:(AbstractValue.t -> AbstractValue.t) -> t -> t
+
+    
   end
 
   module AccessSet : Caml.Set.S with type elt = Access.t

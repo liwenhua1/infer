@@ -389,7 +389,20 @@ let caller_type_constrain_sat argv_key argv_caller callee_summary (astate:Abduct
    match typ1 with 
   | Some t -> (match callee_dynamic_type with 
               |Some t1 -> let type_match = Typ.equal t t1 in 
-                          if type_match then true else let () = ( print_endline ((Typ.to_string t)^"unmatchinggggggggggggggg"^(Typ.to_string t1))) in false
+                          if type_match then true else 
+                                                  let pre = AbductiveDomain.Summary.get_pre callee_summary in 
+                                                  let this_var = BaseDomain.find_this_var_mapping pre in 
+                                                  (match this_var with 
+                                                  |None -> false
+                                                  |Some mapping -> 
+                                                    let v_in_heap = AbductiveDomain.Summary.find_edge_opt mapping (AbductiveDomain.Memory.make_deref) callee_summary in 
+                                                        match v_in_heap with
+                                                        | None -> raise (Foo "cannot find this var mapping in heap")
+                                                        | Some value -> if AbstractValue.equal (fst value) argv_caller then true 
+                                                        else
+                                                    false
+                                        (* let () = ( print_endline ((Typ.to_string t)^"unmatchinggggggggggggggg"^(Typ.to_string t1)))  in  *)
+                                                )
               |None ->
             let na1 = match Typ.name t with 
                       | None -> raise (F "None source type") (*TODO Only support dynamic with Tstruct now of name now*)

@@ -23,7 +23,11 @@ module type BaseDomainSig = sig
   (* private because the lattice is not the same for preconditions and postconditions so we don't
      want to confuse them *)
   type t = private BaseDomain.t [@@deriving compare, equal, yojson_of]
+  val find_this_mapping : t -> AbstractValue.t option
+  
 end
+
+
 
 (* defined in two parts to avoid exporting internal APIs to the .mli *)
 module type BaseDomainSig_ = sig
@@ -41,6 +45,9 @@ module type BaseDomainSig_ = sig
   val subst_var : for_summary:bool -> AbstractValue.t * AbstractValue.t -> t -> t SatUnsat.t
 
   val pp : F.formatter -> t -> unit
+
+  
+
 end
 
 (* just to expose record field names without having to type
@@ -63,6 +70,8 @@ module PostDomain : BaseDomainSig_ = struct
       && phys_equal new_attrs foot.attrs
     then foot
     else {stack= new_stack; heap= new_heap; attrs= new_attrs}
+
+    let find_this_mapping = BaseDomain.find_this_var_mapping
 end
 
 (* NOTE: [PreDomain] and [Domain] theoretically differ in that [PreDomain] should be the inverted lattice of [Domain], but since we never actually join states or check implication the two collapse into one (though we still want to be careful not to mix them up so give them different types). *)
@@ -677,6 +686,8 @@ module Internal = struct
       let get_var_repr v = Formula.get_var_repr astate.path_condition v in
       BaseMemory.find_edge_opt ~get_var_repr address access (astate.post :> base_domain).heap
       |> CanonValue.canon_opt_fst astate
+
+ 
 
 
     let eval_edge (addr_src, hist_src) access astate =
@@ -1702,6 +1713,16 @@ module Summary = struct
 
   let leq = leq
 
+ 
+
+  let find_edge_opt address access astate =
+    SafeMemory.find_edge_opt
+      (CanonValue.canon' astate address)
+      (CanonValue.canon_access astate access)
+      astate
+    |> Option.map ~f:downcast_fst
+  
+
   let get_pre = get_pre
   let get_dynamic_type v astate =
     SafeAttributes.get_dynamic_type (CanonValue.canon' astate v) astate
@@ -1968,7 +1989,7 @@ module Memory = struct
       astate
     |> downcast_snd_fst
 
-
+  let make_deref : AbstractValue.t HilExp.Access.t = HilExp.Access.Dereference
   let fold_edges addr astate ~init ~f =
     SafeMemory.fold_edges (CanonValue.canon' astate addr) astate ~init
       ~f:(fun acc access_addr_hist ->

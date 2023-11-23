@@ -29,7 +29,8 @@ let empty =
 
 type cell = Memory.Edges.t * Attributes.t
 
-let find_this_var_mapping stk  =   
+let find_this_var_mapping pre  =   
+  let stk = pre.stack in
   let helper (k:Var.t) v acc = 
       if Var.is_this k then Some v else acc in
   

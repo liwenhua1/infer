@@ -18,7 +18,7 @@ type cell = PulseBaseMemory.Edges.t * Attributes.t
 
 val empty : t
 
-val find_this_var_mapping : PulseBaseStack.t -> AbstractValue.t option
+val find_this_var_mapping : t -> AbstractValue.t option
 
 val reachable_addresses : ?var_filter:(Var.t -> bool) -> t -> AbstractValue.Set.t
 (** compute the set of abstract addresses that are "used" in the abstract state, i.e. reachable from

@@ -42,6 +42,7 @@ module type BaseDomainSig = sig
   (* private because the lattice is not the same for preconditions and postconditions so we don't
      want to confuse them *)
   type t = private BaseDomain.t [@@deriving compare, equal, yojson_of]
+  val find_this_mapping : t -> AbstractValue.t option
 end
 
 (** The post abstract state at each program point, or current state. *)
@@ -124,6 +125,8 @@ module Memory : sig
        AbstractValue.t
     -> (t, PulseBaseMemory.Access.t * (AbstractValue.t * ValueHistory.t), _) Container.fold
 
+  val make_deref : PulseBaseMemory.Access.t
+    
   val find_edge_opt :
     AbstractValue.t -> PulseBaseMemory.Access.t -> t -> (AbstractValue.t * ValueHistory.t) option
 
@@ -332,6 +335,11 @@ module Summary : sig
   (** private type to make sure {!of_post} is always called when creating summaries and that it is
       not called twice *)
   type summary = private t [@@deriving compare, equal, yojson_of]
+
+  val find_edge_opt : AbstractValue.t ->
+    PulseBaseMemory.Access.t ->
+    summary ->
+    (AbstractValue.t * ValueHistory.t) option
 
   val skipped_calls_match_pattern : summary -> bool
 
