@@ -1610,7 +1610,9 @@ let mk_initial tenv (proc_attrs : ProcAttributes.t) specialization =
       add_static_types tenv astate formals_and_captured 
     else
       astate
+ 
   in
+  pp Format.std_formatter astate;
   let finial = 
   apply_specialization proc_name specialization astate
   in finial

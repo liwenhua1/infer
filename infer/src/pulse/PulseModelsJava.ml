@@ -156,15 +156,15 @@ let java_cast (argv, hist) typeexpr : model =
         | _ -> print_endline (Exp.to_string typeexpr));  *)
       
        fun {location; path = _; ret= _, _;} (astate:AbductiveDomain.t) ->
-        AbductiveDomain.pp Format.std_formatter astate;
+        (* AbductiveDomain.pp Format.std_formatter astate; *)
           let tenv = match (Tenv.load_global ()) with 
             | Some t -> t 
             | None -> Tenv.create ()
           in
         let access_trace = Trace.Immediate {location; history = hist} in 
-        print_endline "..............";
+        (* print_endline "..............";
         AbstractValue.pp Format.std_formatter argv;
-        print_endline "..............";
+        print_endline ".............."; *)
         let typ1 = AbductiveDomain.AddressAttributes.get_dynamic_type argv astate in
         (* AbstractValue.pp Format.std_formatter argv;
         AbductiveDomain.pp Format.std_formatter astate; *)
