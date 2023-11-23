@@ -16,6 +16,8 @@ module Set : Caml.Set.S with type elt = t
 val make : package:string option -> classname:string -> t
 (** [make ~package:(Some "java.lang") "Object"] creates a value representing [java.lang.Object] *)
 
+
+
 val from_string : string -> t
 (** [from_string "java.lang.Object"] is same as [make ~package:(Some "java.lang") "Object"] *)
 

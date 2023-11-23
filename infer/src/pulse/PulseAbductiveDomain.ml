@@ -1612,7 +1612,7 @@ let mk_initial tenv (proc_attrs : ProcAttributes.t) specialization =
       astate
  
   in
-  pp Format.std_formatter astate;
+  (* pp Format.std_formatter astate; *)
   let finial = 
   apply_specialization proc_name specialization astate
   in finial

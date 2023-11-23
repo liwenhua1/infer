@@ -115,6 +115,7 @@ val pp_template_spec_info : Pp.env -> F.formatter -> template_spec_info -> unit
 
 val is_template_spec_info_empty : template_spec_info -> bool
 
+val make_object : name
 val mk : ?default:t -> ?quals:type_quals -> desc -> t
 (** Create Typ.t from given desc. if [default] is passed then use its value to set other fields such
     as quals *)
@@ -157,6 +158,7 @@ module Name : sig
 
   val to_string : t -> string
   (** convert the typename to a string *)
+
 
   val pp : Format.formatter -> t -> unit
 

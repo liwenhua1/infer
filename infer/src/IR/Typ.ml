@@ -151,6 +151,9 @@ module T = struct
     | Template of {mangled: string option; args: template_arg list}
   [@@deriving compare, equal, yojson_of]
 
+  let make_object = 
+    let obj = JavaClassName.make ~package:(Some "java.lang") ~classname:("Object") in
+    JavaClass obj
   let yojson_of_name = [%yojson_of: _]
   let print_name (na:name)=
     match na with

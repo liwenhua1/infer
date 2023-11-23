@@ -226,8 +226,9 @@ let java_cast (argv, hist) typeexpr : model =
             
             match (Typ.name typ) with
             | None -> raise (UnsupportCast) (*todo*)
-            | Some a -> a in
-
+            | Some a1 -> a1 in
+            (* Utils.print_bool (PatternMatch.is_subtype tenv name1 name2);
+            Utils.print_bool (PatternMatch.is_subtype tenv name2 name1); *)
             let (yinstance, b) = Formula.find_last_subclass tenv name1 instance in 
             if b then let ninstance = Formula.check_not_instance tenv yinstance not_instance in 
                 if (fst ninstance) then 
@@ -240,9 +241,10 @@ let java_cast (argv, hist) typeexpr : model =
                               
                               if not ( PatternMatch.is_subtype tenv name2 yinstance) then astate |> Basic.err_cast_abort javaname access_trace location
                               else
-                              
+                                
                               let exe1 = add_instance_of_info_succ true argv typ astate in 
                               let exe2 = add_instance_of_info_fail false argv typ astate javaname access_trace location in 
+                             
                               exe1 @ exe2
                           (* let () =(print_endline ("possible cast error detected at "^ (Location.to_string location))) in  *)
                          (* astate |> Basic.ok_continue *)
