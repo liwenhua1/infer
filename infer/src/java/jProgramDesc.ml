@@ -87,7 +87,7 @@ let lookup_node cn program =
 
 
 let create_sourcemap classes program =
-  let add_class cn jclass = Classmap.add program.classmap cn jclass in
+  let add_class cn jclass = Classmap.add program.classmap cn (jclass:JCode.jcode Javalib.interface_or_class) in
   let add_source cn jclass =
     match Javalib.get_sourcefile jclass with
     | None ->

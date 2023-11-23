@@ -174,6 +174,7 @@ let is_suppressed tenv proc_desc ~is_nullptr_dereference ~is_constant_deref_with
 
 
 let summary_of_error_post tenv proc_desc location mk_error astate =
+  (* AbductiveDomain.pp Format.std_formatter astate; *)
   match
     AbductiveDomain.Summary.of_post tenv
       (Procdesc.get_proc_name proc_desc)
@@ -202,6 +203,7 @@ let summary_of_error_post tenv proc_desc location mk_error astate =
 
 
 let summary_error_of_error tenv proc_desc location (error : AccessResult.error) : _ SatUnsat.t =
+  (* AccessResult.pp  error; *)
   match error with
   | WithSummary (error, summary) ->
       Sat (error, summary)
@@ -265,15 +267,18 @@ let report_summary_error tenv proc_desc err_log ((access_error : AccessResult.er
 
 
 let report_error tenv proc_desc err_log location access_error =
+  (* let () = AccessResult.pp access_error in *)
   let open SatUnsat.Import in
   summary_error_of_error tenv proc_desc location access_error
   >>| report_summary_error tenv proc_desc err_log
 
 
 let report_errors tenv proc_desc err_log location errors =
+    (* Utils.list_printer (fun x ->  AccessResult.pp x) errors; *)
   let open SatUnsat.Import in
   List.rev errors
   |> List.fold ~init:(Sat None) ~f:(fun sat_result error ->
+   
          match sat_result with
          | Unsat | Sat (Some _) ->
              sat_result
@@ -282,12 +287,17 @@ let report_errors tenv proc_desc err_log location errors =
 
 
 let report_exec_results tenv proc_desc err_log location results =
+  (* Utils.list_printer (fun x -> match PulseResult.fetal_error x with |None -> print_endline "None11" | Some a -> AccessResult.pp a) results; *)
   (* print_endline (Location.to_string location); *)
   List.filter_map results ~f:(fun exec_result ->
+      (* let () = match PulseResult.fetal_error exec_result with |None -> print_endline "None11" | Some a -> AccessResult.pp a in *)
+
       match PulseResult.to_result exec_result with (*pulse_result to result*)
       | Ok post -> 
           Some post
       | Error errors -> 
+
+         (* Utils.list_printer (fun x ->  AccessResult.pp x) errors; *)
         (
         match report_errors tenv proc_desc err_log location errors with
         | Unsat ->
@@ -302,7 +312,9 @@ let report_exec_results tenv proc_desc err_log location results =
               Some exec_state )
         | Sat (Some exec_state) -> 
           
-            Some exec_state ) )
+            Some (
+              (* let () = ExecutionDomain.pp F.std_formatter exec_state in  *)
+                    exec_state) ) )
 
 
 let report_results tenv proc_desc err_log location results =

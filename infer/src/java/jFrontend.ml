@@ -150,6 +150,7 @@ let test_source_file_location source_file program cn node =
    in this case translates it. In standard mode, all methods are translated *)
 let create_icfg source_file program tenv icfg cn node =
   L.(debug Capture Verbose) "\tclassname: %s@." (JBasics.cn_name cn) ;
+  (* print_endline (JBasics.cn_name cn); *)
   if Config.dependency_mode && not (is_classname_cached cn) then cache_classname cn ;
   test_source_file_location source_file program cn node ;
   let translate m =
@@ -197,6 +198,7 @@ let should_capture package_opt source_basename classname node =
    In the standard - mode, it translated all the classes of [program] that correspond to this
    source file. *)
 let compute_source_icfg program tenv source_basename package_opt source_file =
+ 
   let icfg = {JContext.cfg= Cfg.create (); tenv} in
   let select test procedure cn =
     match JProgramDesc.lookup_node cn program with

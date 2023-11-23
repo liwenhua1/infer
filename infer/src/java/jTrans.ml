@@ -392,12 +392,15 @@ let create_callee_attributes tenv program cn ms procname =
             , List.map ~f:JBasics.cn_name cm.Javalib.cm_exceptions
             , false )
       in
+      (* Utils.print_int (List.length params_annotation);
+      print_endline "cccccccccccccccccccccccccccccc";
+      Utils.list_printer (fun x -> Annot.Item.pp Format.std_formatter x) params_annotation; *)
       let formals =
         construct_formals
           (formals_from_signature program tenv cn ms (JTransType.get_method_kind jmethod))
-          params_annotation
+          (params_annotation:Annot.Item.t list)
       in
-      let ret_type = JTransType.return_type program tenv ms in
+      let ret_type = JTransType.return_type (program:JProgramDesc.t) tenv ms in
       (* getting the correct path to the source is cumbersome to do here, and nothing uses this data
          yet so ignore this issue *)
       let translation_unit = SourceFile.invalid __FILE__ in
@@ -512,10 +515,11 @@ let create_empty_procdesc source_file program icfg cm proc_name =
 
 (** Creates a procedure description. *)
 let create_cm_procdesc source_file program icfg cm proc_name =
+
   let cfg = icfg.JContext.cfg in
   let tenv = icfg.JContext.tenv in
   let m = Javalib.ConcreteMethod cm in
-  let cn, ms = JBasics.cms_split (Javalib.get_class_method_signature m) in
+  let cn, (ms:JBasics.method_signature) = JBasics.cms_split (Javalib.get_class_method_signature m) in
   try
     let bytecode = get_bytecode cm in
     let jbir_code = get_jbir_representation cm bytecode in

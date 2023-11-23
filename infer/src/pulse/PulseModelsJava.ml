@@ -113,7 +113,9 @@ let add_instance_of_info_succ is_instance argv typ astate =
         = PulseResult.map ~f:(fun x -> (x,hist)) in *)
       let res1 = match SatUnsat.sat astate with 
                   | None -> raise (Foo "impossible") 
-                  | Some a -> let fc x = (match (List.hd (Basic.err_cast_abort javaname access_trace location x)) with 
+                  | Some a -> let fc x = 
+                    (* AbductiveDomain.pp Format.std_formatter x; *)
+                    (match (List.hd (Basic.err_cast_abort javaname access_trace location x)) with 
                                            |None -> raise (Foo "impossible") 
                                            |Some a -> a  ) in
                     
@@ -245,7 +247,11 @@ let java_cast (argv, hist) typeexpr : model =
                               let exe1 = add_instance_of_info_succ true argv typ astate in 
                               let exe2 = add_instance_of_info_fail false argv typ astate javaname access_trace location in 
                              
-                              exe1 @ exe2
+                              let res_list = exe1 @ exe2 in 
+                              (* Utils.print_int (List.length res_list); *)
+                                (* Utils.list_printer (fun x -> match PulseResult.fetal_error x with |None -> print_endline "None11" | Some a -> AccessResult.pp a) res_list; *)
+
+                              res_list
                           (* let () =(print_endline ("possible cast error detected at "^ (Location.to_string location))) in  *)
                          (* astate |> Basic.ok_continue *)
                          else 

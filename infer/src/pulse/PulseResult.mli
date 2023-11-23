@@ -19,6 +19,8 @@ val append_errors : 'err list -> ('ok, 'err) t -> ('ok, 'err) t
 
 val ok : ('ok, _) t -> 'ok option
 
+val fetal_error : ('a, 'b) t -> 'b option
+
 val ok_exn : ('ok, _) t -> 'ok
 (** dies if the argument is not of the form [Ok _] *)
 

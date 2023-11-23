@@ -23,6 +23,11 @@ type error =
 let with_summary result =
   PulseResult.map_error result ~f:(fun (error, summary) -> WithSummary (error, summary))
 
+let pp err = 
+  match err with 
+  | PotentialInvalidAccess _ -> print_endline "to be impl"
+  | WithSummary _ -> print_endline "to be impl"
+  | ReportableError a -> AbductiveDomain.pp Format.std_formatter a.astate 
 
 let rec is_fatal = function
   | PotentialInvalidAccess _ ->

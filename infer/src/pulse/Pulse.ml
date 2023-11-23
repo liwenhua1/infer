@@ -1021,6 +1021,7 @@ module PulseTransferFunctions = struct
     | ContinueProgram astate -> (
       match instr with
       | Load {id= lhs_id; e= rhs_exp; loc; typ} ->
+          (* print_endline ("Load at"^ (Location.to_string loc)); *)
           (* [lhs_id := *rhs_exp] *)
           let model_opt = PulseLoadInstrModels.dispatch ~load:rhs_exp in
           let deref_rhs astate =
@@ -1069,6 +1070,7 @@ module PulseTransferFunctions = struct
           in
           (astates, path, non_disj)
       | Store {e1= lhs_exp; e2= rhs_exp; loc; typ} ->
+          (* print_endline ("Load at"^ (Location.to_string loc)); *)
           (* [*lhs_exp := rhs_exp] *)
           let event =
             match lhs_exp with
@@ -1149,8 +1151,10 @@ module PulseTransferFunctions = struct
             in
             (* print_endline ((Location.to_string loc)^ "calling location"); *)
             let astates_before = !astates_before in
+            (* Utils.list_printer (fun x -> match PulseResult.fetal_error x with |None -> print_endline "None11" | Some a -> AccessResult.pp a) res; *)
             (PulseReport.report_exec_results tenv proc_desc err_log loc res, astates_before)
           in
+           (* Utils.list_printer (fun x -> ExecutionDomain.pp F.std_formatter x) astates; *)
           (* list_printer (fun x -> AbductiveDomain.pp F.std_formatter x) astates_before; (*state before*)
           list_printer (fun x -> ExecutionDomain.pp F.std_formatter x) astates; state after *)
           (* print_endline "here"; *)
@@ -1371,13 +1375,13 @@ let analyze specialization
     let ((exit_summaries_opt:DisjunctiveAnalyzer.TransferFunctions.Domain.t option), exn_sink_summaries_opt) =
       DisjunctiveAnalyzer.compute_post_including_exceptional analysis_data ~initial proc_desc
     in
-    print_endline "process analysis";
+    (* print_endline "process analysis";
     Procname.pp_name_only F.std_formatter proc_name;
     let res = match exit_summaries_opt with 
     | None  -> ()
     | Some a -> DisjunctiveAnalyzer.TransferFunctions.Domain.pp F.std_formatter a in
     res;
-    print_endline "process analysis end";
+    print_endline "process analysis end"; *)
     let process_postconditions node posts_opt ~convert_normal_to_exceptional =
       match posts_opt with
       | Some (posts, non_disj_astate) ->
@@ -1449,7 +1453,7 @@ let analyze specialization
 
 
 let checker ?specialization ({InterproceduralAnalysis.proc_desc} as analysis_data) =
-  (* Procdesc.pp_with_instrs ~print_types:true F.std_formatter proc_desc; *)
+  Procdesc.pp_with_instrs ~print_types:true F.std_formatter proc_desc;
   (* Tenv.pp_per_file F.std_formatter (Tenv.FileLocal analysis_data.tenv); *)
   (* print_endline "===================="; *)
   let open IOption.Let_syntax in

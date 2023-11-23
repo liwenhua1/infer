@@ -24,6 +24,8 @@ let append_errors errors result =
 
 let ok = function Ok x -> Some x | FatalError _ | Recoverable _ -> None
 
+let fetal_error = function FatalError (a,_) -> Some a | Recoverable _ | Ok _ -> None
+
 let ok_exn = function
   | Ok x ->
       x

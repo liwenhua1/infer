@@ -92,7 +92,7 @@ let store_callee_attributes tenv program =
 
 
 (* The program is loaded and translated *)
-let do_all_files classpath program =
+let do_all_files (classpath:JClasspath.t) (program:JProgramDesc.t) =
   let {JClasspath.sources; JClasspath.classes; _} = classpath in
   let tenv = load_tenv () in
   let skip source_file =
@@ -147,7 +147,7 @@ let main load_sources_and_classes =
       JModels.load_models ~jar_filename:Config.biabduction_models_jar ) ;
   JBasics.set_permissive true ;
   JClasspath.with_classpath load_sources_and_classes ~f:(fun classpath ->
-      let program = JProgramDesc.load classpath in
+      let program = JProgramDesc.load (classpath:JClasspath.t) in
       do_all_files classpath program )
 
 

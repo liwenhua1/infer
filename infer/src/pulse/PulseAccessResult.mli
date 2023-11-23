@@ -24,7 +24,7 @@ type error =
           [error] within a [WithSummary (error, summary)] cannot itself be a [WithSummary _]. *)
 
 type 'a t = ('a, error) PulseResult.t
-
+val pp : error -> unit
 val with_summary : ('a, error * AbductiveDomain.Summary.t) PulseResult.t -> 'a t
 
 (** Intermediate datatype since {!AbductiveDomain} cannot refer to this module without creating a

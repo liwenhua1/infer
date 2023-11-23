@@ -130,6 +130,8 @@ let checking_instanceof_var var (formula:t) static_type =
     Atom.Set.fold iter_atom atoms (v,false) in  *)
 
 let check_instance argv path summary=
+
+(* Formula.pp Format.std_formatter path; *)
 (* print_endline "yes";
 AbstractValue.pp Format.std_formatter argv;  *)
 let tenv = match (Tenv.load_global ()) with 
@@ -164,7 +166,7 @@ let tenv = match (Tenv.load_global ()) with
 
 
 let is_manifest summary =
-  (* AbductiveDomain.Summary.pp Format.std_formatter summary; *)
+  
   let path = AbductiveDomain.Summary.get_path_condition summary in 
 
 
