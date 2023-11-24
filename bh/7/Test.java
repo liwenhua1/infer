@@ -15,7 +15,10 @@ class Test<T> {
         return a; 
     } 
 
-   
+    public Integer getObject1() 
+    {   Integer a = new Integer(123);
+        return a; 
+    } 
 } 
   
 
