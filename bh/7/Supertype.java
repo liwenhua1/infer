@@ -59,16 +59,16 @@ public class Supertype {
       //   } else {a.toString();}
       //   }
 
-      public void tt() {
-        Object a = new Object();
-       foo (a); //cast err 1 disj
+    //   public void tt() {
+    //     Object a = new Object();
+    //    foo (a); //cast err 1 disj
         
-      }
-       public void tt2() {
-         Subtype2 a = new Subtype2();
-         foo (a); // cast err 1 disj
+    //   }
+    //    public void tt2() {
+    //      Subtype2 a = new Subtype2();
+    //      foo (a); // cast err 1 disj
          
-      }
+    //   }
      
 
       //  public void tt5() {

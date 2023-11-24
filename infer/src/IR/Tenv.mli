@@ -82,7 +82,7 @@ val merge : src:t -> dst:t -> unit
 val merge_per_file : src:per_file -> dst:per_file -> per_file
 (** Best-effort merge of [src] into [dst]. If a procedure is both in [dst] and [src], the one in
     [dst] will get overwritten. *)
-
+val find_limited_sub : Typ.name -> ?limit:int -> t -> Typ.name list
 module MethodInfo : sig
   module Hack : sig
     type kind = private IsClass | IsTrait of {used: Typ.Name.t}

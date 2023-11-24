@@ -148,7 +148,7 @@ let test_source_file_location source_file program cn node =
 (* Given a source file and a class, translates the code of this class.
    In init - mode, finds out whether this class contains initializers at all,
    in this case translates it. In standard mode, all methods are translated *)
-let create_icfg source_file program tenv icfg cn node =
+let create_icfg source_file program (tenv:Tenv.t) icfg cn node =
   L.(debug Capture Verbose) "\tclassname: %s@." (JBasics.cn_name cn) ;
   (* print_endline (JBasics.cn_name cn); *)
   if Config.dependency_mode && not (is_classname_cached cn) then cache_classname cn ;

@@ -49,6 +49,8 @@ type t =
 
 type lookup = Typ.Name.t -> t option
 
+let get_all_supers str = str.supers
+
 let pp_field pe f (field_name, typ, ann) =
   F.fprintf f "@\n\t\t%a %a %a" (Typ.pp_full pe) typ Fieldname.pp field_name Annot.Item.pp ann
 

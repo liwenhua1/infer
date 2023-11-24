@@ -1021,8 +1021,13 @@ module PulseTransferFunctions = struct
     | ContinueProgram astate -> (
       match instr with
       | Load {id= lhs_id; e= rhs_exp; loc; typ} ->
-          (* print_endline ("Load at"^ (Location.to_string loc)); *)
-          (* [lhs_id := *rhs_exp] *)
+        (* print_endline "=================";
+          print_endline ("Load at"^ (Location.to_string loc));
+          
+          Ident.pp F.std_formatter lhs_id;
+          print_endline "////////////////////";
+          Exp.pp Format.std_formatter rhs_exp;
+          print_endline "================="; *)
           let model_opt = PulseLoadInstrModels.dispatch ~load:rhs_exp in
           let deref_rhs astate =
             (let** astate, rhs_addr_hist =
@@ -1037,7 +1042,7 @@ module PulseTransferFunctions = struct
              let rhs_addr, _ = rhs_addr_hist in
              and_is_int_if_integer_type typ rhs_addr astate
              >>|| PulseOperations.hack_propagates_type_on_load tenv path loc rhs_exp rhs_addr
-             >>|| PulseOperations.write_id lhs_id rhs_addr_hist )
+             >>|| PulseOperations.write_id (lhs_id:Ident.t) rhs_addr_hist )
             |> SatUnsat.to_list
             |> PulseReport.report_results tenv proc_desc err_log loc
           in
@@ -1451,10 +1456,10 @@ let analyze specialization
         report_on_and_return_summaries exit_esink_summaries )
   else None
 
-let print_tenv = ref true 
+
 let checker ?specialization ({InterproceduralAnalysis.proc_desc} as analysis_data) =
   (* Procdesc.pp_with_instrs ~print_types:true F.std_formatter proc_desc; *)
-  if !print_tenv then Tenv.pp_per_file F.std_formatter (Tenv.FileLocal analysis_data.tenv); print_tenv := false;
+  (* Tenv.pp_per_file F.std_formatter (Tenv.FileLocal analysis_data.tenv); *)
   (* print_endline "===================="; *)
   let open IOption.Let_syntax in
   if should_analyze proc_desc then (

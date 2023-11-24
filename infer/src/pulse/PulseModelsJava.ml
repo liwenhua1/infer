@@ -210,7 +210,7 @@ let java_cast (argv, hist) typeexpr : model =
           match AbductiveDomain.AddressAttributes.get_static_type argv astate with 
                 |None ->  astate |> Basic.ok_continue
                 |Some a -> let name1 = a in
-                          
+                (* Utils.list_printer (fun x -> Typ.print_name x) (Tenv.find_limited_sub name1 tenv); *)
         (* AbductiveDomain.pp Format.std_formatter astate; *)
         let (instance,not_instance) = Formula.get_all_instance_constrains argv astate.path_condition in 
         let not_instance = List.map not_instance ~f:(fun x -> match Typ.name x with |Some a -> a | None -> raise (Foo "not Typ.name")) in 

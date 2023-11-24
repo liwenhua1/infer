@@ -95,6 +95,8 @@ val get_source_file : t -> SourceFile.t option
 
 val is_hack_class : t -> bool
 
+val get_all_supers : t -> Typ.name list
+
 val is_hack_trait : t -> bool [@@warning "-unused-value-declaration"]
 
 module Normalizer : HashNormalizer.S with type t = t

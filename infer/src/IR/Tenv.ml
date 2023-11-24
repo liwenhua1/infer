@@ -15,7 +15,7 @@ module TypenameHash = Caml.Hashtbl.Make (Typ.Name)
 
 (** Type for type environment. *)
 type t = Struct.t TypenameHash.t
-
+exception Subfull
 let pp fmt (tenv : t) =
   TypenameHash.iter (fun name typ -> Format.fprintf fmt "%a@," (Struct.pp Pp.text name) typ) tenv
 
@@ -90,6 +90,9 @@ let fold_supers tenv name ~init ~f =
   aux [name] Typ.Name.Set.empty init |> snd
 
 
+
+
+
 let find_map_supers (type f_result) tenv name ~(f : Typ.Name.t -> Struct.t option -> f_result option)
     =
   let exception FOUND of f_result option in
@@ -126,6 +129,31 @@ let get_parent tenv name =
 let implements_remodel_class tenv name =
   Option.exists Typ.Name.Objc.remodel_class ~f:(fun remodel_class ->
       mem_supers tenv name ~f:(fun name _ -> Typ.Name.equal name remodel_class) )
+
+let supertype_exists tenv pred name =
+        mem_supers tenv name ~f:(fun name struct_opt ->
+            Option.exists struct_opt ~f:(fun str -> pred name str) )
+      
+let is_subtype tenv name0 name1 =
+              if (Typ.Name.equal name1 Typ.make_object) then true else
+              let a = 
+              Typ.Name.equal name0 name1
+              || supertype_exists tenv (fun name _ -> Typ.Name.equal name name1) name0 in 
+               a
+            
+let subtype_mapping = ref []
+    
+    
+    
+let find_limited_sub ty ?(limit = 10) (tenv:t)=
+      match List.find !subtype_mapping ~f:(fun x -> Typ.equal_name (fst x) ty) with |Some a -> snd a | None ->
+      try 
+      fst ( TypenameHash.fold 
+      (fun tyname stru acc -> if (Int.equal (snd acc) 0) then let () = subtype_mapping := (ty,(fst acc))::!subtype_mapping in (raise Subfull) else 
+        let sups = Struct.get_all_supers stru in 
+        List.fold sups ~init:acc ~f:(fun acc2 a -> if is_subtype tenv a ty then (tyname::(fst acc2),(snd acc2)-1) else acc2)
+        ) tenv ([],limit) )
+      with Subfull -> match List.hd !subtype_mapping with |None -> raise Subfull |Some a -> snd a
 
 
 type per_file = Global | FileLocal of t
