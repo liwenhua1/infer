@@ -10,24 +10,26 @@ class Test<T> {
     } 
   
     public T getObject() 
-    {   
-        T a = this.obj;
+    {   T b =this.obj;
+        T a = b;
         return a; 
     } 
+
+   
 } 
   
-// // Driver class to test above 
-// class Main { 
-//     public static void main(String[] args) 
-//     { 
-//         // instance of Integer type 
-//         Test<Integer> iObj 
-//             = new Test<Integer>(15); 
-//         System.out.println(iObj.getObject()); 
+
+class Main { 
+    public static void main(String[] args) 
+    { 
+        // instance of Integer type 
+        Test<Integer> iObj 
+            = new Test<Integer>(15); 
+        System.out.println(iObj.getObject()); 
   
-//         // instance of String type 
-//         Test<String> sObj 
-//             = new Test<String>("GeeksForGeeks"); 
-//         System.out.println(sObj.getObject()); 
-//     } 
-// } 
+        // instance of String type 
+        Test<String> sObj 
+            = new Test<String>("GeeksForGeeks"); 
+        System.out.println(sObj.getObject()); 
+    } 
+} 

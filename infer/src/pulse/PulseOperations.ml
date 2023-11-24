@@ -238,6 +238,7 @@ and eval_to_value_path (path : PathContext.t) mode location exp astate :
       let len_int = IntLit.of_int (String.length s) in
       let++ astate = PulseArithmetic.and_eq_int len_addr len_int astate in
       let astate = AddressAttributes.add_one v (ConstString s) astate in
+      let astate = AddressAttributes.add_dynamic_type (Typ.mk_struct (Typ.Name.Java.from_string "java.lang.String")) v astate in
       (astate, ValuePath.Unknown (v, hist))
   | Const ((Cfloat _ | Cclass _) as c) ->
     
