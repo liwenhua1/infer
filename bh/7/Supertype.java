@@ -1,5 +1,12 @@
 
-public class Supertype {
+class Supertype {
+   
+
+   public Object foo() {
+      return new Object();
+    }
+
+  }
 
     //      public Integer foo(int b) 
     //    //seems input parameter has no type, but constructed parameter has type
@@ -19,38 +26,38 @@ public class Supertype {
     //     k.toString();
     //    }
      
-         public Supertype foo(Object b) 
-       //seems input parameter has no type, but constructed parameter has type
-       //static //presumes this::Supertype<> achieves this::Supertype<> * res::Objec<>;
-       //dynamic //presumes this::Supertype<> achieves this::Supertype<> * res::Objec<>;
-       {
+      //    public String foo(Object b) 
+      //  //seems input parameter has no type, but constructed parameter has type
+      //  //static //presumes this::Supertype<> achieves this::Supertype<> * res::Objec<>;
+      //  //dynamic //presumes this::Supertype<> achieves this::Supertype<> * res::Objec<>;
+      //  {
         
-        Supertype q = (Supertype) b;
-        if (b instanceof Subtype ) {
-           {
-            // q.toString();
-            // Subtype c = (Subtype) b;
+      //   // Supertype q = (Supertype) b;
+      //   if (b instanceof Subtype ) {
+      //      {
+      //       // q.toString();
+      //       // Subtype c = (Subtype) b;
             
 
-            // if (b instanceof Subtype2) {
-            //     Subtype z = (Subtype) b;
-            // }
-            return null;}
-        } else {
-            Subtype c = (Subtype) b;
-        return new Subtype();}
-       }
+      //       // if (b instanceof Subtype2) {
+      //       //     Subtype z = (Subtype) b;
+      //       // }
+      //       return null;}
+      //   } else {
+      //       // Subtype c = (Subtype) b;
+      //   return "null";}
+      //  }
 
-        public void tt3(Object a) {
+      //   public void tt3(Object a) {
         
-        Supertype b =foo (a); //three disj all latent
-        b.toString();
-        }
-      public void tt4(Subtype a) {
+      //   String b =foo (a); //three disj all latent
+      //   b.toString();
+      //   }
+      // public void tt4(Subtype a) {
         
-        tt3 (a); //1 disj cast err
+      //   tt3 (a); 
         
-      }
+      // }
 
       //  public void tt3() {
       //   Supertype a = new Supertype();
@@ -163,7 +170,7 @@ public class Supertype {
 //     //    }
        
    
-     }
+     
  class Subtype extends Supertype {
     // public void test() 
     //    //seems input parameter has no type, but constructed parameter has type
@@ -172,9 +179,51 @@ public class Supertype {
     //    {
     //     Object a = null;
     //      a.toString();}  
+    @Override
+    public Object foo() {
+      return null;
+    }
+
+
+  
+
+  // static void dynamicDispatchShouldNotCauseFalseNegativeEasyBad() {
+  //   Supertype o = new Subtype();
+  //   // should report a warning because we know the dynamic type of o is Subtype
+  //   o.foo().toString();
+  // }
+
+  // static void dynamicDispatchShouldNotCauseFalsePositiveEasyOK() {
+  //   Supertype o = new Subtype();
+  //   // should not report a warning because we know the dynamic type of o is Subtype
+  //   o.bar().toString();
+  // }
+
+  public void typeOK(Supertype o) {
+    // should not report a warning because the Supertype implementation
+    // of foo() does not return null
+    Object a= o.foo();
+    a.toString();
+  }
+
+  // static void dynamicDispatchShouldReportWhenCalledWithSubtypeParameterBad_AUX() {
+  //   // should report a warning because the Subtype implementation
+  //   // of foo() returns null
+  //   // Supertype o = new Supertype();
+  //   dynamicDispatchShouldNotReportWhenCallingSupertypeOK(o);
+  // }
+
+  public void Bad_FN(Subtype o) {
+    // should report a warning because the Subtype implementation
+    // of foo() returns null
+    
+    typeOK(o);
+  }
+
+
  }
- class Subtype2 extends Supertype {}
- class Sub extends Subtype{}
+//  class Subtype2 extends Supertype {}
+//  class Sub extends Subtype{}
 //  class Sub1 extends Sub{}
    
 //        public Object foo() 
