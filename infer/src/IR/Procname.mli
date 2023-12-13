@@ -53,6 +53,8 @@ module Java : sig
 
   val constructor_method_name : string
 
+  val print_java_proc : t -> unit
+
   val class_initializer_method_name : string
 
   val replace_method_name : string -> t -> t

@@ -739,10 +739,15 @@ module PulseTransferFunctions = struct
     let++ astate, rev_actuals =
       PulseOperationResult.list_fold actuals ~init:(astate, [])
         ~f:(fun (astate, rev_func_args) (actual_exp, actual_typ) ->
-          let++ astate, actual_evaled =
+          let++ astate, (actual_evaled:ValuePath.t) =
             PulseOperations.eval_to_value_path path Read call_loc actual_exp astate
           in
-         
+          (* AbductiveDomain.pp F.std_formatter astate;
+          print_endline "====================";
+          Exp.pp F.std_formatter actual_exp;
+          print_endline "======================="; 
+          AbstractValue.pp F.std_formatter (ValuePath.value actual_evaled);
+          print_endline ""; *)
           ( astate
           , ProcnameDispatcher.Call.FuncArg.
               {exp= actual_exp; arg_payload= actual_evaled; typ= actual_typ}
@@ -1117,8 +1122,15 @@ module PulseTransferFunctions = struct
           let astate_n = NonDisjDomain.set_captured_variables rhs_exp astate_n in
           let results = SatUnsat.to_list result in
           (PulseReport.report_results tenv proc_desc err_log loc results, path, astate_n)
-      | Call (ret, call_exp, actuals, loc, (call_flags:CallFlags.t)) ->
-        (* CallFlags.pp F.std_formatter call_flags; *)
+      | Call (ret, (call_exp:Exp.t), actuals, loc, (call_flags:CallFlags.t)) ->
+        (* let all_possible_subtypes = 
+        in *)
+        (* let () = match call_exp with 
+       
+        |Const (Cfun p) -> if Procname.equal p BuiltinDecl.__new then print_endline "__new"
+        |_ -> print_endline "--"
+        in *)
+         (* CallFlags.pp F.std_formatter call_flags; *)
         (* print_endline "start";
           print_endline ("ret ident "^Ident.to_string (fst ret));
           print_endline ("ret type "^Typ.to_string (snd ret)); *)

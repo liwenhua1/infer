@@ -130,6 +130,10 @@ module Java = struct
       L.die InternalError "Expected java type but got %a@." (Typ.pp_full Pp.text) t
 
 
+  let print_java_proc j = 
+    print_endline j.method_name;
+    Typ.print_name j.class_name 
+
   
                       
   let make ~class_name ~return_type ~method_name ~parameters ~kind () =

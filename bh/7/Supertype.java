@@ -202,8 +202,9 @@ class Supertype {
   public void typeOK(Supertype o) {
     // should not report a warning because the Supertype implementation
     // of foo() does not return null
-    Object a= o.foo();
-    a.toString();
+
+   
+    o.foo.toString();
   }
 
   // static void dynamicDispatchShouldReportWhenCalledWithSubtypeParameterBad_AUX() {
