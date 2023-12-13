@@ -17,6 +17,7 @@ open PulseOperationResult.Import
 (** raised when we detect that pulse is using too much memory to stop the analysis of the current
     procedure *)
 exception AboutToOOM
+exception Listhd
 
 let rec list_printer f alist = 
   match alist with
@@ -1123,6 +1124,10 @@ module PulseTransferFunctions = struct
           let results = SatUnsat.to_list result in
           (PulseReport.report_results tenv proc_desc err_log loc results, path, astate_n)
       | Call (ret, (call_exp:Exp.t), actuals, loc, (call_flags:CallFlags.t)) ->
+        (match call_exp with 
+       
+        |Const (Cfun p) when Procname.is_java p-> if (Procname.equal p BuiltinDecl.__new) then
+        
         (* let all_possible_subtypes = 
         in *)
         (* let () = match call_exp with 
@@ -1187,7 +1192,273 @@ module PulseTransferFunctions = struct
                 NonDisjDomain.set_captured_variables exp astate_n )
           in
           
+          (astates, path, astate_n) 
+        
+        else 
+
+            let act_exp_opt = List.hd actuals in 
+            let act_exp = (match  act_exp_opt with
+            | Some ac -> ac
+            |None -> raise Listhd) in 
+            
+            let kk =
+
+            PulseOperationResult.sat_ok (PulseOperations.eval_to_value_path path Read loc (fst act_exp) astate)
+             in 
+            let call_obj = 
+             (match kk with
+            |Some a -> ValuePath.value (snd a)
+              
+          (* print_endline "====================";
+          Exp.pp F.std_formatter (fst act_exp);
+          print_endline "======================="; 
+          AbstractValue.pp F.std_formatter (ValuePath.value (snd a));
+          print_endline ""; *)
+            |None -> raise Listhd) in 
+
+          let dynamic_ty = AbductiveDomain.AddressAttributes.get_dynamic_type call_obj astate in 
+          (match dynamic_ty with 
+            |Some dty ->
+              let dy_name = match Typ.name dty with |Some na -> na |None -> raise Listhd in
+              let java_p = Procname.as_java_exn ~explanation:"zzz" p in 
+              let dy_process = Procname.Java.replace_class_name dy_name java_p in 
+              let meth_exist = Tenv.method_exsit dy_process tenv in 
+              let call_exp =  if not meth_exist then call_exp else Exp.Const (Cfun (Java dy_process)) in
+              (* if not meth_exist then Procname.Java.print_java_proc dy_process; *)
+            let astate_n = check_modified_before_dtor actuals call_exp astate astate_n in
+          let astates =
+            List.fold actuals ~init:[astate] ~f:(fun astates (exp, typ) ->
+                List.concat_map astates ~f:(fun astate ->
+                    set_global_astates path analysis_data exp typ loc astate ) )
+          in
+          (* [astates_before] are the states after we evaluate args but before we apply the callee. This is needed for PulseNonDisjunctiveOperations to determine whether we are copying from something pointed to by [this].  *)
+          let astates, astates_before =
+            let astates_before = ref [] in
+            let res =
+              List.concat_map astates ~f:(fun astate ->
+                  let results_and_before_state =
+                    let++ astate, call_exp, callee_pname, func_args =
+                      eval_function_call_args path call_exp actuals loc astate
+                    in
+                    (* stash the intermediate "before" [astate] here because the result monad does
+                       not accept more complicated types than lists of states (we need a pair of the
+                       before astate and the list of results) *)
+
+                    astates_before := astate :: !astates_before ;
+                    (* AbductiveDomain.pp F.std_formatter astate; *)
+                    dispatch_call_eval_args analysis_data path ret call_exp actuals func_args loc
+                      call_flags astate callee_pname
+                  in
+                  let<**> r = results_and_before_state in
+                  
+                  r )
+            in
+            (* print_endline ((Location.to_string loc)^ "calling location"); *)
+            let astates_before = !astates_before in
+            (* Utils.list_printer (fun x -> match PulseResult.fetal_error x with |None -> print_endline "None11" | Some a -> AccessResult.pp a) res; *)
+            (PulseReport.report_exec_results tenv proc_desc err_log loc res, astates_before)
+          in
+           (* Utils.list_printer (fun x -> ExecutionDomain.pp F.std_formatter x) astates; *)
+          (* list_printer (fun x -> AbductiveDomain.pp F.std_formatter x) astates_before; (*state before*)
+          list_printer (fun x -> ExecutionDomain.pp F.std_formatter x) astates; state after *)
+          (* print_endline "here"; *)
+          let astate_n, astates =
+            let pname = Procdesc.get_proc_name proc_desc in
+            let integer_type_widths = Exe_env.get_integer_type_widths exe_env pname in
+            PulseNonDisjunctiveOperations.call integer_type_widths tenv proc_desc path loc ~call_exp
+              ~actuals ~astates_before astates astate_n
+          in
+          let astate_n = NonDisjDomain.set_passed_to loc timestamp call_exp actuals astate_n in
+          let astate_n =
+            List.fold actuals ~init:astate_n ~f:(fun astate_n (exp, _) ->
+                NonDisjDomain.set_captured_variables exp astate_n )
+          in
+          
           (astates, path, astate_n)
+          |None ->
+            let static_ty = AbductiveDomain.AddressAttributes.get_static_type call_obj astate in 
+            (match static_ty with
+            |Some sty -> let possible_subclass = Tenv.find_limited_sub sty tenv in 
+            let astate_n = check_modified_before_dtor actuals call_exp astate astate_n in
+            let constrains = Formula.get_all_instance_constrains call_obj astate.path_condition in 
+            let yes_instance = Formula.type_list_conversion (fst constrains) in 
+            let not_instance = Formula.type_list_conversion (snd constrains) in 
+            let possible_subclass_sat = List.fold possible_subclass ~init:[] ~f:(fun acc x -> if Formula.check_dynamic_type_sat x (yes_instance,not_instance) tenv then x::acc else acc ) in
+
+
+            let astates_all, astates_before_all =  List.fold possible_subclass_sat ~init:([],[]) ~f:( fun (ast,astb) cls_name -> 
+            
+            let call_exp = 
+              let java_p = Procname.as_java_exn ~explanation:"zzz" p in 
+              let dy_process = Procname.Java.replace_class_name cls_name java_p in 
+              let meth_exist = Tenv.method_exsit dy_process tenv in 
+              if not meth_exist then call_exp else Exp.Const (Cfun (Java dy_process)) 
+
+            in
+            let astate = AbductiveDomain.AddressAttributes.add_dynamic_type (Typ.mk_struct cls_name) call_obj astate in
+            let astates =
+              List.fold actuals ~init:[astate] ~f:(fun astates (exp, typ) ->
+                  List.concat_map astates ~f:(fun astate ->
+                      set_global_astates path analysis_data exp typ loc astate ) )
+            in
+            (* [astates_before] are the states after we evaluate args but before we apply the callee. This is needed for PulseNonDisjunctiveOperations to determine whether we are copying from something pointed to by [this].  *)
+            let astates, astates_before =
+              let astates_before = ref [] in
+              let res =
+                List.concat_map astates ~f:(fun astate ->
+                    let results_and_before_state =
+                      let++ astate, call_exp, callee_pname, func_args =
+                        eval_function_call_args path call_exp actuals loc astate
+                      in
+                      (* stash the intermediate "before" [astate] here because the result monad does
+                         not accept more complicated types than lists of states (we need a pair of the
+                         before astate and the list of results) *)
+  
+                      astates_before := astate :: !astates_before ;
+                      (* AbductiveDomain.pp F.std_formatter astate; *)
+                      dispatch_call_eval_args analysis_data path ret call_exp actuals func_args loc
+                        call_flags astate callee_pname
+                    in
+                    let<**> r = results_and_before_state in
+                    
+                    r )
+              in
+              (* print_endline ((Location.to_string loc)^ "calling location"); *)
+              let astates_before = !astates_before in
+              (* Utils.list_printer (fun x -> match PulseResult.fetal_error x with |None -> print_endline "None11" | Some a -> AccessResult.pp a) res; *)
+              (PulseReport.report_exec_results tenv proc_desc err_log loc res, astates_before)
+              in (ast@astates,astb@astates_before))
+            in
+             (* Utils.list_printer (fun x -> ExecutionDomain.pp F.std_formatter x) astates; *)
+            (* list_printer (fun x -> AbductiveDomain.pp F.std_formatter x) astates_before; (*state before*)
+            list_printer (fun x -> ExecutionDomain.pp F.std_formatter x) astates; state after *)
+            (* print_endline "here"; *)
+            let astate_n, astates =
+              let pname = Procdesc.get_proc_name proc_desc in
+              let integer_type_widths = Exe_env.get_integer_type_widths exe_env pname in
+              PulseNonDisjunctiveOperations.call integer_type_widths tenv proc_desc path loc ~call_exp
+                ~actuals ~astates_before:astates_before_all astates_all astate_n
+            in
+            let astate_n = NonDisjDomain.set_passed_to loc timestamp call_exp actuals astate_n in
+            let astate_n =
+              List.fold actuals ~init:astate_n ~f:(fun astate_n (exp, _) ->
+                  NonDisjDomain.set_captured_variables exp astate_n )
+            in
+            
+            (astates, path, astate_n)
+                        
+
+            |None ->
+            let astate_n = check_modified_before_dtor actuals call_exp astate astate_n in
+            let astates =
+              List.fold actuals ~init:[astate] ~f:(fun astates (exp, typ) ->
+                  List.concat_map astates ~f:(fun astate ->
+                      set_global_astates path analysis_data exp typ loc astate ) )
+            in
+            (* [astates_before] are the states after we evaluate args but before we apply the callee. This is needed for PulseNonDisjunctiveOperations to determine whether we are copying from something pointed to by [this].  *)
+            let astates, astates_before =
+              let astates_before = ref [] in
+              let res =
+                List.concat_map astates ~f:(fun astate ->
+                    let results_and_before_state =
+                      let++ astate, call_exp, callee_pname, func_args =
+                        eval_function_call_args path call_exp actuals loc astate
+                      in
+                      (* stash the intermediate "before" [astate] here because the result monad does
+                         not accept more complicated types than lists of states (we need a pair of the
+                         before astate and the list of results) *)
+  
+                      astates_before := astate :: !astates_before ;
+                      (* AbductiveDomain.pp F.std_formatter astate; *)
+                      dispatch_call_eval_args analysis_data path ret call_exp actuals func_args loc
+                        call_flags astate callee_pname
+                    in
+                    let<**> r = results_and_before_state in
+                    
+                    r )
+              in
+              (* print_endline ((Location.to_string loc)^ "calling location"); *)
+              let astates_before = !astates_before in
+              (* Utils.list_printer (fun x -> match PulseResult.fetal_error x with |None -> print_endline "None11" | Some a -> AccessResult.pp a) res; *)
+              (PulseReport.report_exec_results tenv proc_desc err_log loc res, astates_before)
+            in
+             (* Utils.list_printer (fun x -> ExecutionDomain.pp F.std_formatter x) astates; *)
+            (* list_printer (fun x -> AbductiveDomain.pp F.std_formatter x) astates_before; (*state before*)
+            list_printer (fun x -> ExecutionDomain.pp F.std_formatter x) astates; state after *)
+            (* print_endline "here"; *)
+            let astate_n, astates =
+              let pname = Procdesc.get_proc_name proc_desc in
+              let integer_type_widths = Exe_env.get_integer_type_widths exe_env pname in
+              PulseNonDisjunctiveOperations.call integer_type_widths tenv proc_desc path loc ~call_exp
+                ~actuals ~astates_before astates astate_n
+            in
+            let astate_n = NonDisjDomain.set_passed_to loc timestamp call_exp actuals astate_n in
+            let astate_n =
+              List.fold actuals ~init:astate_n ~f:(fun astate_n (exp, _) ->
+                  NonDisjDomain.set_captured_variables exp astate_n )
+            in
+            
+            (astates, path, astate_n)
+            )  
+          )
+
+
+          | _ ->  
+          let astate_n = check_modified_before_dtor actuals call_exp astate astate_n in
+          let astates =
+            List.fold actuals ~init:[astate] ~f:(fun astates (exp, typ) ->
+                List.concat_map astates ~f:(fun astate ->
+                    set_global_astates path analysis_data exp typ loc astate ) )
+          in
+          (* [astates_before] are the states after we evaluate args but before we apply the callee. This is needed for PulseNonDisjunctiveOperations to determine whether we are copying from something pointed to by [this].  *)
+          let astates, astates_before =
+            let astates_before = ref [] in
+            let res =
+              List.concat_map astates ~f:(fun astate ->
+                  let results_and_before_state =
+                    let++ astate, call_exp, callee_pname, func_args =
+                      eval_function_call_args path call_exp actuals loc astate
+                    in
+                    (* stash the intermediate "before" [astate] here because the result monad does
+                       not accept more complicated types than lists of states (we need a pair of the
+                       before astate and the list of results) *)
+
+                    astates_before := astate :: !astates_before ;
+                    (* AbductiveDomain.pp F.std_formatter astate; *)
+                    dispatch_call_eval_args analysis_data path ret call_exp actuals func_args loc
+                      call_flags astate callee_pname
+                  in
+                  let<**> r = results_and_before_state in
+                  
+                  r )
+            in
+            (* print_endline ((Location.to_string loc)^ "calling location"); *)
+            let astates_before = !astates_before in
+            (* Utils.list_printer (fun x -> match PulseResult.fetal_error x with |None -> print_endline "None11" | Some a -> AccessResult.pp a) res; *)
+            (PulseReport.report_exec_results tenv proc_desc err_log loc res, astates_before)
+          in
+           (* Utils.list_printer (fun x -> ExecutionDomain.pp F.std_formatter x) astates; *)
+          (* list_printer (fun x -> AbductiveDomain.pp F.std_formatter x) astates_before; (*state before*)
+          list_printer (fun x -> ExecutionDomain.pp F.std_formatter x) astates; state after *)
+          (* print_endline "here"; *)
+          let astate_n, astates =
+            let pname = Procdesc.get_proc_name proc_desc in
+            let integer_type_widths = Exe_env.get_integer_type_widths exe_env pname in
+            PulseNonDisjunctiveOperations.call integer_type_widths tenv proc_desc path loc ~call_exp
+              ~actuals ~astates_before astates astate_n
+          in
+          let astate_n = NonDisjDomain.set_passed_to loc timestamp call_exp actuals astate_n in
+          let astate_n =
+            List.fold actuals ~init:astate_n ~f:(fun astate_n (exp, _) ->
+                NonDisjDomain.set_captured_variables exp astate_n )
+          in
+          
+          (astates, path, astate_n)
+            
+            
+            )
+
+
       | Prune (condition, loc, is_then_branch, if_kind) ->
         (* Exp.pp F.std_formatter condition; *)
         (* AbductiveDomain.pp F.std_formatter astate; *)

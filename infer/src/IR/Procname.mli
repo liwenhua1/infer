@@ -60,6 +60,8 @@ module Java : sig
   val replace_method_name : string -> t -> t
   (** Replace the method name of an existing java procname. *)
 
+  val replace_class_name:Typ.name -> t -> t
+
   val replace_parameters : Typ.t list -> t -> t
   (** Replace the parameters of a java procname. *)
 

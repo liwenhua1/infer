@@ -71,6 +71,8 @@ val find_map_supers : t -> Typ.Name.t -> f:(Typ.Name.t -> Struct.t option -> 'a 
 val implements_remodel_class : t -> Typ.Name.t -> bool
 (** Check if a class implements the Remodel class *)
 
+val method_exsit: Procname.Java.t -> t -> bool
+
 type per_file = Global | FileLocal of t
 
 val pp_per_file : Format.formatter -> per_file -> unit

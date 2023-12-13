@@ -169,6 +169,8 @@ module Java = struct
 
   let replace_parameters parameters j = {j with parameters}
 
+  let replace_class_name class_name j = {j with class_name}
+  
   let replace_return_type ret_type j = {j with return_type= Some ret_type}
 
   let get_parameters j = j.parameters

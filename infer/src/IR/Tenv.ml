@@ -53,6 +53,12 @@ let lookup tenv name : Struct.t option =
   Option.iter (result >>= Struct.get_source_file) ~f:Dependencies.record_srcfile_dep ;
   result
 
+let method_exsit (meth:Procname.Java.t) tenv =
+    match lookup tenv (Procname.Java.get_class_type_name meth) with
+    | None -> false
+    | Some cls -> let methods = cls.methods in 
+                  List.fold methods ~init:false ~f:(fun acc x -> let x = Procname.as_java_exn ~explanation:"xx" x in Int.(=) (Procname.Java.compare x meth) 0 || acc)     
+
 
 let compare_fields (name1, _, _) (name2, _, _) = Fieldname.compare name1 name2
 
