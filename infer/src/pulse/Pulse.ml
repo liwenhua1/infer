@@ -1010,7 +1010,7 @@ module PulseTransferFunctions = struct
     | _ ->
         [astate]
   
-  let rec find_meth tenv proc ty call_exp act_call= 
+  (* let rec find_meth tenv proc ty call_exp act_call= 
       let meth_exist = Tenv.method_exsit proc tenv in
       if not meth_exist then 
         let supers = 
@@ -1049,7 +1049,7 @@ module PulseTransferFunctions = struct
             let p = Procname.Java.replace_class_name super proc in
             find_meth tenv p super call_exp act_call)
     else act_call := Exp.Const (Cfun (Java proc)) ;
-    !act_call
+    !act_call *)
 
   let exec_instr_aux ({PathContext.timestamp} as path) (astate : ExecutionDomain.t)
       (astate_n : NonDisjDomain.t)
@@ -1166,7 +1166,10 @@ module PulseTransferFunctions = struct
       | Call (ret, (call_exp:Exp.t), actuals, loc, (call_flags:CallFlags.t)) ->
         (match call_exp with 
        
-        |Const (Cfun p) when Procname.is_java p-> if (Procname.equal p BuiltinDecl.__new) then
+        |Const (Cfun p) when Procname.is_java p
+        
+        
+        -> if (Procname.equal p BuiltinDecl.__new) || (List.is_empty actuals) then
         
         (* let all_possible_subtypes = 
         in *)
@@ -1244,6 +1247,9 @@ module PulseTransferFunctions = struct
             let kk =
 
             PulseOperationResult.sat_ok (PulseOperations.eval_to_value_path path Read loc (fst act_exp) astate)
+            (* let kk = match get_receiver (Some) func_args with
+            | None -> None
+            | Some {ProcnameDispatcher.Call.FuncArg.arg_payload= receiver} -> Some receiver *)
              in 
             let call_obj = 
              (match kk with
@@ -1262,10 +1268,11 @@ module PulseTransferFunctions = struct
               let dy_name = match Typ.name dty with |Some na -> na |None -> raise Listhd in
               let java_p = Procname.as_java_exn ~explanation:"zzz" p in 
               let dy_process = Procname.Java.replace_class_name dy_name java_p in 
-              (* let meth_exist = Tenv.method_exsit dy_process tenv in  *)
+              let meth_exist = Tenv.method_exsit dy_process tenv in 
+              let call_exp =  if not meth_exist then call_exp else Exp.Const (Cfun (Java dy_process)) in
               (* print_endline "=============="; *)
               
-              let call_exp = find_meths tenv dy_process dy_name call_exp in
+              (* let call_exp = find_meths tenv dy_process dy_name call_exp in *)
               (* Exp.pp F.std_formatter call_exp; *)
               (* print_endline "=============="; *)
               (* if not meth_exist then Procname.Java.print_java_proc dy_process; *)
@@ -1342,9 +1349,9 @@ module PulseTransferFunctions = struct
               let dy_process = Procname.Java.replace_class_name cls_name java_p in 
               (* act_call := call_exp;find_meth tenv dy_process cls_name call_exp;
               !act_call  *)
-              find_meths tenv dy_process cls_name call_exp 
-              (* let meth_exist = Tenv.method_exsit dy_process tenv in 
-              if not meth_exist then call_exp else Exp.Const (Cfun (Java dy_process))  *)
+              (* find_meths tenv dy_process cls_name call_exp  *)
+              let meth_exist = Tenv.method_exsit dy_process tenv in 
+              if not meth_exist then call_exp else Exp.Const (Cfun (Java dy_process)) 
               (* find_meth tenv dy_process cls_name call_exp  *)
 
             in

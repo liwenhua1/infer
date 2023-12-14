@@ -81,6 +81,4 @@ val check_dynamic_type_sat : Typ.name -> Typ.name list * Typ.name list -> Tenv.t
 val caller_type_constrain_sat : AbstractValue.t ->
   AbstractValue.t ->
   AbductiveDomain.Summary.summary ->
-  AbductiveDomain.t ->
-  bool
-  
+  ?cal_obj:AbstractValue.t option -> AbductiveDomain.t -> bool

@@ -371,7 +371,8 @@ let ty_name t =
   |None -> raise (Foo "not java type")
   |Some a -> a
 
-let caller_type_constrain_sat argv_key argv_caller callee_summary (astate:AbductiveDomain.t) = 
+let caller_type_constrain_sat argv_key argv_caller callee_summary ?(cal_obj=None) (astate:AbductiveDomain.t)  = 
+  let _aux = cal_obj in
   let formu =  (AbductiveDomain.Summary.get_path_condition callee_summary) in
   let tenv = match (Tenv.load_global ()) with 
   | Some t -> t 
@@ -389,7 +390,10 @@ let caller_type_constrain_sat argv_key argv_caller callee_summary (astate:Abduct
    match typ1 with 
   | Some t -> (match callee_dynamic_type with 
               |Some t1 -> let type_match = Typ.equal t t1 in 
-                          if type_match then true else 
+                          if type_match then true else
+                             (* ( match cal_obj with 
+                                                  |Some var when (AbstractValue.equal var argv_caller) -> true
+                                                  |_ -> *)
                                                   let pre = AbductiveDomain.Summary.get_pre callee_summary in 
                                                   let this_var = BaseDomain.find_this_var_mapping pre in 
                                                   (match this_var with 
@@ -439,7 +443,7 @@ let caller_type_constrain_sat argv_key argv_caller callee_summary (astate:Abduct
                           (fst join_constrain_sat))
     with F _ -> true 
 
-let conjoin_callee_arith pre_or_post (callee_summary:AbductiveDomain.Summary.t) (call_state:call_state) =
+let conjoin_callee_arith pre_or_post (callee_summary:AbductiveDomain.Summary.t) ?(calling_obj=None) (call_state:call_state)  =
   let open PulseResult.Let_syntax in
   (* pp_call_state F.std_formatter call_state; *)
   (* Formula.pp F.std_formatter callee_path_condition; *)
@@ -452,7 +456,7 @@ let conjoin_callee_arith pre_or_post (callee_summary:AbductiveDomain.Summary.t) 
   let subst, path_condition, new_eqs =
     match pre_or_post with
     | `Pre ->  
-      let type_checking = AddressMap.fold (fun x _ acc -> acc && caller_type_constrain_sat x (fst (AddressMap.find x call_state.subst)) callee_summary call_state.astate) call_state.subst true in 
+      let type_checking = AddressMap.fold (fun x _ acc -> acc && caller_type_constrain_sat x (fst (AddressMap.find x call_state.subst)) callee_summary call_state.astate ~cal_obj:calling_obj) call_state.subst true in 
       (* Utils.print_bool type_checking; *)
       if not (type_checking) then  raise_notrace (Contradiction PathCondition) else
 
@@ -497,8 +501,8 @@ let caller_attrs_of_callee_attrs timestamp callee_proc_name call_location caller
   ({call_state with subst= !subst_ref}, attrs)
 
 
-let apply_arithmetic_constraints pre_or_post {PathContext.timestamp} callee_proc_name call_location 
-    callee_summary call_state =
+let apply_arithmetic_constraints pre_or_post {PathContext.timestamp} ?(c_obj = None) callee_proc_name call_location 
+    callee_summary call_state  =
     (*maybe here*)
     (* pp_call_state F.std_formatter call_state; *)
   let open PulseResult.Let_syntax in
@@ -514,7 +518,8 @@ let apply_arithmetic_constraints pre_or_post {PathContext.timestamp} callee_proc
   let+ call_state =
     conjoin_callee_arith pre_or_post
       callee_summary
-      call_state
+      call_state 
+      ~calling_obj:c_obj
   in
   AddressMap.fold
     (fun addr_callee addr_hist_caller call_state ->
@@ -530,6 +535,9 @@ let apply_arithmetic_constraints pre_or_post {PathContext.timestamp} callee_proc
 
 let materialize_pre path callee_proc_name call_location callee_summary ~captured_formals
     ~captured_actuals ~formals ~actuals call_state =
+  
+    let call_obj = Option.map (List.hd actuals) ~f:(fun ((a,_),_)->a) in 
+
   PerfEvent.(log (fun logger -> log_begin_event logger ~name:"pulse call pre" ())) ;
   let r =
     let callee_precondition = AbductiveDomain.Summary.get_pre callee_summary in
@@ -543,7 +551,7 @@ let materialize_pre path callee_proc_name call_location callee_summary ~captured
     >>= materialize_pre_for_globals path call_location ~pre:callee_precondition
     >>= (* ...then relational arithmetic constraints in the callee's attributes will make sense in
            terms of the caller's values *)
-    apply_arithmetic_constraints `Pre path callee_proc_name call_location callee_summary
+    apply_arithmetic_constraints `Pre path callee_proc_name call_location callee_summary ~c_obj:call_obj
   in
   PerfEvent.(log (fun logger -> log_end_event logger ())) ;
   r
@@ -1046,7 +1054,7 @@ let apply_post path callee_proc_name call_location callee_summary ~captured_form
       record_post_remaining_attributes path callee_proc_name call_location callee_summary call_state
       |> record_skipped_calls callee_proc_name call_location callee_summary
       |> record_need_closure_specialization callee_summary
-      |> conjoin_callee_arith `Post callee_summary
+      |> conjoin_callee_arith `Post callee_summary ?calling_obj:None
       (* normalize subst again now that we know more arithmetic facts *)
       >>| normalize_subst_for_post
     in
