@@ -129,25 +129,32 @@ let checking_instanceof_var var (formula:t) static_type =
   let is_instance v atoms = 
     Atom.Set.fold iter_atom atoms (v,false) in  *)
 
-let check_instance argv path summary=
+let check_instance tenv argv path summary=
 
 (* Formula.pp Format.std_formatter path; *)
 (* print_endline "yes";
 AbstractValue.pp Format.std_formatter argv;  *)
-let tenv = match (Tenv.load_global ()) with 
-            | Some t -> t 
-            | None -> Tenv.create ()
-          in
+
   let (a,b,c) = Formula.checking_instanceof_var true argv path in 
+  
   if (a) then match AbductiveDomain.Summary.get_static_type b summary with 
                             | None -> false (*should consider dynamic type?*)
                             | Some typ1 -> 
+                                ( match AbductiveDomain.Summary.get_dynamic_type b summary with
+                                        |Some dty -> 
+                                            let dty = Formula.ty_name dty in 
+                                            let possible_subtype = Tenv.find_limited_sub dty tenv in 
+                                            (* print_endline "";
+                                            print_endline "xxxxxxxxxxxxxxxxxxxxx";
+                                            print_endline ""; *)
+                                            if (List.is_empty possible_subtype) && PatternMatch.is_subtype tenv dty typ1 && PatternMatch.is_subtype tenv typ1 dty then true else false 
+                                        |None ->
                                         let typ2 = match c with 
                                             | None -> raise (Foo "impossible")
                                             | Some b -> Formula.ty_name b in 
               (* Typ.print_name typ2; *)
                                             let res = PatternMatch.is_subtype tenv typ1 typ2 in 
-                                            res 
+                                            res )
                                         (* else let (a2,b2,c2) = Formula.checking_instanceof_var false argv path in
                                                       if (a2) then match AbductiveDomain.Summary.get_static_type b2 summary with 
                                                         | None -> false (*should consider dynamic type?*)
@@ -162,18 +169,43 @@ let tenv = match (Tenv.load_global ()) with
 
 
 
+let stack_instance_check (summary:AbductiveDomain.Summary.summary) tenv= 
+  
+  let helper var = (match AbductiveDomain.Summary.get_static_type var summary with 
+                        |None -> true 
+                        |Some (sty:Typ.name
+                        ) -> (match AbductiveDomain.Summary.get_dynamic_type var summary with 
+                                      |None -> true 
+                                      |Some dty -> 
+                                        let dty = Formula.ty_name dty in 
+                                        let possible_subtype = Tenv.find_limited_sub dty tenv in 
+                                        (* print_endline "";
+                                        print_endline "xxxxxxxxxxxxxxxxxxxxx";
+                                        print_endline ""; *)
+                                        if (List.is_empty possible_subtype) && PatternMatch.is_subtype tenv dty sty && PatternMatch.is_subtype tenv sty dty then true else false 
+                        )
+  )
+  in
+
+  let pre = AbductiveDomain.Summary.get_pre summary in 
+  let abs_vars = PulseBaseDomain.reachable_addresses pre in 
+  AbstractValue.Set.fold (fun x acc-> helper x && acc) abs_vars true
+
 
 
 
 let is_manifest summary =
+  let tenv = match (Tenv.load_global ()) with 
+            | Some t -> t 
+            | None -> Tenv.create ()
+          in
   
   let path = AbductiveDomain.Summary.get_path_condition summary in 
-
-
-  Formula.is_manifest (AbductiveDomain.Summary.get_path_condition summary) ~is_allocated:(fun v ->
-      if check_instance v path summary then true else
+ 
+  (Formula.is_manifest (AbductiveDomain.Summary.get_path_condition summary) ~is_allocated:(fun v ->
+      if check_instance tenv v path summary then true else
       AbductiveDomain.Summary.is_heap_allocated summary v
-      || AbductiveDomain.Summary.get_must_be_valid v summary |> Option.is_some )
+      || AbductiveDomain.Summary.get_must_be_valid v summary |> Option.is_some )) && stack_instance_check summary tenv
 
 
 let and_is_int v astate = map_path_condition astate ~f:(fun phi -> Formula.and_is_int v phi)

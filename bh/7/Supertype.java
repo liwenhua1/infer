@@ -203,9 +203,18 @@ class Supertype {
     // should not report a warning because the Supertype implementation
     // of foo() does not return null
 
-    // Subtype x = new Subtype();
+    // Supertype x = new Subtype();
     o.foo().toString();
   }
+
+  // public Supertype test(Supertype o) {
+  //     return o;
+  // }
+
+  // public void try1(){
+  //     Subtype a = new Subtype();
+  //     test(a);
+  // }
 
   // static void dynamicDispatchShouldReportWhenCalledWithSubtypeParameterBad_AUX() {
   //   // should report a warning because the Subtype implementation
@@ -217,7 +226,7 @@ class Supertype {
   public void Bad_FN(Subtype o) {
     // should report a warning because the Subtype implementation
     // of foo() returns null
-    
+    // Supertype o = new Supertype();
     typeOK(o);
   }
 
