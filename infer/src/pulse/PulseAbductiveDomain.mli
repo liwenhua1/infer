@@ -197,6 +197,8 @@ module AddressAttributes : sig
 
   val add_dynamic_type : Typ.t -> AbstractValue.t -> t -> t
 
+  val remove_dynamic_type_attr : AbstractValue.t -> t -> t
+
   val add_dynamic_type_source_file : Typ.t -> SourceFile.t -> AbstractValue.t -> t -> t
 
   val add_ref_counted : AbstractValue.t -> t -> t

@@ -566,6 +566,9 @@ module Internal = struct
     let remove_static_type_attr address astate =
         map_post_attrs astate ~f:(BaseAddressAttributes.remove_static_type_attr address)
 
+    let remove_dynamic_type_attr address astate =
+          map_post_attrs astate ~f:(BaseAddressAttributes.remove_dynamic_type_attr address)
+
 
     let remove_taint_attrs address astate =
       map_post_attrs astate ~f:(BaseAddressAttributes.remove_taint_attrs address)
@@ -2113,6 +2116,9 @@ module AddressAttributes = struct
 
   let remove_static_type_attr v astate =
       SafeAttributes.remove_static_type_attr (CanonValue.canon' astate v) astate
+
+  let remove_dynamic_type_attr v astate =
+        SafeAttributes.remove_dynamic_type_attr (CanonValue.canon' astate v) astate
 
   let swap_static_type tenv typ v astete = 
         let astete = remove_static_type_attr v astete in 

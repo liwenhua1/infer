@@ -191,6 +191,8 @@ let remove_allocation_attr = remove_attribute Attributes.remove_allocation
 
 let remove_static_type_attr = remove_attribute Attributes.remove_static_type
 
+let remove_dynamic_type_attr = remove_attribute Attributes.remove_dynamic_type
+
 let remove_tainted = remove_attribute Attributes.remove_tainted
 
 let remove_taint_sanitizer = remove_attribute Attributes.remove_taint_sanitized
@@ -457,6 +459,8 @@ module type S = sig
   val remove_allocation_attr : key -> t -> t
 
   val remove_static_type_attr : key -> t -> t
+
+  val remove_dynamic_type_attr : key -> t -> t
 
   val remove_taint_attrs : key -> t -> t
 

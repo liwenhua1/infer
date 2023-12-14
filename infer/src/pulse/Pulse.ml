@@ -1009,7 +1009,47 @@ module PulseTransferFunctions = struct
           [astate] )
     | _ ->
         [astate]
-
+  
+  let rec find_meth tenv proc ty call_exp act_call= 
+      let meth_exist = Tenv.method_exsit proc tenv in
+      if not meth_exist then 
+        let supers = 
+        let self = Tenv.lookup tenv ty in 
+        match self with | None -> raise Listhd 
+                                   | Some stru -> Struct.get_all_supers stru in 
+        List.iter supers ~f:(fun super ->
+    (* match super with 
+    |None -> call_exp
+    |Some s-> Typ.print_name s; *)
+    (* print_endline "========="; *)
+        let p = Procname.Java.replace_class_name super proc in
+          find_meth tenv p super call_exp act_call)
+      else act_call := Exp.Const (Cfun (Java proc)) 
+  
+  let find_meths tenv proc ty call_exp=
+    let act_call = ref Exp.minus_one in 
+    let meth_exist = Tenv.method_exsit proc tenv in 
+    (* print_endline "=========";
+    Typ.print_name ty;
+    print_endline "---------------";
+    Procname.Java.print_java_proc proc;
+    print_endline "---------------";
+    Utils.print_bool meth_exist;
+    print_endline "--------------"; *)
+    if not meth_exist then 
+          let supers = 
+            let self = Tenv.lookup tenv ty in 
+            match self with | None -> raise Listhd 
+                                         | Some stru -> Struct.get_all_supers stru in 
+          List.iter supers ~f:(fun super ->
+          (* match super with 
+          |None -> call_exp
+          |Some s-> Typ.print_name s; *)
+          (* print_endline "========="; *)
+            let p = Procname.Java.replace_class_name super proc in
+            find_meth tenv p super call_exp act_call)
+    else act_call := Exp.Const (Cfun (Java proc)) ;
+    !act_call
 
   let exec_instr_aux ({PathContext.timestamp} as path) (astate : ExecutionDomain.t)
       (astate_n : NonDisjDomain.t)
@@ -1222,9 +1262,17 @@ module PulseTransferFunctions = struct
               let dy_name = match Typ.name dty with |Some na -> na |None -> raise Listhd in
               let java_p = Procname.as_java_exn ~explanation:"zzz" p in 
               let dy_process = Procname.Java.replace_class_name dy_name java_p in 
-              let meth_exist = Tenv.method_exsit dy_process tenv in 
-              let call_exp =  if not meth_exist then call_exp else Exp.Const (Cfun (Java dy_process)) in
+              (* let meth_exist = Tenv.method_exsit dy_process tenv in  *)
+              (* print_endline "=============="; *)
+              
+              let call_exp = find_meths tenv dy_process dy_name call_exp in
+              (* Exp.pp F.std_formatter call_exp; *)
+              (* print_endline "=============="; *)
               (* if not meth_exist then Procname.Java.print_java_proc dy_process; *)
+              (* let astate = AbductiveDomain.AddressAttributes.remove_static_type_attr *)
+              (* AbductiveDomain.pp F.std_formatter astate;
+              let astate = AbductiveDomain.AddressAttributes.remove_dynamic_type_attr call_obj astate in
+              AbductiveDomain.pp F.std_formatter astate; *)
             let astate_n = check_modified_before_dtor actuals call_exp astate astate_n in
           let astates =
             List.fold actuals ~init:[astate] ~f:(fun astates (exp, typ) ->
@@ -1292,8 +1340,12 @@ module PulseTransferFunctions = struct
             let call_exp = 
               let java_p = Procname.as_java_exn ~explanation:"zzz" p in 
               let dy_process = Procname.Java.replace_class_name cls_name java_p in 
-              let meth_exist = Tenv.method_exsit dy_process tenv in 
-              if not meth_exist then call_exp else Exp.Const (Cfun (Java dy_process)) 
+              (* act_call := call_exp;find_meth tenv dy_process cls_name call_exp;
+              !act_call  *)
+              find_meths tenv dy_process cls_name call_exp 
+              (* let meth_exist = Tenv.method_exsit dy_process tenv in 
+              if not meth_exist then call_exp else Exp.Const (Cfun (Java dy_process))  *)
+              (* find_meth tenv dy_process cls_name call_exp  *)
 
             in
             let astate = AbductiveDomain.AddressAttributes.add_dynamic_type (Typ.mk_struct cls_name) call_obj astate in
@@ -1742,8 +1794,8 @@ let analyze specialization
 
 
 let checker ?specialization ({InterproceduralAnalysis.proc_desc} as analysis_data) =
-  Procdesc.pp_with_instrs ~print_types:true F.std_formatter proc_desc;
-  (* Tenv.pp_per_file F.std_formatter (Tenv.FileLocal analysis_data.tenv); *)
+  (* Procdesc.pp_with_instrs ~print_types:true F.std_formatter proc_desc;
+  Tenv.pp_per_file F.std_formatter (Tenv.FileLocal analysis_data.tenv); *)
   (* print_endline "===================="; *)
   let open IOption.Let_syntax in
   if should_analyze proc_desc then (

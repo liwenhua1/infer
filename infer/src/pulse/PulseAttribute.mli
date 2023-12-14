@@ -164,6 +164,8 @@ module Attributes : sig
 
   val remove_static_type : t -> t
 
+  val remove_dynamic_type : t -> t
+
   val is_ref_counted : t -> bool
 
   val get_unknown_effect : t -> (CallEvent.t * ValueHistory.t) option

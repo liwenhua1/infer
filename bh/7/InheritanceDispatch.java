@@ -23,6 +23,7 @@ class InheritanceDispatch {
 
   void dispatch_to_C_bad() {
     A c = getC();
+    // int b = c.foo();
     if (c.foo() == 52) {
       Object o = null;
       o.toString();
