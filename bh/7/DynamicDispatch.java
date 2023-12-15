@@ -61,15 +61,13 @@ public class DynamicDispatch {
 
 
   // require iterative specialization
-  C callCallBuildC(A a1, A a2) {
-    return a1.callBuildC(a2);
+  C callBuildCTwiceGood(A a1, A a2) {
+    C c = (a1 == null) ? null : a1.buildC();
+    return (a2 == null) ? null : a2.buildC();
   }
 
-  C buildCTransitivelyAndDerefGood() {
-    A a1 = new A_Bad();
-    A a2 = new A_Good();
-    return this.callCallBuildC(a1,a2 ).f;
+  C buildCAndDerefNeedPartialSpecializationBad(A a) {
+    return callBuildCTwiceGood(a, new A_Bad()).f;
   }
-
 
 }
