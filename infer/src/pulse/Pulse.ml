@@ -1010,7 +1010,7 @@ module PulseTransferFunctions = struct
     | _ ->
         [astate]
   
-  (* let rec find_meth tenv proc ty call_exp act_call= 
+  let rec _find_meth tenv proc ty call_exp act_call= 
       let meth_exist = Tenv.method_exsit proc tenv in
       if not meth_exist then 
         let supers = 
@@ -1023,10 +1023,10 @@ module PulseTransferFunctions = struct
     |Some s-> Typ.print_name s; *)
     (* print_endline "========="; *)
         let p = Procname.Java.replace_class_name super proc in
-          find_meth tenv p super call_exp act_call)
+          _find_meth tenv p super call_exp act_call)
       else act_call := Exp.Const (Cfun (Java proc)) 
   
-  let find_meths tenv proc ty call_exp=
+  let _find_meths tenv proc ty call_exp=
     let act_call = ref Exp.minus_one in 
     let meth_exist = Tenv.method_exsit proc tenv in 
     (* print_endline "=========";
@@ -1047,9 +1047,9 @@ module PulseTransferFunctions = struct
           |Some s-> Typ.print_name s; *)
           (* print_endline "========="; *)
             let p = Procname.Java.replace_class_name super proc in
-            find_meth tenv p super call_exp act_call)
+            _find_meth tenv p super call_exp act_call)
     else act_call := Exp.Const (Cfun (Java proc)) ;
-    !act_call *)
+    !act_call
 
   let exec_instr_aux ({PathContext.timestamp} as path) (astate : ExecutionDomain.t)
       (astate_n : NonDisjDomain.t)
@@ -1169,7 +1169,7 @@ module PulseTransferFunctions = struct
         |Const (Cfun p) when Procname.is_java p
         
         
-        -> if (Procname.equal p BuiltinDecl.__new) || (List.is_empty actuals) then
+        -> if (Procname.equal p BuiltinDecl.__new) || (List.is_empty actuals) || Procname.is_java_static_method p then
         
         (* let all_possible_subtypes = 
         in *)
@@ -1272,7 +1272,8 @@ module PulseTransferFunctions = struct
               let call_exp =  if not meth_exist then call_exp else Exp.Const (Cfun (Java dy_process)) in
               (* print_endline "=============="; *)
               
-              (* let call_exp = find_meths tenv dy_process dy_name call_exp in *)
+              (* let call_exp = _find_meths tenv dy_process dy_name call_exp in *)
+
               (* Exp.pp F.std_formatter call_exp; *)
               (* print_endline "=============="; *)
               (* if not meth_exist then Procname.Java.print_java_proc dy_process; *)
@@ -1334,6 +1335,7 @@ module PulseTransferFunctions = struct
             let static_ty = AbductiveDomain.AddressAttributes.get_static_type call_obj astate in 
             (match static_ty with
             |Some sty -> let possible_subclass = sty::(Tenv.find_limited_sub sty tenv) in 
+            let possible_subclass = List.filter possible_subclass ~f:(fun x -> not (Tenv.is_java_abstract_cls tenv x)) in
            
             let astate_n = check_modified_before_dtor actuals call_exp astate astate_n in
             let constrains = Formula.get_all_instance_constrains call_obj astate.path_condition in 
@@ -1352,7 +1354,7 @@ module PulseTransferFunctions = struct
               (* find_meths tenv dy_process cls_name call_exp  *)
               let meth_exist = Tenv.method_exsit dy_process tenv in 
               if not meth_exist then call_exp else Exp.Const (Cfun (Java dy_process)) 
-              (* find_meth tenv dy_process cls_name call_exp  *)
+              (* _find_meths tenv dy_process cls_name call_exp  *)
 
             in
             let astate = AbductiveDomain.AddressAttributes.add_dynamic_type (Typ.mk_struct cls_name) call_obj astate in
@@ -1723,13 +1725,13 @@ let analyze specialization
     let ((exit_summaries_opt:DisjunctiveAnalyzer.TransferFunctions.Domain.t option), exn_sink_summaries_opt) =
       DisjunctiveAnalyzer.compute_post_including_exceptional analysis_data ~initial proc_desc
     in
-    (* print_endline "process analysis";
+    print_endline "process analysis";
     Procname.pp_name_only F.std_formatter proc_name;
     let res = match exit_summaries_opt with 
     | None  -> ()
     | Some a -> DisjunctiveAnalyzer.TransferFunctions.Domain.pp F.std_formatter a in
     res;
-    print_endline "process analysis end"; *)
+    print_endline "process analysis end";
     let process_postconditions node posts_opt ~convert_normal_to_exceptional =
       match posts_opt with
       | Some (posts, non_disj_astate) ->
@@ -1801,8 +1803,8 @@ let analyze specialization
 
 
 let checker ?specialization ({InterproceduralAnalysis.proc_desc} as analysis_data) =
-  (* Procdesc.pp_with_instrs ~print_types:true F.std_formatter proc_desc;
-  Tenv.pp_per_file F.std_formatter (Tenv.FileLocal analysis_data.tenv); *)
+  (* Procdesc.pp_with_instrs ~print_types:true F.std_formatter proc_desc; *)
+  (* Tenv.pp_per_file F.std_formatter (Tenv.FileLocal analysis_data.tenv); *)
   (* print_endline "===================="; *)
   let open IOption.Let_syntax in
   if should_analyze proc_desc then (

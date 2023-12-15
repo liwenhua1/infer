@@ -1,0 +1,904 @@
+process analysis
+DynamicDispatch$A.<init>1 disjuncts:
+                        #0: (conditions: (empty) phi: term_eqs: DynamicDispatch$A.<init>()([v2])=v4
+                             { roots={ &this=v1 };
+                               mem  ={ v1 -> { * -> v2 }, v2 -> { * -> v3 } };
+                               attrs={ v1 -> { MustBeValid(, None, t=0) },
+                                       v2 -> { DynamicType DynamicDispatch$A, SourceFile [None],
+                                               MustBeValid(, None, t=0),
+                                               UnknownEffect(function `DynamicDispatch$A.<init>()` with no summary,
+                                                             in call to function `DynamicDispatch$A.<init>()` with no summary at line 37 :t2
+                                                             [] ) } };}
+                             PRE=[{ roots={ &this=v1 };
+                                    mem  ={ v1 -> { * -> v2 }, v2 -> { * -> v3 }, v3 -> { } };
+                                    attrs={ v1 -> { MustBeInitialized(, t=0),
+                                                    MustBeValid(, None, t=0) },
+                                            v2 -> { MustBeInitialized(, t=0),
+                                                    MustBeValid(, None, t=0) } };}]
+                             need_closure_specialization=false
+                             need_dynamic_type_specialization={ }
+                             skipped_calls={ DynamicDispatch$A.<init>() -> call to skipped function occurs here }
+                             Topl={len=0;content=
+                                    [  ]},
+                            conditions= [] timestamp= 7)
+                        
+                        Non-disj state:
+                          copy map: { }, parameter map: { }, destructor checked: { },
+                          captured: { }, locked: false,
+                          loads: ({ n$0 -> { this } },{ this -> { line 37 -> { 1 } } }),
+                          passed to: { this -> { DynamicDispatch$A.<init>() -> { line 37 -> { 2 } } } }process analysis end
+process analysis
+DynamicDispatch$C.<init>
+1 disjuncts:
+#0: (conditions: (empty) phi: term_eqs: DynamicDispatch$C.<init>()([v2])=v4
+     { roots={ &this=v1 };
+       mem  ={ v1 -> { * -> v2 }, v2 -> { * -> v3 } };
+       attrs={ v1 -> { MustBeValid(, None, t=0) },
+               v2 -> { DynamicType DynamicDispatch$C, SourceFile [None],
+                       MustBeValid(, None, t=0),
+                       UnknownEffect(function `DynamicDispatch$C.<init>()` with no summary,
+                                     in call to function `DynamicDispatch$C.<init>()` with no summary at line 33 :t2
+                                     [] ) } };}
+     PRE=[{ roots={ &this=v1 };
+            mem  ={ v1 -> { * -> v2 }, v2 -> { * -> v3 }, v3 -> { } };
+            attrs={ v1 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                    v2 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) } };}]
+     need_closure_specialization=false
+     need_dynamic_type_specialization={ }
+     skipped_calls={ DynamicDispatch$C.<init>() -> call to skipped function occurs here }
+     Topl={len=0;content=
+            [  ]},
+    conditions= [] timestamp= 7)
+
+Non-disj state:
+  copy map: { }, parameter map: { }, destructor checked: { }, captured: { }, 
+  locked: false, loads: ({ n$0 -> { this } },{ this -> { line 33 -> { 1 } } }),
+  process analysis end
+process analysis
+passed to: { this -> { DynamicDispatch$C.<init>() -> { line 33 -> { 2 } } } }DynamicDispatch$A_Good.buildC
+1 disjuncts:
+#0: (conditions: (empty)
+     phi: linear_eqs: v5 = a1 +1
+          && term_eqs: DynamicDispatch$C.<init>()([v5])=v7∧[a1 +1]=v5
+          && intervals: v5≥1
+     { roots={ &this=v1, &return=v9 };
+       mem  ={ v1 -> { * -> v2 },
+               v2 -> { * -> v3 },
+               v5 -> { * -> v6 },
+               v8 -> { * -> v5 },
+               v9 -> { * -> v5 } };
+       attrs={ v1 -> { MustBeValid(, None, t=0) },
+               v2 -> { DynamicType DynamicDispatch$A_Good, SourceFile [None],
+                       MustBeValid(, None, t=0) },
+               v5 -> { DynamicType DynamicDispatch$C, SourceFile [None],
+                       MustBeValid(, None, t=2),
+                       UnknownEffect(function `DynamicDispatch$C.<init>()` with no summary,
+                                     in call to `DynamicDispatch$C.<init>()` at line 49 :t2
+                                     [in call to function `DynamicDispatch$C.<init>()` with no summary at line 33 :t2
+                                      [] ]
+                                     ) },
+               v8 -> { MustBeValid(, None, t=3), WrittenTo (3, ) },
+               v9 -> { MustBeValid(, None, t=6), WrittenTo (6, ) } };}
+     PRE=[{ roots={ &this=v1 };
+            mem  ={ v1 -> { * -> v2 }, v2 -> { * -> v3 }, v3 -> { } };
+            attrs={ v1 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                    v2 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) } };}]
+     need_closure_specialization=false
+     need_dynamic_type_specialization={ }
+     skipped_calls={ DynamicDispatch$C.<init>() -> call to skipped function occurs here }
+     Topl={len=0;content=
+            [  ]},
+    conditions= [] timestamp= 11)
+
+Non-disj state:
+  copy map: { }, parameter map: { }, destructor checked: { }, captured: { }, 
+  locked: false, loads: ({ n$2 -> { $irvar0 } },{ $irvar0 -> { line 49 -> { 5 } } }),
+  process analysis end
+process analysis
+passed to: { }DynamicDispatch$A_Bad.buildC1 disjuncts:
+                                            #0: (conditions: (empty)
+                                                 phi: linear_eqs: v4 = 0
+                                                      && term_eqs: 0=v4
+                                                      && intervals: v4=null
+                                                 { roots={ &this=v1, &return=v5 };
+                                                   mem  ={ v1 -> { * -> v2 },
+                                                           v2 -> { * -> v3 },
+                                                           v5 -> { * -> v4 } };
+                                                   attrs={ v1 -> { MustBeValid(, None, t=0) },
+                                                           v2 -> { DynamicType DynamicDispatch$A_Bad, SourceFile [None],
+                                                                   MustBeValid(, None, t=0) },
+                                                           v4 -> { Invalid ConstantDereference(is assigned to the null pointer) },
+                                                           v5 -> { MustBeValid(, None, t=1),
+                                                                   WrittenTo (1, ) } };}
+                                                 PRE=[{ roots={ &this=v1 };
+                                                        mem  ={ v1 -> { * -> v2 },
+                                                                v2 -> { * -> v3 },
+                                                                v3 -> { } };
+                                                        attrs={ v1 -> { MustBeInitialized(, t=0),
+                                                                    MustBeValid(, None, t=0) },
+                                                                v2 -> { MustBeInitialized(, t=0),
+                                                                    MustBeValid(, None, t=0) } };}]
+                                                 need_closure_specialization=false
+                                                 need_dynamic_type_specialization=
+                                                 { }
+                                                 skipped_calls={ }
+                                                 Topl={len=0;content=
+                                                        [  ]},
+                                                conditions= [] timestamp= 4)
+                                            
+                                            Non-disj state:
+                                              copy map: { }, parameter map: { },
+                                              destructor checked: { }, 
+                                              captured: { }, locked: false, 
+                                              loads: ({ },{ }),process analysis end
+process analysis
+ passed to: { }DynamicDispatch$A.callBuildC
+3 disjuncts:
+#0: (conditions: (empty) phi: term_eqs: DynamicDispatch$C DynamicDispatch$A.buildC()([v4])=v11
+     { roots={ &a=v2, &this=v1, &return=v15 };
+       mem  ={ v1 -> { * -> v3 },
+               v2 -> { * -> v4 },
+               v3 -> { * -> v5 },
+               v4 -> { * -> v6 },
+               v12 -> { * -> v11 },
+               v15 -> { * -> v11 } };
+       attrs={ v1 -> { MustBeValid(, None, t=0) },
+               v2 -> { MustBeValid(, None, t=0) },
+               v3 -> { DynamicType DynamicDispatch$A, SourceFile [None], MustBeValid(, None, t=0) },
+               v4 -> { DynamicType DynamicDispatch$A, SourceFile [None],
+                       MustBeValid(, None, t=2),
+                       StaticType class DynamicDispatch$A,
+                       UnknownEffect(function `DynamicDispatch$C DynamicDispatch$A.buildC()` with no summary,
+                                     in call to function `DynamicDispatch$C DynamicDispatch$A.buildC()` with no summary at line 41 :t3
+                                     [] ) },
+               v11 -> { PropagateTaintFrom([{v= v4}]), ReturnedFromUnknown([v4]) },
+               v12 -> { MustBeValid(, None, t=4), WrittenTo (4, ) },
+               v15 -> { MustBeValid(, None, t=8), WrittenTo (8, ) } };}
+     PRE=[{ roots={ &a=v2, &this=v1 };
+            mem  ={ v1 -> { * -> v3 },
+                    v2 -> { * -> v4 },
+                    v3 -> { * -> v5 },
+                    v4 -> { * -> v6 },
+                    v5 -> { },
+                    v6 -> { } };
+            attrs={ v1 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                    v2 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                    v3 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                    v4 -> { MustBeInitialized(, t=2), MustBeValid(, None, t=2) } };}]
+     need_closure_specialization=false
+     need_dynamic_type_specialization={ }
+     skipped_calls={ DynamicDispatch$C DynamicDispatch$A.buildC() -> call to skipped function occurs here }
+     Topl={len=0;content=
+            [  ]},
+    conditions= [] timestamp= 13)
+#1: (conditions: (empty) phi: linear_eqs: v10 = 0 && term_eqs: 0=v10 && intervals: v10=null
+     { roots={ &a=v2, &this=v1, &return=v16 };
+       mem  ={ v1 -> { * -> v3 },
+               v2 -> { * -> v4 },
+               v3 -> { * -> v5 },
+               v4 -> { * -> v6 },
+               v13 -> { * -> v10 },
+               v16 -> { * -> v10 } };
+       attrs={ v1 -> { MustBeValid(, None, t=0) },
+               v2 -> { MustBeValid(, None, t=0) },
+               v3 -> { DynamicType DynamicDispatch$A, SourceFile [None], MustBeValid(, None, t=0) },
+               v4 -> { DynamicType DynamicDispatch$A_Bad, SourceFile [None],
+                       MustBeValid(, None, t=2),
+                       StaticType class DynamicDispatch$A },
+               v10 -> { Invalid ConstantDereference(is assigned to the null pointer) },
+               v13 -> { MustBeValid(, None, t=4), WrittenTo (4, ) },
+               v16 -> { MustBeValid(, None, t=8), WrittenTo (8, ) } };}
+     PRE=[{ roots={ &a=v2, &this=v1 };
+            mem  ={ v1 -> { * -> v3 },
+                    v2 -> { * -> v4 },
+                    v3 -> { * -> v5 },
+                    v4 -> { * -> v6 },
+                    v5 -> { },
+                    v6 -> { } };
+            attrs={ v1 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                    v2 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                    v3 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                    v4 -> { MustBeInitialized(, t=2), MustBeValid(, None, t=2) } };}]
+     need_closure_specialization=false
+     need_dynamic_type_specialization={ }
+     skipped_calls={ }
+     Topl={len=0;content=
+            [  ]},
+    conditions= [] timestamp= 13)
+#2: (conditions: (empty)
+     phi: linear_eqs: v7 = a1 +1
+          && term_eqs: DynamicDispatch$C.<init>()([v7])=v9∧[a1 +1]=v7
+          && intervals: v7≥1
+     { roots={ &a=v2, &this=v1, &return=v17 };
+       mem  ={ v1 -> { * -> v3 },
+               v2 -> { * -> v4 },
+               v3 -> { * -> v5 },
+               v4 -> { * -> v6 },
+               v7 -> { * -> v8 },
+               v14 -> { * -> v7 },
+               v17 -> { * -> v7 } };
+       attrs={ v1 -> { MustBeValid(, None, t=0) },
+               v2 -> { MustBeValid(, None, t=0) },
+               v3 -> { DynamicType DynamicDispatch$A, SourceFile [None], MustBeValid(, None, t=0) },
+               v4 -> { DynamicType DynamicDispatch$A_Good, SourceFile [None],
+                       MustBeValid(, None, t=2),
+                       StaticType class DynamicDispatch$A },
+               v7 -> { DynamicType DynamicDispatch$C, SourceFile [None],
+                       UnknownEffect(function `DynamicDispatch$C.<init>()` with no summary,
+                                     in call to `DynamicDispatch$C DynamicDispatch$A_Good.buildC()` at line 41 :t3
+                                     [in call to `DynamicDispatch$C.<init>()` at line 49 :t2
+                                      [in call to function `DynamicDispatch$C.<init>()` with no summary at line 33 :t2
+                                       [] ]
+                                      ]
+                                     ) },
+               v14 -> { MustBeValid(, None, t=4), WrittenTo (4, ) },
+               v17 -> { MustBeValid(, None, t=8), WrittenTo (8, ) } };}
+     PRE=[{ roots={ &a=v2, &this=v1 };
+            mem  ={ v1 -> { * -> v3 },
+                    v2 -> { * -> v4 },
+                    v3 -> { * -> v5 },
+                    v4 -> { * -> v6 },
+                    v5 -> { },
+                    v6 -> { } };
+            attrs={ v1 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                    v2 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                    v3 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                    v4 -> { MustBeInitialized(, t=2), MustBeValid(, None, t=2) } };}]
+     need_closure_specialization=false
+     need_dynamic_type_specialization={ }
+     skipped_calls={ DynamicDispatch$C.<init>() -> call to skipped function occurs here }
+     Topl={len=0;content=
+            [  ]},
+    conditions= [] timestamp= 13)
+
+Non-disj state:
+  copy map: { }, parameter map: { }, destructor checked: { }, captured: { }, 
+  locked: false,
+  loads: ({ n$0 -> { a }, n$3 -> { $irvar0 } },
+  { a -> { line 41 -> { 1 } }, $irvar0 -> { line 41 -> { 7 } } }),
+  process analysis end
+process analysis
+passed to: { a -> { DynamicDispatch$C DynamicDispatch$A.buildC() -> { line 41 -> { 3 } } } }DynamicDispatch.callCallBuildC
+9 disjuncts:
+#0: (conditions: (empty)
+     phi: linear_eqs: v26 = a3 +1
+          && term_eqs: DynamicDispatch$C.<init>()([v26])=v28∧[a3 +1]=v26
+          && intervals: v26≥1
+     { roots={ &a2=v3, &this=v1, &return=v42, &a1=v2 };
+       mem  ={ v1 -> { * -> v4 },
+               v2 -> { * -> v5 },
+               v3 -> { * -> v6 },
+               v4 -> { * -> v7 },
+               v5 -> { * -> v8 },
+               v6 -> { * -> v25 },
+               v26 -> { * -> v27 },
+               v33 -> { * -> v26 },
+               v42 -> { * -> v26 } };
+       attrs={ v1 -> { MustBeValid(, None, t=0) },
+               v2 -> { MustBeValid(, None, t=0) },
+               v3 -> { MustBeValid(, None, t=0) },
+               v4 -> { DynamicType DynamicDispatch, SourceFile [None], MustBeValid(, None, t=0) },
+               v5 -> { DynamicType DynamicDispatch$A, SourceFile [None],
+                       MustBeValid(, None, t=2),
+                       StaticType class DynamicDispatch$A },
+               v6 -> { MustBeValid(, None, t=4), StaticType class DynamicDispatch$A },
+               v26 -> { DynamicType DynamicDispatch$C, SourceFile [None],
+                        UnknownEffect(function `DynamicDispatch$C.<init>()` with no summary,
+                                      in call to `DynamicDispatch$C DynamicDispatch$A.callBuildC(DynamicDispatch$A)` at line 65 :t4
+                                      [in call to `DynamicDispatch$C DynamicDispatch$A_Good.buildC()` at line 41 :t3
+                                       [in call to `DynamicDispatch$C.<init>()` at line 49 :t2
+                                        [in call to function `DynamicDispatch$C.<init>()` with no summary at line 33 :t2
+                                         [] ]
+                                        ]
+                                       ]
+                                      ) },
+               v33 -> { MustBeValid(, None, t=5), WrittenTo (5, ) },
+               v42 -> { MustBeValid(, None, t=10), WrittenTo (10, ) } };}
+     PRE=[{ roots={ &a2=v3, &this=v1, &a1=v2 };
+            mem  ={ v1 -> { * -> v4 },
+                    v2 -> { * -> v5 },
+                    v3 -> { * -> v6 },
+                    v4 -> { * -> v7 },
+                    v5 -> { * -> v8 },
+                    v6 -> { * -> v25 },
+                    v7 -> { },
+                    v8 -> { },
+                    v25 -> { } };
+            attrs={ v1 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                    v2 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                    v3 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                    v4 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                    v5 -> { MustBeInitialized(, t=2), MustBeValid(, None, t=2) },
+                    v6 -> { MustBeInitialized(, t=4), MustBeValid(, None, t=4) } };}]
+     need_closure_specialization=false
+     need_dynamic_type_specialization={ }
+     skipped_calls={ DynamicDispatch$C.<init>() -> call to skipped function occurs here }
+     Topl={len=0;content=
+            [  ]},
+    conditions= [] timestamp= 15)
+#1: (conditions: (empty) phi: linear_eqs: v30 = 0 && term_eqs: 0=v30 && intervals: v30=null
+     { roots={ &a2=v3, &this=v1, &return=v43, &a1=v2 };
+       mem  ={ v1 -> { * -> v4 },
+               v2 -> { * -> v5 },
+               v3 -> { * -> v6 },
+               v4 -> { * -> v7 },
+               v5 -> { * -> v8 },
+               v6 -> { * -> v29 },
+               v34 -> { * -> v30 },
+               v43 -> { * -> v30 } };
+       attrs={ v1 -> { MustBeValid(, None, t=0) },
+               v2 -> { MustBeValid(, None, t=0) },
+               v3 -> { MustBeValid(, None, t=0) },
+               v4 -> { DynamicType DynamicDispatch, SourceFile [None], MustBeValid(, None, t=0) },
+               v5 -> { DynamicType DynamicDispatch$A, SourceFile [None],
+                       MustBeValid(, None, t=2),
+                       StaticType class DynamicDispatch$A },
+               v6 -> { MustBeValid(, None, t=4), StaticType class DynamicDispatch$A },
+               v30 -> { Invalid ConstantDereference(is assigned to the null pointer) },
+               v34 -> { MustBeValid(, None, t=5), WrittenTo (5, ) },
+               v43 -> { MustBeValid(, None, t=10), WrittenTo (10, ) } };}
+     PRE=[{ roots={ &a2=v3, &this=v1, &a1=v2 };
+            mem  ={ v1 -> { * -> v4 },
+                    v2 -> { * -> v5 },
+                    v3 -> { * -> v6 },
+                    v4 -> { * -> v7 },
+                    v5 -> { * -> v8 },
+                    v6 -> { * -> v29 },
+                    v7 -> { },
+                    v8 -> { },
+                    v29 -> { } };
+            attrs={ v1 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                    v2 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                    v3 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                    v4 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                    v5 -> { MustBeInitialized(, t=2), MustBeValid(, None, t=2) },
+                    v6 -> { MustBeInitialized(, t=4), MustBeValid(, None, t=4) } };}]
+     need_closure_specialization=false
+     need_dynamic_type_specialization={ }
+     skipped_calls={ }
+     Topl={len=0;content=
+            [  ]},
+    conditions= [] timestamp= 15)
+#2: (conditions: (empty) phi: term_eqs: DynamicDispatch$C DynamicDispatch$A.buildC()([v6])=v32
+     { roots={ &a2=v3, &this=v1, &return=v44, &a1=v2 };
+       mem  ={ v1 -> { * -> v4 },
+               v2 -> { * -> v5 },
+               v3 -> { * -> v6 },
+               v4 -> { * -> v7 },
+               v5 -> { * -> v8 },
+               v6 -> { * -> v31 },
+               v35 -> { * -> v32 },
+               v44 -> { * -> v32 } };
+       attrs={ v1 -> { MustBeValid(, None, t=0) },
+               v2 -> { MustBeValid(, None, t=0) },
+               v3 -> { MustBeValid(, None, t=0) },
+               v4 -> { DynamicType DynamicDispatch, SourceFile [None], MustBeValid(, None, t=0) },
+               v5 -> { DynamicType DynamicDispatch$A, SourceFile [None],
+                       MustBeValid(, None, t=2),
+                       StaticType class DynamicDispatch$A },
+               v6 -> { DynamicType DynamicDispatch$A, SourceFile [None],
+                       MustBeValid(, None, t=4),
+                       StaticType class DynamicDispatch$A,
+                       UnknownEffect(function `DynamicDispatch$C DynamicDispatch$A.buildC()` with no summary,
+                                     in call to `DynamicDispatch$C DynamicDispatch$A.callBuildC(DynamicDispatch$A)` at line 65 :t4
+                                     [in call to function `DynamicDispatch$C DynamicDispatch$A.buildC()` with no summary at line 41 :t3
+                                      [] ]
+                                     ) },
+               v32 -> { PropagateTaintFrom([{v= v6}]), ReturnedFromUnknown([v6]) },
+               v35 -> { MustBeValid(, None, t=5), WrittenTo (5, ) },
+               v44 -> { MustBeValid(, None, t=10), WrittenTo (10, ) } };}
+     PRE=[{ roots={ &a2=v3, &this=v1, &a1=v2 };
+            mem  ={ v1 -> { * -> v4 },
+                    v2 -> { * -> v5 },
+                    v3 -> { * -> v6 },
+                    v4 -> { * -> v7 },
+                    v5 -> { * -> v8 },
+                    v6 -> { * -> v31 },
+                    v7 -> { },
+                    v8 -> { },
+                    v31 -> { } };
+            attrs={ v1 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                    v2 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                    v3 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                    v4 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                    v5 -> { MustBeInitialized(, t=2), MustBeValid(, None, t=2) },
+                    v6 -> { MustBeInitialized(, t=4), MustBeValid(, None, t=4) } };}]
+     need_closure_specialization=false
+     need_dynamic_type_specialization={ }
+     skipped_calls={ DynamicDispatch$C DynamicDispatch$A.buildC() -> call to skipped function occurs here }
+     Topl={len=0;content=
+            [  ]},
+    conditions= [] timestamp= 15)
+#3: (conditions: (empty)
+     phi: linear_eqs: v18 = a2 +1
+          && term_eqs: DynamicDispatch$C.<init>()([v18])=v20∧[a2 +1]=v18
+          && intervals: v18≥1
+     { roots={ &a2=v3, &this=v1, &return=v45, &a1=v2 };
+       mem  ={ v1 -> { * -> v4 },
+               v2 -> { * -> v5 },
+               v3 -> { * -> v6 },
+               v4 -> { * -> v7 },
+               v5 -> { * -> v8 },
+               v6 -> { * -> v17 },
+               v18 -> { * -> v19 },
+               v36 -> { * -> v18 },
+               v45 -> { * -> v18 } };
+       attrs={ v1 -> { MustBeValid(, None, t=0) },
+               v2 -> { MustBeValid(, None, t=0) },
+               v3 -> { MustBeValid(, None, t=0) },
+               v4 -> { DynamicType DynamicDispatch, SourceFile [None], MustBeValid(, None, t=0) },
+               v5 -> { DynamicType DynamicDispatch$A_Bad, SourceFile [None],
+                       MustBeValid(, None, t=2),
+                       StaticType class DynamicDispatch$A },
+               v6 -> { MustBeValid(, None, t=4), StaticType class DynamicDispatch$A },
+               v18 -> { DynamicType DynamicDispatch$C, SourceFile [None],
+                        UnknownEffect(function `DynamicDispatch$C.<init>()` with no summary,
+                                      in call to `DynamicDispatch$C DynamicDispatch$A.callBuildC(DynamicDispatch$A)` at line 65 :t4
+                                      [in call to `DynamicDispatch$C DynamicDispatch$A_Good.buildC()` at line 41 :t3
+                                       [in call to `DynamicDispatch$C.<init>()` at line 49 :t2
+                                        [in call to function `DynamicDispatch$C.<init>()` with no summary at line 33 :t2
+                                         [] ]
+                                        ]
+                                       ]
+                                      ) },
+               v36 -> { MustBeValid(, None, t=5), WrittenTo (5, ) },
+               v45 -> { MustBeValid(, None, t=10), WrittenTo (10, ) } };}
+     PRE=[{ roots={ &a2=v3, &this=v1, &a1=v2 };
+            mem  ={ v1 -> { * -> v4 },
+                    v2 -> { * -> v5 },
+                    v3 -> { * -> v6 },
+                    v4 -> { * -> v7 },
+                    v5 -> { * -> v8 },
+                    v6 -> { * -> v17 },
+                    v7 -> { },
+                    v8 -> { },
+                    v17 -> { } };
+            attrs={ v1 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                    v2 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                    v3 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                    v4 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                    v5 -> { MustBeInitialized(, t=2), MustBeValid(, None, t=2) },
+                    v6 -> { MustBeInitialized(, t=4), MustBeValid(, None, t=4) } };}]
+     need_closure_specialization=false
+     need_dynamic_type_specialization={ }
+     skipped_calls={ DynamicDispatch$C.<init>() -> call to skipped function occurs here }
+     Topl={len=0;content=
+            [  ]},
+    conditions= [] timestamp= 15)
+#4: (conditions: (empty) phi: linear_eqs: v22 = 0 && term_eqs: 0=v22 && intervals: v22=null
+     { roots={ &a2=v3, &this=v1, &return=v46, &a1=v2 };
+       mem  ={ v1 -> { * -> v4 },
+               v2 -> { * -> v5 },
+               v3 -> { * -> v6 },
+               v4 -> { * -> v7 },
+               v5 -> { * -> v8 },
+               v6 -> { * -> v21 },
+               v37 -> { * -> v22 },
+               v46 -> { * -> v22 } };
+       attrs={ v1 -> { MustBeValid(, None, t=0) },
+               v2 -> { MustBeValid(, None, t=0) },
+               v3 -> { MustBeValid(, None, t=0) },
+               v4 -> { DynamicType DynamicDispatch, SourceFile [None], MustBeValid(, None, t=0) },
+               v5 -> { DynamicType DynamicDispatch$A_Bad, SourceFile [None],
+                       MustBeValid(, None, t=2),
+                       StaticType class DynamicDispatch$A },
+               v6 -> { MustBeValid(, None, t=4), StaticType class DynamicDispatch$A },
+               v22 -> { Invalid ConstantDereference(is assigned to the null pointer) },
+               v37 -> { MustBeValid(, None, t=5), WrittenTo (5, ) },
+               v46 -> { MustBeValid(, None, t=10), WrittenTo (10, ) } };}
+     PRE=[{ roots={ &a2=v3, &this=v1, &a1=v2 };
+            mem  ={ v1 -> { * -> v4 },
+                    v2 -> { * -> v5 },
+                    v3 -> { * -> v6 },
+                    v4 -> { * -> v7 },
+                    v5 -> { * -> v8 },
+                    v6 -> { * -> v21 },
+                    v7 -> { },
+                    v8 -> { },
+                    v21 -> { } };
+            attrs={ v1 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                    v2 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                    v3 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                    v4 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                    v5 -> { MustBeInitialized(, t=2), MustBeValid(, None, t=2) },
+                    v6 -> { MustBeInitialized(, t=4), MustBeValid(, None, t=4) } };}]
+     need_closure_specialization=false
+     need_dynamic_type_specialization={ }
+     skipped_calls={ }
+     Topl={len=0;content=
+            [  ]},
+    conditions= [] timestamp= 15)
+#5: (conditions: (empty) phi: term_eqs: DynamicDispatch$C DynamicDispatch$A.buildC()([v6])=v24
+     { roots={ &a2=v3, &this=v1, &return=v47, &a1=v2 };
+       mem  ={ v1 -> { * -> v4 },
+               v2 -> { * -> v5 },
+               v3 -> { * -> v6 },
+               v4 -> { * -> v7 },
+               v5 -> { * -> v8 },
+               v6 -> { * -> v23 },
+               v38 -> { * -> v24 },
+               v47 -> { * -> v24 } };
+       attrs={ v1 -> { MustBeValid(, None, t=0) },
+               v2 -> { MustBeValid(, None, t=0) },
+               v3 -> { MustBeValid(, None, t=0) },
+               v4 -> { DynamicType DynamicDispatch, SourceFile [None], MustBeValid(, None, t=0) },
+               v5 -> { DynamicType DynamicDispatch$A_Bad, SourceFile [None],
+                       MustBeValid(, None, t=2),
+                       StaticType class DynamicDispatch$A },
+               v6 -> { DynamicType DynamicDispatch$A, SourceFile [None],
+                       MustBeValid(, None, t=4),
+                       StaticType class DynamicDispatch$A,
+                       UnknownEffect(function `DynamicDispatch$C DynamicDispatch$A.buildC()` with no summary,
+                                     in call to `DynamicDispatch$C DynamicDispatch$A.callBuildC(DynamicDispatch$A)` at line 65 :t4
+                                     [in call to function `DynamicDispatch$C DynamicDispatch$A.buildC()` with no summary at line 41 :t3
+                                      [] ]
+                                     ) },
+               v24 -> { PropagateTaintFrom([{v= v6}]), ReturnedFromUnknown([v6]) },
+               v38 -> { MustBeValid(, None, t=5), WrittenTo (5, ) },
+               v47 -> { MustBeValid(, None, t=10), WrittenTo (10, ) } };}
+     PRE=[{ roots={ &a2=v3, &this=v1, &a1=v2 };
+            mem  ={ v1 -> { * -> v4 },
+                    v2 -> { * -> v5 },
+                    v3 -> { * -> v6 },
+                    v4 -> { * -> v7 },
+                    v5 -> { * -> v8 },
+                    v6 -> { * -> v23 },
+                    v7 -> { },
+                    v8 -> { },
+                    v23 -> { } };
+            attrs={ v1 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                    v2 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                    v3 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                    v4 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                    v5 -> { MustBeInitialized(, t=2), MustBeValid(, None, t=2) },
+                    v6 -> { MustBeInitialized(, t=4), MustBeValid(, None, t=4) } };}]
+     need_closure_specialization=false
+     need_dynamic_type_specialization={ }
+     skipped_calls={ DynamicDispatch$C DynamicDispatch$A.buildC() -> call to skipped function occurs here }
+     Topl={len=0;content=
+            [  ]},
+    conditions= [] timestamp= 15)
+#6: (conditions: (empty)
+     phi: linear_eqs: v10 = a1 +1
+          && term_eqs: DynamicDispatch$C.<init>()([v10])=v12∧[a1 +1]=v10
+          && intervals: v10≥1
+     { roots={ &a2=v3, &this=v1, &return=v48, &a1=v2 };
+       mem  ={ v1 -> { * -> v4 },
+               v2 -> { * -> v5 },
+               v3 -> { * -> v6 },
+               v4 -> { * -> v7 },
+               v5 -> { * -> v8 },
+               v6 -> { * -> v9 },
+               v10 -> { * -> v11 },
+               v39 -> { * -> v10 },
+               v48 -> { * -> v10 } };
+       attrs={ v1 -> { MustBeValid(, None, t=0) },
+               v2 -> { MustBeValid(, None, t=0) },
+               v3 -> { MustBeValid(, None, t=0) },
+               v4 -> { DynamicType DynamicDispatch, SourceFile [None], MustBeValid(, None, t=0) },
+               v5 -> { DynamicType DynamicDispatch$A_Good, SourceFile [None],
+                       MustBeValid(, None, t=2),
+                       StaticType class DynamicDispatch$A },
+               v6 -> { MustBeValid(, None, t=4), StaticType class DynamicDispatch$A },
+               v10 -> { DynamicType DynamicDispatch$C, SourceFile [None],
+                        UnknownEffect(function `DynamicDispatch$C.<init>()` with no summary,
+                                      in call to `DynamicDispatch$C DynamicDispatch$A.callBuildC(DynamicDispatch$A)` at line 65 :t4
+                                      [in call to `DynamicDispatch$C DynamicDispatch$A_Good.buildC()` at line 41 :t3
+                                       [in call to `DynamicDispatch$C.<init>()` at line 49 :t2
+                                        [in call to function `DynamicDispatch$C.<init>()` with no summary at line 33 :t2
+                                         [] ]
+                                        ]
+                                       ]
+                                      ) },
+               v39 -> { MustBeValid(, None, t=5), WrittenTo (5, ) },
+               v48 -> { MustBeValid(, None, t=10), WrittenTo (10, ) } };}
+     PRE=[{ roots={ &a2=v3, &this=v1, &a1=v2 };
+            mem  ={ v1 -> { * -> v4 },
+                    v2 -> { * -> v5 },
+                    v3 -> { * -> v6 },
+                    v4 -> { * -> v7 },
+                    v5 -> { * -> v8 },
+                    v6 -> { * -> v9 },
+                    v7 -> { },
+                    v8 -> { },
+                    v9 -> { } };
+            attrs={ v1 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                    v2 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                    v3 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                    v4 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                    v5 -> { MustBeInitialized(, t=2), MustBeValid(, None, t=2) },
+                    v6 -> { MustBeInitialized(, t=4), MustBeValid(, None, t=4) } };}]
+     need_closure_specialization=false
+     need_dynamic_type_specialization={ }
+     skipped_calls={ DynamicDispatch$C.<init>() -> call to skipped function occurs here }
+     Topl={len=0;content=
+            [  ]},
+    conditions= [] timestamp= 15)
+#7: (conditions: (empty) phi: linear_eqs: v14 = 0 && term_eqs: 0=v14 && intervals: v14=null
+     { roots={ &a2=v3, &this=v1, &return=v49, &a1=v2 };
+       mem  ={ v1 -> { * -> v4 },
+               v2 -> { * -> v5 },
+               v3 -> { * -> v6 },
+               v4 -> { * -> v7 },
+               v5 -> { * -> v8 },
+               v6 -> { * -> v13 },
+               v40 -> { * -> v14 },
+               v49 -> { * -> v14 } };
+       attrs={ v1 -> { MustBeValid(, None, t=0) },
+               v2 -> { MustBeValid(, None, t=0) },
+               v3 -> { MustBeValid(, None, t=0) },
+               v4 -> { DynamicType DynamicDispatch, SourceFile [None], MustBeValid(, None, t=0) },
+               v5 -> { DynamicType DynamicDispatch$A_Good, SourceFile [None],
+                       MustBeValid(, None, t=2),
+                       StaticType class DynamicDispatch$A },
+               v6 -> { MustBeValid(, None, t=4), StaticType class DynamicDispatch$A },
+               v14 -> { Invalid ConstantDereference(is assigned to the null pointer) },
+               v40 -> { MustBeValid(, None, t=5), WrittenTo (5, ) },
+               v49 -> { MustBeValid(, None, t=10), WrittenTo (10, ) } };}
+     PRE=[{ roots={ &a2=v3, &this=v1, &a1=v2 };
+            mem  ={ v1 -> { * -> v4 },
+                    v2 -> { * -> v5 },
+                    v3 -> { * -> v6 },
+                    v4 -> { * -> v7 },
+                    v5 -> { * -> v8 },
+                    v6 -> { * -> v13 },
+                    v7 -> { },
+                    v8 -> { },
+                    v13 -> { } };
+            attrs={ v1 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                    v2 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                    v3 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                    v4 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                    v5 -> { MustBeInitialized(, t=2), MustBeValid(, None, t=2) },
+                    v6 -> { MustBeInitialized(, t=4), MustBeValid(, None, t=4) } };}]
+     need_closure_specialization=false
+     need_dynamic_type_specialization={ }
+     skipped_calls={ }
+     Topl={len=0;content=
+            [  ]},
+    conditions= [] timestamp= 15)
+#8: (conditions: (empty) phi: term_eqs: DynamicDispatch$C DynamicDispatch$A.buildC()([v6])=v16
+     { roots={ &a2=v3, &this=v1, &return=v50, &a1=v2 };
+       mem  ={ v1 -> { * -> v4 },
+               v2 -> { * -> v5 },
+               v3 -> { * -> v6 },
+               v4 -> { * -> v7 },
+               v5 -> { * -> v8 },
+               v6 -> { * -> v15 },
+               v41 -> { * -> v16 },
+               v50 -> { * -> v16 } };
+       attrs={ v1 -> { MustBeValid(, None, t=0) },
+               v2 -> { MustBeValid(, None, t=0) },
+               v3 -> { MustBeValid(, None, t=0) },
+               v4 -> { DynamicType DynamicDispatch, SourceFile [None], MustBeValid(, None, t=0) },
+               v5 -> { DynamicType DynamicDispatch$A_Good, SourceFile [None],
+                       MustBeValid(, None, t=2),
+                       StaticType class DynamicDispatch$A },
+               v6 -> { DynamicType DynamicDispatch$A, SourceFile [None],
+                       MustBeValid(, None, t=4),
+                       StaticType class DynamicDispatch$A,
+                       UnknownEffect(function `DynamicDispatch$C DynamicDispatch$A.buildC()` with no summary,
+                                     in call to `DynamicDispatch$C DynamicDispatch$A.callBuildC(DynamicDispatch$A)` at line 65 :t4
+                                     [in call to function `DynamicDispatch$C DynamicDispatch$A.buildC()` with no summary at line 41 :t3
+                                      [] ]
+                                     ) },
+               v16 -> { PropagateTaintFrom([{v= v6}]), ReturnedFromUnknown([v6]) },
+               v41 -> { MustBeValid(, None, t=5), WrittenTo (5, ) },
+               v50 -> { MustBeValid(, None, t=10), WrittenTo (10, ) } };}
+     PRE=[{ roots={ &a2=v3, &this=v1, &a1=v2 };
+            mem  ={ v1 -> { * -> v4 },
+                    v2 -> { * -> v5 },
+                    v3 -> { * -> v6 },
+                    v4 -> { * -> v7 },
+                    v5 -> { * -> v8 },
+                    v6 -> { * -> v15 },
+                    v7 -> { },
+                    v8 -> { },
+                    v15 -> { } };
+            attrs={ v1 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                    v2 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                    v3 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                    v4 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                    v5 -> { MustBeInitialized(, t=2), MustBeValid(, None, t=2) },
+                    v6 -> { MustBeInitialized(, t=4), MustBeValid(, None, t=4) } };}]
+     need_closure_specialization=false
+     need_dynamic_type_specialization={ }
+     skipped_calls={ DynamicDispatch$C DynamicDispatch$A.buildC() -> call to skipped function occurs here }
+     Topl={len=0;content=
+            [  ]},
+    conditions= [] timestamp= 15)
+
+Non-disj state:
+  copy map: { }, parameter map: { }, destructor checked: { }, captured: { }, 
+  locked: false,
+  loads: ({ n$0 -> { a1 }, n$2 -> { a2 }, n$4 -> { $irvar0 } },
+  { a2 -> { line 65 -> { 3 } }, $irvar0 -> { line 65 -> { 9 } }, a1 -> { line 65 -> { 1 } } }),
+  passed to: { a2 -> { DynamicDispatch$C DynamicDispatch$A.callBuildC(DynamicDispatch$A) -> { line 65 -> { 4 } } },
+               a1 -> { DynamicDispatch$C DynamicDispatch$A.callBuildC(DynamicDispatch$A) -> { line 65 -> { 4 } } } }process analysis end
+process analysis
+DynamicDispatch$A_Bad.<init>
+1 disjuncts:
+#0: (conditions: (empty) phi: term_eqs: DynamicDispatch$A_Bad.<init>()([v2])=v4
+     { roots={ &this=v1 };
+       mem  ={ v1 -> { * -> v2 }, v2 -> { * -> v3 } };
+       attrs={ v1 -> { MustBeValid(, None, t=0) },
+               v2 -> { DynamicType DynamicDispatch$A_Bad, SourceFile [None],
+                       MustBeValid(, None, t=0),
+                       UnknownEffect(function `DynamicDispatch$A_Bad.<init>()` with no summary,
+                                     in call to function `DynamicDispatch$A_Bad.<init>()` with no summary at line 54 :t2
+                                     [] ) } };}
+     PRE=[{ roots={ &this=v1 };
+            mem  ={ v1 -> { * -> v2 }, v2 -> { * -> v3 }, v3 -> { } };
+            attrs={ v1 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                    v2 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) } };}]
+     need_closure_specialization=false
+     need_dynamic_type_specialization={ }
+     skipped_calls={ DynamicDispatch$A_Bad.<init>() -> call to skipped function occurs here }
+     Topl={len=0;content=
+            [  ]},
+    conditions= [] timestamp= 7)
+
+Non-disj state:
+  copy map: { }, parameter map: { }, destructor checked: { }, captured: { }, 
+  locked: false, loads: ({ n$0 -> { this } },{ this -> { line 54 -> { 1 } } }),
+  process analysis end
+process analysis
+passed to: { this -> { DynamicDispatch$A_Bad.<init>() -> { line 54 -> { 2 } } } }DynamicDispatch.<init>
+1 disjuncts:
+#0: (conditions: (empty) phi: term_eqs: DynamicDispatch.<init>()([v2])=v4
+     { roots={ &this=v1 };
+       mem  ={ v1 -> { * -> v2 }, v2 -> { * -> v3 } };
+       attrs={ v1 -> { MustBeValid(, None, t=0) },
+               v2 -> { DynamicType DynamicDispatch, SourceFile [None],
+                       MustBeValid(, None, t=0),
+                       UnknownEffect(function `DynamicDispatch.<init>()` with no summary,
+                                     in call to function `DynamicDispatch.<init>()` with no summary at line 1 :t2
+                                     [] ) } };}
+     PRE=[{ roots={ &this=v1 };
+            mem  ={ v1 -> { * -> v2 }, v2 -> { * -> v3 }, v3 -> { } };
+            attrs={ v1 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                    v2 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) } };}]
+     need_closure_specialization=false
+     need_dynamic_type_specialization={ }
+     skipped_calls={ DynamicDispatch.<init>() -> call to skipped function occurs here }
+     Topl={len=0;content=
+            [  ]},
+    conditions= [] timestamp= 7)
+
+Non-disj state:
+  copy map: { }, parameter map: { }, destructor checked: { }, captured: { }, 
+  locked: false, loads: ({ n$0 -> { this } },{ this -> { line 1 -> { 1 } } }),
+  process analysis end
+process analysis
+passed to: { this -> { DynamicDispatch.<init>() -> { line 1 -> { 2 } } } }DynamicDispatch$A_Good.<init>
+1 disjuncts:
+#0: (conditions: (empty) phi: term_eqs: DynamicDispatch$A_Good.<init>()([v2])=v4
+     { roots={ &this=v1 };
+       mem  ={ v1 -> { * -> v2 }, v2 -> { * -> v3 } };
+       attrs={ v1 -> { MustBeValid(, None, t=0) },
+               v2 -> { DynamicType DynamicDispatch$A_Good, SourceFile [None],
+                       MustBeValid(, None, t=0),
+                       UnknownEffect(function `DynamicDispatch$A_Good.<init>()` with no summary,
+                                     in call to function `DynamicDispatch$A_Good.<init>()` with no summary at line 45 :t2
+                                     [] ) } };}
+     PRE=[{ roots={ &this=v1 };
+            mem  ={ v1 -> { * -> v2 }, v2 -> { * -> v3 }, v3 -> { } };
+            attrs={ v1 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                    v2 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) } };}]
+     need_closure_specialization=false
+     need_dynamic_type_specialization={ }
+     skipped_calls={ DynamicDispatch$A_Good.<init>() -> call to skipped function occurs here }
+     Topl={len=0;content=
+            [  ]},
+    conditions= [] timestamp= 7)
+
+Non-disj state:
+  copy map: { }, parameter map: { }, destructor checked: { }, captured: { }, 
+  locked: false, loads: ({ n$0 -> { this } },{ this -> { line 45 -> { 1 } } }),
+  process analysis end
+process analysis
+passed to: { this -> { DynamicDispatch$A_Good.<init>() -> { line 45 -> { 2 } } } }DynamicDispatch.buildCTransitivelyAndDerefGood
+2 disjuncts:
+#0: ({AbortProgram conditions: (empty) phi: (empty)
+                   { roots={ &this=v1 };
+                     mem  ={ v1 -> { * -> v2 }, v2 -> { * -> v3 } };
+                     attrs={ v2 -> { DynamicType DynamicDispatch, SourceFile [None] } };}
+                   PRE=[{ roots={ &this=v1 };
+                          mem  ={ v1 -> { * -> v2 }, v2 -> { * -> v3 } };
+                          attrs={ v1 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                                  v2 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) } };}]
+                   need_closure_specialization=false
+                   need_dynamic_type_specialization={ }
+                   skipped_calls={ DynamicDispatch$A_Bad.<init>() -> call to skipped function occurs here,
+                                   DynamicDispatch$A_Good.<init>() -> call to skipped function occurs here }
+                   Topl={len=0;content=
+                          [  ]}},
+    conditions= [] timestamp= 26)
+#1: (conditions: (empty)
+     phi: linear_eqs: v5 = a1 +1 ∧ v10 = a2 +1 ∧ v15 = a3 +1
+          && term_eqs: DynamicDispatch$A_Bad.<init>()([v5])=v7∧DynamicDispatch$A_Good.<init>()([v10])=v12
+                       ∧DynamicDispatch$C.<init>()([v15])=v17∧[a1 +1]=v5
+                       ∧[a2 +1]=v10∧[a3 +1]=v15
+          && intervals: v5≥1 ∧ v10≥1 ∧ v15≥1
+     { roots={ &this=v1, &return=v22 };
+       mem  ={ v1 -> { * -> v2 },
+               v2 -> { * -> v3 },
+               v5 -> { * -> v6 },
+               v8 -> { * -> v5 },
+               v10 -> { * -> v11 },
+               v13 -> { * -> v10 },
+               v15 -> { f -> v20, * -> v16 },
+               v19 -> { * -> v15 },
+               v20 -> { * -> v21 },
+               v22 -> { * -> v21 } };
+       attrs={ v1 -> { MustBeValid(, None, t=0) },
+               v2 -> { DynamicType DynamicDispatch, SourceFile [None], MustBeValid(, None, t=0) },
+               v5 -> { DynamicType DynamicDispatch$A_Bad, SourceFile [None],
+                       MustBeValid(, None, t=2),
+                       UnknownEffect(function `DynamicDispatch$A_Bad.<init>()` with no summary,
+                                     in call to `DynamicDispatch$A_Bad.<init>()` at line 69 :t2
+                                     [in call to function `DynamicDispatch$A_Bad.<init>()` with no summary at line 54 :t2
+                                      [] ]
+                                     ) },
+               v8 -> { MustBeValid(, None, t=3), WrittenTo (3, ) },
+               v10 -> { DynamicType DynamicDispatch$A_Good, SourceFile [None],
+                        MustBeValid(, None, t=6),
+                        UnknownEffect(function `DynamicDispatch$A_Good.<init>()` with no summary,
+                                      in call to `DynamicDispatch$A_Good.<init>()` at line 69 :t6
+                                      [in call to function `DynamicDispatch$A_Good.<init>()` with no summary at line 45 :t2
+                                       [] ]
+                                      ) },
+               v13 -> { MustBeValid(, None, t=7), WrittenTo (7, ) },
+               v15 -> { DynamicType DynamicDispatch$C, SourceFile [None],
+                        MustBeValid(, None, t=20),
+                        UnknownEffect(function `DynamicDispatch$C.<init>()` with no summary,
+                                      in call to `DynamicDispatch$C DynamicDispatch.callCallBuildC(DynamicDispatch$A,DynamicDispatch$A)` at line 69 :t13
+                                      [in call to `DynamicDispatch$C DynamicDispatch$A.callBuildC(DynamicDispatch$A)` at line 65 :t4
+                                       [in call to `DynamicDispatch$C DynamicDispatch$A_Good.buildC()` at line 41 :t3
+                                        [in call to `DynamicDispatch$C.<init>()` at line 49 :t2
+                                         [in call to function `DynamicDispatch$C.<init>()` with no summary at line 33 :t2
+                                          [] ]
+                                         ]
+                                        ]
+                                       ]
+                                      ) },
+               v19 -> { MustBeValid(, None, t=14), WrittenTo (14, ) },
+               v20 -> { MustBeValid(, None, t=20) },
+               v22 -> { MustBeValid(, None, t=21), WrittenTo (21, ) } };}
+     PRE=[{ roots={ &this=v1 };
+            mem  ={ v1 -> { * -> v2 }, v2 -> { * -> v3 }, v3 -> { } };
+            attrs={ v1 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                    v2 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) } };}]
+     need_closure_specialization=false
+     need_dynamic_type_specialization={ }
+     skipped_calls={ DynamicDispatch$A_Bad.<init>() -> call to skipped function occurs here,
+                     DynamicDispatch$A_Good.<init>() -> call to skipped function occurs here,
+                     DynamicDispatch$C.<init>() -> call to skipped function occurs here }
+     Topl={len=0;content=
+            [  ]},
+    conditions= [] timestamp= 26)
+
+Non-disj state:
+  copy map: { }, parameter map: { }, destructor checked: { }, captured: { }, 
+  locked: false,
+  loads: ({ n$4 -> { this }, n$6 -> { $irvar0 }, n$7 -> { $irvar1 }, n$9 -> { $irvar2 } },
+  { $irvar1 -> { line 69 -> { 12 } },
+    $irvar2 -> { line 69 -> { 19 } },
+    this -> { line 69 -> { 9 } },
+    $irvar0 -> { line 69 -> { 11 } } }),
+  passed to: { $irvar1 -> { DynamicDispatch$C DynamicDispatch.callCallBuildC(DynamicDispatch$A,DynamicDispatch$A) -> { line 69 -> { 13 } } },
+               this -> { DynamicDispatch$C DynamicDispatch.callCallBuildC(DynamicDispatch$A,DynamicDispatch$A) -> { line 69 -> { 13 } } },
+               $irvar0 -> { DynamicDispatch$C DynamicDispatch.callCallBuildC(DynamicDispatch$A,DynamicDispatch$A) -> { line 69 -> { 13 } } } }process analysis end
+
+DynamicDispatch.java:69: error: Null Dereference
+  `DynamicDispatch$C DynamicDispatch.callCallBuildC(DynamicDispatch$A,DynamicDispatch$A)` could be null (from the call to `DynamicDispatch.callCallBuildC(...)` on line 69) and is dereferenced. 
+  67.   
+  68.     C buildCTransitivelyAndDerefGood() {
+  69. >     return callCallBuildC(new A_Bad(), new A_Good()).f;
+  70.     }
+  71.   
+
+
+Found 1 issue
+             Issue Type(ISSUED_TYPE_ID): #
+  Null Dereference(NULLPTR_DEREFERENCE): 1

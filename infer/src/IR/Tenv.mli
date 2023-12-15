@@ -57,6 +57,8 @@ val mk_struct :
 val add_field : t -> Typ.Name.t -> Struct.field -> unit
 (** Add a field to a given struct in the global type environment. *)
 
+val is_java_abstract_cls : t -> Typ.Name.t -> bool
+
 val pp : Format.formatter -> t -> unit
 (** print a type environment *)
 

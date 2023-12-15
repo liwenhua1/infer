@@ -162,3 +162,187 @@ Non-disj state:
   passed to: { b -> { String String.toString() -> { line 48 -> { 15 } } },
                a -> { String Supertype.foo(Object) -> { line 47 -> { 8 } } },
                this -> { String Supertype.foo(Object) -> { line 47 -> { 8 } } } }process analysis end
+
+!#0
+DynamicDispatch.java:26: error: Null Dereference
+  `Object DynamicDispatch$Impl.foo()` could be null (from the call to `DynamicDispatch$Impl.foo()` on line 26) and is dereferenced. 
+  24.       Interface i = new Impl();
+  25.       // should be a warning since Impl's implementation of foo returns null
+  26. >     i.foo().toString();
+  27.     }
+  28.   
+
+v?#1
+DynamicDispatch.java:34: error: Null Dereference
+  The call to `void DynamicDispatch.FN_interfaceShouldNotCauseFalseNegativeHardOK(DynamicDispatch$Interface)` may trigger the following issue: `Object DynamicDispatch$Impl.foo()` could be null (from the call to `DynamicDispatch.FN_interfaceShouldNotCauseFalseNegativeHardOK(...)` on line 30) and is dereferenced in the call to `DynamicDispatch.FN_interfaceShouldNotCauseFalseNegativeHardOK(...)`. 
+  32.   
+  33.     static void callWithBadImplementationBad_FN(Impl impl) {
+  34. >     FN_interfaceShouldNotCauseFalseNegativeHardOK(impl);
+  35.     }
+  36.   
+
+!#2
+DynamicDispatch.java:62: error: Null Dereference
+  `Object DynamicDispatch$Subtype.foo()` could be null (from the call to `DynamicDispatch$Subtype.foo()` on line 62) and is dereferenced. 
+  60.       Supertype o = new Subtype();
+  61.       // should report a warning because we know the dynamic type of o is Subtype
+  62. >     o.foo().toString();
+  63.     }
+  64.   
+
+v?#3
+DynamicDispatch.java:80: error: Null Dereference
+  The call to `void DynamicDispatch.dynamicDispatchShouldNotReportWhenCallingSupertypeOK(DynamicDispatch$Supertype)` may trigger the following issue: `Object DynamicDispatch$Subtype.foo()` could be null (from the call to `DynamicDispatch.dynamicDispatchShouldNotReportWhenCallingSupertypeOK(...)` on line 74) and is dereferenced in the call to `DynamicDispatch.dynamicDispatchShouldNotReportWhenCallingSupertypeOK(...)`. 
+  78.       // should report a warning because the Subtype implementation
+  79.       // of foo() returns null
+  80. >     dynamicDispatchShouldNotReportWhenCallingSupertypeOK(o);
+  81.     }
+  82.   
+
+X#4
+DynamicDispatch.java:94: error: Null Dereference
+  `Object DynamicDispatch.dynamicDispatchWrapperFoo(DynamicDispatch$Supertype)` could be null (from the call to `DynamicDispatch.dynamicDispatchWrapperFoo(...)` on line 94) and is dereferenced. 
+  92.       // Should not report because Supertype.foo() does not return null
+  93.       Supertype o = new Supertype();
+  94. >     dynamicDispatchWrapperFoo(o).toString();
+  95.     }
+  96.   
+
+!#5
+DynamicDispatch.java:100: error: Null Dereference
+  `Object DynamicDispatch.dynamicDispatchWrapperBar(DynamicDispatch$Supertype)` could be null (from the call to `DynamicDispatch.dynamicDispatchWrapperBar(...)` on line 100) and is dereferenced. 
+   98.       // Should report because Supertype.bar() returns null
+   99.       Supertype o = new Supertype();
+  100. >     dynamicDispatchWrapperBar(o).toString();
+  101.     }
+  102.   
+
+!#6
+DynamicDispatch.java:106: error: Null Dereference
+  `Object DynamicDispatch.dynamicDispatchWrapperFoo(DynamicDispatch$Supertype)` could be null (from the call to `DynamicDispatch.dynamicDispatchWrapperFoo(...)` on line 106) and is dereferenced. 
+  104.       // Should report because Subtype.foo() returns null
+  105.       Supertype o = new Subtype();
+  106. >     dynamicDispatchWrapperFoo(o).toString();
+  107.     }
+  108.   
+
+X#7
+DynamicDispatch.java:112: error: Null Dereference
+  `Object DynamicDispatch.dynamicDispatchWrapperBar(DynamicDispatch$Supertype)` could be null (from the call to `DynamicDispatch.dynamicDispatchWrapperBar(...)` on line 112) and is dereferenced. 
+  110.       // Should not report because Subtype.bar() does not returns null
+  111.       Supertype o = new Subtype();
+  112. >     dynamicDispatchWrapperBar(o).toString();
+  113.     }
+  114.   
+
+!#8
+DynamicDispatch.java:132: error: Null Dereference
+  `Object DynamicDispatch$Subtype.foo()` could be null (from the call to `DynamicDispatch$Subtype.foo()` on line 132) and is dereferenced. 
+  130.         Supertype subtype = new Subtype();
+  131.         WithField object = new WithField(subtype);
+  132. >       object.mField.foo().toString();
+  133.       }
+  134.     }
+
+!#9
+DynamicDispatch.java:142: error: Null Dereference
+  `Object DynamicDispatch.callFoo(DynamicDispatch$Supertype)` could be null (from the call to `DynamicDispatch.callFoo(...)` on line 142) and is dereferenced. 
+  140.     void dynamicResolutionWithPrivateMethodBad() {
+  141.       Supertype subtype = new Subtype();
+  142. >     callFoo(subtype).toString();
+  143.     }
+  144.   
+
+!#10
+DynamicDispatch.java:155: error: Null Dereference
+  `Object DynamicDispatch.variadicMethod(DynamicDispatch$Supertype[])` could be null (from the call to `DynamicDispatch.variadicMethod(...)` on line 155) and is dereferenced. 
+  153.     void dynamicResolutionWithVariadicMethodBad() {
+  154.       Supertype subtype = new Subtype();
+  155. >     variadicMethod(subtype, null, null).toString();
+  156.     }
+  157.   }
+
+!#11
+DynamicDispatch.java:194: error: Null Dereference
+  `o` could be null (null value originating from line 193) and is dereferenced. 
+  192.       if (b.foo() == 52) {
+  193.         Object o = null;
+  194. >       o.toString();
+  195.       }
+  196.     }
+
+!#12
+DynamicDispatch.java:202: error: Null Dereference
+  `o` could be null (null value originating from line 201) and is dereferenced. 
+  200.       if (a.foo() == 32) {
+  201.         Object o = null;
+  202. >       o.toString();
+  203.       }
+  204.     }
+
+!#13
+DynamicDispatch.java:210: error: Null Dereference
+  `o` could be null (null value originating from line 209) and is dereferenced. 
+  208.       if (c.foo() == 52) {
+  209.         Object o = null;
+  210. >       o.toString();
+  211.       }
+  212.     }
+
+!#14
+DynamicDispatch.java:249: error: Null Dereference
+  `Specialization$C Specialization.callBuildCGood(Specialization$A)` could be null (from the call to `Specialization.callBuildCGood(...)` on line 249) and is dereferenced. 
+  247.   
+  248.     C buildCAndDerefBad() {
+  249. >     return callBuildCGood(new A_Bad()).f;
+  250.     }
+  251.   
+
+!#15
+DynamicDispatch.java:286: error: Null Dereference
+  `Specialization$C Specialization.callBuildCOnBoxGood(Specialization$Box1)` could be null (from the call to `Specialization.callBuildCOnBoxGood(...)` on line 286) and is dereferenced. 
+  284.   
+  285.     C buildCOnBoxAndDerefBad() {
+  286. >     return callBuildCOnBoxGood(new Box1(new Box2(new Box3(new A_Bad())))).f;
+  287.     }
+  288.   
+
+!#16
+DynamicDispatch.java:299: error: Null Dereference
+  `Specialization$C Specialization.callCallBuildC(Specialization$A,Specialization$A)` could be null (from the call to `Specialization.callCallBuildC(...)` on line 299) and is dereferenced. 
+  297.   
+  298.     C buildCTransitivelyAndDerefBad() {
+  299. >     return callCallBuildC(new A_Good(), new A_Bad()).f;
+  300.     }
+  301.   
+
+?#17
+DynamicDispatch.java:303: error: Null Dereference
+  `Specialization$C Specialization.callCallBuildC(Specialization$A,Specialization$A)` could be null (from the call to `Specialization.callCallBuildC(...)` on line 303) and is dereferenced. 
+  301.   
+  302.     C buildCTransitivelyAndDerefGood() {
+  303. >     return callCallBuildC(new A_Bad(), new A_Good()).f;
+  304.     }
+  305.   
+
+!#18
+DynamicDispatch.java:311: error: Null Dereference
+  `Specialization$C Specialization.callBuildCWithEmptyPaths(Specialization$A,boolean)` could be null (from the call to `Specialization.callBuildCWithEmptyPaths(...)` on line 311) and is dereferenced. 
+  309.   
+  310.     C buildCWithInfeasiblePathsAndDerefBad() {
+  311. >     return callBuildCWithEmptyPaths(new A_Bad(), true).f;
+  312.     }
+  313.   
+
+?#19
+DynamicDispatch.java:324: error: Null Dereference
+  `Specialization$C Specialization.callBuildCTwiceGood(Specialization$A,Specialization$A)` could be null (from the call to `Specialization.callBuildCTwiceGood(...)` on line 324) and is dereferenced. 
+  322.   
+  323.     C buildCAndDerefNeedPartialSpecializationBad(A a) {
+  324. >     return callBuildCTwiceGood(a, new A_Bad()).f;
+  325.     }
+  326.   
+
+Found 20 issues
+             Issue Type(ISSUED_TYPE_ID): #
+  Null Dereference(NULLPTR_DEREFERENCE): 20

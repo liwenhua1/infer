@@ -371,7 +371,7 @@ let ty_name t =
   |None -> raise (Foo "not java type")
   |Some a -> a
 
-let caller_type_constrain_sat argv_key argv_caller callee_summary ?(cal_obj=None) (astate:AbductiveDomain.t)  = 
+let caller_type_constrain_sat argv_key argv_caller callee_summary ?(cal_obj=None) ?(is_j_static=false) (astate:AbductiveDomain.t)  = 
   let _aux = cal_obj in
   let formu =  (AbductiveDomain.Summary.get_path_condition callee_summary) in
   let tenv = match (Tenv.load_global ()) with 
@@ -391,9 +391,9 @@ let caller_type_constrain_sat argv_key argv_caller callee_summary ?(cal_obj=None
   | Some t -> (match callee_dynamic_type with 
               |Some t1 -> let type_match = Typ.equal t t1 in 
                           if type_match then true else
-                             (* ( match cal_obj with 
-                                                  |Some var when (AbstractValue.equal var argv_caller) -> true
-                                                  |_ -> *)
+                             ( match cal_obj with 
+                                                  |Some var when (not is_j_static && (AbstractValue.equal var argv_caller))-> true
+                                                  |_ ->
                                                   let pre = AbductiveDomain.Summary.get_pre callee_summary in 
                                                   let this_var = BaseDomain.find_this_var_mapping pre in 
                                                   (match this_var with 
@@ -406,7 +406,7 @@ let caller_type_constrain_sat argv_key argv_caller callee_summary ?(cal_obj=None
                                                         else
                                                     false
                                         (* let () = ( print_endline ((Typ.to_string t)^"unmatchinggggggggggggggg"^(Typ.to_string t1)))  in  *)
-                                                )
+                                                  ))
               |None ->
             let na1 = match Typ.name t with 
                       | None -> raise (F "None source type") (*TODO Only support dynamic with Tstruct now of name now*)
@@ -443,7 +443,7 @@ let caller_type_constrain_sat argv_key argv_caller callee_summary ?(cal_obj=None
                           (fst join_constrain_sat))
     with F _ -> true 
 
-let conjoin_callee_arith pre_or_post (callee_summary:AbductiveDomain.Summary.t) ?(calling_obj=None) (call_state:call_state)  =
+let conjoin_callee_arith pre_or_post (callee_summary:AbductiveDomain.Summary.t) ?(calling_obj=None) ?(is_java_static=false) (call_state:call_state)  =
   let open PulseResult.Let_syntax in
   (* pp_call_state F.std_formatter call_state; *)
   (* Formula.pp F.std_formatter callee_path_condition; *)
@@ -456,7 +456,7 @@ let conjoin_callee_arith pre_or_post (callee_summary:AbductiveDomain.Summary.t) 
   let subst, path_condition, new_eqs =
     match pre_or_post with
     | `Pre ->  
-      let type_checking = AddressMap.fold (fun x _ acc -> acc && caller_type_constrain_sat x (fst (AddressMap.find x call_state.subst)) callee_summary call_state.astate ~cal_obj:calling_obj) call_state.subst true in 
+      let type_checking = AddressMap.fold (fun x _ acc -> acc && caller_type_constrain_sat x (fst (AddressMap.find x call_state.subst)) callee_summary call_state.astate ~is_j_static:is_java_static ~cal_obj:calling_obj) call_state.subst true in 
       (* Utils.print_bool type_checking; *)
       if not (type_checking) then  raise_notrace (Contradiction PathCondition) else
 
@@ -503,6 +503,7 @@ let caller_attrs_of_callee_attrs timestamp callee_proc_name call_location caller
 
 let apply_arithmetic_constraints pre_or_post {PathContext.timestamp} ?(c_obj = None) callee_proc_name call_location 
     callee_summary call_state  =
+    let is_static = Procname.is_java_static_method callee_proc_name in
     (*maybe here*)
     (* pp_call_state F.std_formatter call_state; *)
   let open PulseResult.Let_syntax in
@@ -520,6 +521,7 @@ let apply_arithmetic_constraints pre_or_post {PathContext.timestamp} ?(c_obj = N
       callee_summary
       call_state 
       ~calling_obj:c_obj
+      ~is_java_static:is_static
   in
   AddressMap.fold
     (fun addr_callee addr_hist_caller call_state ->
