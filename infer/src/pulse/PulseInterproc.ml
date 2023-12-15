@@ -37,6 +37,7 @@ type call_state =
             visit each subgraph from each formal independently so we reset [visited] between the
             visit of each formal *) }
 
+let update_call_state_dy_type call_sta new_astate = {call_sta with astate=new_astate}
 let pp_call_state fmt {astate; subst; rev_subst; visited} =
   F.fprintf fmt
     "@[<v>{ astate=@[<hv2>%a@];@,\
@@ -364,7 +365,7 @@ let check_static_type_sat start lists tenv=
 
 
 
-let static_var_to_dynamic_mapping = ref []
+
 
 let ty_name t = 
   match Typ.name t with 
@@ -427,7 +428,8 @@ let caller_type_constrain_sat argv_key argv_caller callee_summary ?(cal_obj=None
                 (match callee_dynamic_type with 
                           |Some dty -> 
                             let matching = Formula.check_dynamic_type_sat (ty_name dty) (a::caller_yes_instance, caller_not_instance) tenv in 
-                            static_var_to_dynamic_mapping := (argv_caller, dty)::!static_var_to_dynamic_mapping ;matching 
+                            (* static_var_to_dynamic_mapping := (argv_caller, dty)::!static_var_to_dynamic_mapping ; *)
+                            matching 
 
                           |None -> 
                           (* Typ.print_name a;
@@ -444,6 +446,83 @@ let caller_type_constrain_sat argv_key argv_caller callee_summary ?(cal_obj=None
     with F _ -> true 
 
 let conjoin_callee_arith pre_or_post (callee_summary:AbductiveDomain.Summary.t) ?(calling_obj=None) ?(is_java_static=false) (call_state:call_state)  =
+ let static_var_to_dynamic_mapping = ref [] in
+ let helper_caller_type_constrain_sat argv_key argv_caller callee_summary ?(cal_obj=None) ?(is_j_static=false) (astate:AbductiveDomain.t)  = 
+  let _aux = cal_obj in
+  let formu =  (AbductiveDomain.Summary.get_path_condition callee_summary) in
+  let tenv = match (Tenv.load_global ()) with 
+        | Some t -> t 
+        | None -> Tenv.create ()
+  in
+  let callee_dynamic_type = AbductiveDomain.Summary.get_dynamic_type argv_key callee_summary in 
+  let callee_static_type = match AbductiveDomain.Summary.get_static_type argv_key callee_summary with 
+                        |None -> []
+                        |Some st -> [st] in
+  let callee_constrain = call_type_constrain argv_key formu in 
+  let callee_yes_instance = callee_static_type @ type_list_conversion (fst (snd (callee_constrain))) in 
+  let callee_not_instance = type_list_conversion (snd (snd (callee_constrain))) in 
+  try
+      let typ1 = AbductiveDomain.AddressAttributes.get_dynamic_type argv_caller astate in 
+          match typ1 with 
+              | Some t -> (match callee_dynamic_type with 
+                          |Some t1 -> let type_match = Typ.equal t t1 in 
+                              if type_match then true else
+                                     ( match cal_obj with 
+                                                |Some var when (not is_j_static && (AbstractValue.equal var argv_caller))-> true
+                                                |_ ->
+                                                let pre = AbductiveDomain.Summary.get_pre callee_summary in 
+                                                let this_var = BaseDomain.find_this_var_mapping pre in 
+                                                (match this_var with 
+                                                |None -> false
+                                                |Some mapping -> 
+                                                  let v_in_heap = AbductiveDomain.Summary.find_edge_opt mapping (AbductiveDomain.Memory.make_deref) callee_summary in 
+                                                      match v_in_heap with
+                                                      | None -> raise (Foo "cannot find this var mapping in heap")
+                                                      | Some value -> if AbstractValue.equal (fst value) argv_caller then true 
+                                                      else
+                                                  false
+                                      (* let () = ( print_endline ((Typ.to_string t)^"unmatchinggggggggggggggg"^(Typ.to_string t1)))  in  *)
+                                                ))
+                            |None ->
+                              let na1 = match Typ.name t with 
+                                    | None -> raise (F "None source type") (*TODO Only support dynamic with Tstruct now of name now*)
+                                    | Some a -> a in
+                              if fst callee_constrain then
+                                  let res = check_dynamic_type_sat na1 (callee_yes_instance, callee_not_instance ) tenv in res (*TODO,CALLER AND CALLEE ARE BOTH DYNAMIC*)
+                              else true)
+                |None -> 
+  (* AbstractValue.pp F.std_formatter argv_caller;
+  AbductiveDomain.pp F.std_formatter astate; *)
+                  let typ2 = AbductiveDomain.AddressAttributes.get_static_type argv_caller astate in 
+          
+                  match typ2 with 
+                      |None -> true
+                      |Some a ->  let caller_constrain = call_type_constrain argv_caller (astate.path_condition:Formula.t) in 
+                                  let caller_yes_instance = type_list_conversion (fst (snd (caller_constrain))) in 
+                                  let caller_not_instance = type_list_conversion (snd (snd (caller_constrain))) in 
+                                  (match callee_dynamic_type with 
+                                        |Some dty -> 
+                                           let matching = Formula.check_dynamic_type_sat (ty_name dty) (a::caller_yes_instance, caller_not_instance) tenv in
+                                           (* print_endline "===================";
+                                           AbstractValue.pp F.std_formatter argv_caller;
+                                           Typ.print_name (ty_name dty);
+                                           print_endline "==================="; *)
+                                           if matching then static_var_to_dynamic_mapping := (argv_caller, dty)::!static_var_to_dynamic_mapping ;matching 
+
+                                   |None -> 
+                        (* Typ.print_name a;
+                        print_endline "//////////////////"; *)
+                       
+                        let join_constrain = ((caller_yes_instance@callee_yes_instance),caller_not_instance@callee_not_instance) in (*TODO,CALLER static CALLEE ARE DYNAMIC*)
+                        (* Utils.list_printer (fun x-> Typ.print_name x) (fst join_constrain); *)
+                        (* print_endline "============"; *)
+                        (* Utils.list_printer (fun x-> Typ.print_name x) (snd join_constrain); *)
+                        (* print_endline "**************"; *)
+                        let join_constrain_sat = check_static_type_sat a join_constrain tenv in 
+                        (* Utils.print_bool (fst join_constrain_sat);  *)
+                        (fst join_constrain_sat))
+       with F _ -> true in
+
   let open PulseResult.Let_syntax in
   (* pp_call_state F.std_formatter call_state; *)
   (* Formula.pp F.std_formatter callee_path_condition; *)
@@ -456,10 +535,18 @@ let conjoin_callee_arith pre_or_post (callee_summary:AbductiveDomain.Summary.t) 
   let subst, path_condition, new_eqs =
     match pre_or_post with
     | `Pre ->  
-      let type_checking = AddressMap.fold (fun x _ acc -> acc && caller_type_constrain_sat x (fst (AddressMap.find x call_state.subst)) callee_summary call_state.astate ~is_j_static:is_java_static ~cal_obj:calling_obj) call_state.subst true in 
+      let type_checking = AddressMap.fold (fun x _ acc -> acc && helper_caller_type_constrain_sat x (fst (AddressMap.find x call_state.subst)) callee_summary call_state.astate ~is_j_static:is_java_static ~cal_obj:calling_obj) call_state.subst true in 
+      (* let call_state = List.fold !static_var_to_dynamic_mapping ~init:call_state ~f:(fun acc (var,ty_name) -> 
+                let type_from_sta_dy_astate = AbductiveDomain.AddressAttributes.add_dynamic_type ty_name var acc.astate 
+                in update_call_state_dy_type acc type_from_sta_dy_astate) in *)
       (* Utils.print_bool type_checking; *)
       if not (type_checking) then  raise_notrace (Contradiction PathCondition) else
-
+      (* print_endline "========================";
+     
+      
+      Utils.list_printer (fun x-> Typ.print_name (ty_name (snd x)) ) !static_var_to_dynamic_mapping;
+      print_endline "--------------------------"; *)
+      
       (* if (Language.curr_language_is Java) then  
           if raise_notrace (Contradiction PathCondition) else *)
       
@@ -475,12 +562,17 @@ let conjoin_callee_arith pre_or_post (callee_summary:AbductiveDomain.Summary.t) 
           ~callee:callee_path_condition
         |> raise_if_unsat PathCondition
   in
+  let call_state = List.fold !static_var_to_dynamic_mapping ~init:call_state ~f:(fun acc (var,ty_name) -> 
+    let type_from_sta_dy_astate = AbductiveDomain.AddressAttributes.add_dynamic_type ty_name var acc.astate 
+    in update_call_state_dy_type acc type_from_sta_dy_astate) in
+    
   let astate = AbductiveDomain.set_path_condition path_condition call_state.astate in
   (* let astate = List.fold !static_var_to_dynamic_mapping ~init:astate ~f:(fun acc (a,b) -> AbductiveDomain.AddressAttributes.add_dynamic_type b a acc) in *)
   let+ astate =
     AbductiveDomain.incorporate_new_eqs new_eqs astate
     |> raise_if_unsat PathCondition |> AccessResult.of_abductive_result
   in
+  
   {call_state with astate; subst}
 
 

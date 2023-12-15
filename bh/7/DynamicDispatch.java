@@ -66,7 +66,9 @@ public class DynamicDispatch {
   }
 
   C buildCTransitivelyAndDerefGood() {
-    return callCallBuildC(new A_Bad(), new A_Good()).f;
+    A a1 = new A_Bad();
+    A a2 = new A_Good();
+    return this.callCallBuildC(a1,a2 ).f;
   }
 
 
