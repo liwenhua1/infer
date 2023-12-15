@@ -1,4 +1,11 @@
 public class DynamicDispatch {
+  public void test(int x) {
+    if (x>7) {x = x+1;}
+    else {x = x-1;}
+    DynamicDispatch z = null;
+    z.toString();
+
+  }
 
 //   static class Supertype {
 //     Object foo() {

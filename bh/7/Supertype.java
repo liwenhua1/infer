@@ -2,11 +2,7 @@
 class Supertype {
    
 
-   public Object foo() {
-      return new Object();
-    }
-
-  }
+  
 
     //      public Integer foo(int b) 
     //    //seems input parameter has no type, but constructed parameter has type
@@ -169,7 +165,11 @@ class Supertype {
 //     //     q.toString();        
 //     //    }
        
-   
+    public Object foo() {
+      return new Object();
+    }
+
+  }
      
  class Subtype extends Supertype {
     // public void test() 
