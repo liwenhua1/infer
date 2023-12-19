@@ -22,27 +22,27 @@ class Supertype {
     //     k.toString();
     //    }
      
-      //    public String foo(Object b) 
-      //  //seems input parameter has no type, but constructed parameter has type
-      //  //static //presumes this::Supertype<> achieves this::Supertype<> * res::Objec<>;
-      //  //dynamic //presumes this::Supertype<> achieves this::Supertype<> * res::Objec<>;
-      //  {
+         public String foo1(Object b) 
+       //seems input parameter has no type, but constructed parameter has type
+       //static //presumes this::Supertype<> achieves this::Supertype<> * res::Objec<>;
+       //dynamic //presumes this::Supertype<> achieves this::Supertype<> * res::Objec<>;
+       {
         
-      //   // Supertype q = (Supertype) b;
-      //   if (b instanceof Subtype ) {
-      //      {
-      //       // q.toString();
-      //       // Subtype c = (Subtype) b;
+        Supertype q = (Supertype) b;
+        if (b instanceof Subtype ) {
+           {
+            q.toString();
+            Subtype c = (Subtype) b;
             
 
-      //       // if (b instanceof Subtype2) {
-      //       //     Subtype z = (Subtype) b;
-      //       // }
-      //       return null;}
-      //   } else {
-      //       // Subtype c = (Subtype) b;
-      //   return "null";}
-      //  }
+            if (b instanceof Subtype2) {
+                Subtype z = (Subtype) b;
+            }
+            return null;}
+        } else {
+            // Subtype c = (Subtype) b;
+        return "null";}
+       }
 
       //   public void tt3(Object a) {
         
@@ -62,11 +62,11 @@ class Supertype {
       //   } else {a.toString();}
       //   }
 
-    //   public void tt() {
-    //     Object a = new Object();
-    //    foo (a); //cast err 1 disj
+      public void tt() {
+        Object a = new Subtype();
+       foo1 (a); //cast err 1 disj
         
-    //   }
+      }
     //    public void tt2() {
     //      Subtype2 a = new Subtype2();
     //      foo (a); // cast err 1 disj

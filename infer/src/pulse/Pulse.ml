@@ -19,6 +19,7 @@ open PulseOperationResult.Import
 exception AboutToOOM
 exception Listhd
 
+let current_path = ref 1
 let rec list_printer f alist = 
   match alist with
   | [] -> print_endline ""
@@ -1090,7 +1091,7 @@ module PulseTransferFunctions = struct
              >>|| PulseOperations.hack_propagates_type_on_load tenv path loc rhs_exp rhs_addr
              >>|| PulseOperations.write_id (lhs_id:Ident.t) rhs_addr_hist )
             |> SatUnsat.to_list
-            |> PulseReport.report_results tenv proc_desc err_log loc
+            (* |> PulseReport.report_results tenv proc_desc err_log loc *)
           in
           let astates =
             (* call the initializer for certain globals to populate their values, unless we already
@@ -1105,7 +1106,11 @@ module PulseTransferFunctions = struct
             | _ ->
                 astate_n
           in
-          let astates, path, non_disj = (List.concat_map astates ~f:deref_rhs, path, astate_n) in
+          let res1 = (List.concat_map astates ~f:deref_rhs) in
+          current_path := (!current_path - 1 + (List.length res1));
+          let res2 = PulseReport.report_results tenv proc_desc err_log loc res1 in
+          let astates, path, non_disj = (res2, path, astate_n) in
+          
           let astates =
             let procname = Procdesc.get_proc_name proc_desc in
             List.concat_map astates ~f:(fun astate ->
@@ -1162,14 +1167,16 @@ module PulseTransferFunctions = struct
           in
           let astate_n = NonDisjDomain.set_captured_variables rhs_exp astate_n in
           let results = SatUnsat.to_list result in
+          current_path := (!current_path - 1 + (List.length results));
           (PulseReport.report_results tenv proc_desc err_log loc results, path, astate_n)
       | Call (ret, (call_exp:Exp.t), actuals, loc, (call_flags:CallFlags.t)) ->
+        (* Exp.pp F.std_formatter call_exp; *)
         (match call_exp with 
        
         |Const (Cfun p) when Procname.is_java p
         
         
-        -> if (Procname.equal p BuiltinDecl.__new) || (List.is_empty actuals) || Procname.is_java_static_method p then
+        -> if (Procname.equal p BuiltinDecl.__new) || (Procname.equal p BuiltinDecl.__cast)||(List.is_empty actuals) || Procname.is_java_static_method p then
         
         (* let all_possible_subtypes = 
         in *)
@@ -1187,6 +1194,7 @@ module PulseTransferFunctions = struct
           (* list_printer (fun x -> print_endline ("act exp "^Exp.to_string (fst x)); print_endline ("act type " ^Typ.to_string (snd x))) actuals; *)
 
           let astate_n = check_modified_before_dtor actuals call_exp astate astate_n in
+          
           let astates =
             List.fold actuals ~init:[astate] ~f:(fun astates (exp, typ) ->
                 List.concat_map astates ~f:(fun astate ->
@@ -1216,6 +1224,7 @@ module PulseTransferFunctions = struct
             in
             (* print_endline ((Location.to_string loc)^ "calling location"); *)
             let astates_before = !astates_before in
+            current_path := (!current_path - 1 + (List.length res));
             (* Utils.list_printer (fun x -> match PulseResult.fetal_error x with |None -> print_endline "None11" | Some a -> AccessResult.pp a) res; *)
             (PulseReport.report_exec_results tenv proc_desc err_log loc res, astates_before)
           in
@@ -1311,6 +1320,7 @@ module PulseTransferFunctions = struct
             in
             (* print_endline ((Location.to_string loc)^ "calling location"); *)
             let astates_before = !astates_before in
+            current_path := (!current_path - 1 + (List.length res));
             (* Utils.list_printer (fun x -> match PulseResult.fetal_error x with |None -> print_endline "None11" | Some a -> AccessResult.pp a) res; *)
             (PulseReport.report_exec_results tenv proc_desc err_log loc res, astates_before)
           in
@@ -1344,7 +1354,7 @@ module PulseTransferFunctions = struct
             let possible_subclass_sat = List.fold possible_subclass ~init:[] ~f:(fun acc x -> if Formula.check_dynamic_type_sat x (yes_instance,not_instance) tenv then x::acc else acc ) in
 
             
-            let astates_all, astates_before_all =  List.fold possible_subclass_sat ~init:([],[]) ~f:( fun (ast,astb) cls_name -> 
+            let astates_all1, astates_before_all =  List.fold possible_subclass_sat ~init:([],[]) ~f:( fun (ast,astb) cls_name -> 
             
             let call_exp = 
               let java_p = Procname.as_java_exn ~explanation:"zzz" p in 
@@ -1386,11 +1396,16 @@ module PulseTransferFunctions = struct
                     r )
               in
               (* print_endline ((Location.to_string loc)^ "calling location"); *)
-              let astates_before = !astates_before in
+              let astates_before = !astates_before 
+              in
+              
               (* Utils.list_printer (fun x -> match PulseResult.fetal_error x with |None -> print_endline "None11" | Some a -> AccessResult.pp a) res; *)
-              (PulseReport.report_exec_results tenv proc_desc err_log loc res, astates_before)
+              (res, astates_before)
+              (* (PulseReport.report_exec_results tenv proc_desc err_log loc res, astates_before) *)
               in (ast@astates,astb@astates_before))
             in
+            current_path := (!current_path - 1 + (List.length astates_all1));
+            let astates_all = PulseReport.report_exec_results tenv proc_desc err_log loc astates_all1 in
              (* Utils.list_printer (fun x -> ExecutionDomain.pp F.std_formatter x) astates; *)
             (* list_printer (fun x -> AbductiveDomain.pp F.std_formatter x) astates_before; (*state before*)
             list_printer (fun x -> ExecutionDomain.pp F.std_formatter x) astates; state after *)
@@ -1441,6 +1456,7 @@ module PulseTransferFunctions = struct
               in
               (* print_endline ((Location.to_string loc)^ "calling location"); *)
               let astates_before = !astates_before in
+              current_path := (!current_path - 1 + (List.length res));
               (* Utils.list_printer (fun x -> match PulseResult.fetal_error x with |None -> print_endline "None11" | Some a -> AccessResult.pp a) res; *)
               (PulseReport.report_exec_results tenv proc_desc err_log loc res, astates_before)
             in
@@ -1466,6 +1482,9 @@ module PulseTransferFunctions = struct
 
 
           | _ ->  
+            (* print_endline "=========";
+            Exp.pp F.std_formatter call_exp;
+             *)
           let astate_n = check_modified_before_dtor actuals call_exp astate astate_n in
           let astates =
             List.fold actuals ~init:[astate] ~f:(fun astates (exp, typ) ->
@@ -1496,6 +1515,9 @@ module PulseTransferFunctions = struct
             in
             (* print_endline ((Location.to_string loc)^ "calling location"); *)
             let astates_before = !astates_before in
+            current_path := (!current_path - 1 + (List.length res));
+            (* Utils.print_int (List.length res);
+            print_endline "========="; *)
             (* Utils.list_printer (fun x -> match PulseResult.fetal_error x with |None -> print_endline "None11" | Some a -> AccessResult.pp a) res; *)
             (PulseReport.report_exec_results tenv proc_desc err_log loc res, astates_before)
           in
@@ -1522,6 +1544,7 @@ module PulseTransferFunctions = struct
 
 
       | Prune (condition, loc, is_then_branch, if_kind) ->
+        Utils.print_bool is_then_branch;
         (* Exp.pp F.std_formatter condition; *)
         (* AbductiveDomain.pp F.std_formatter astate; *)
           let prune_result =
@@ -1555,6 +1578,7 @@ module PulseTransferFunctions = struct
             (* AbductiveDomain.pp F.std_formatter astate; *)
             astate
           in
+          if is_then_branch then current_path := (!current_path + (List.length results)) else current_path := (!current_path - 1 + (List.length results));
           (PulseReport.report_exec_results tenv proc_desc err_log loc results, path, astate_n)
       | Metadata EndBranches ->
           (* We assume that terminated conditions are well-parenthesised, hence an [EndBranches]
@@ -1725,13 +1749,17 @@ let analyze specialization
     let ((exit_summaries_opt:DisjunctiveAnalyzer.TransferFunctions.Domain.t option), exn_sink_summaries_opt) =
       DisjunctiveAnalyzer.compute_post_including_exceptional analysis_data ~initial proc_desc
     in
-    print_endline "process analysis";
+    (* print_endline "process analysis";
     Procname.pp_name_only F.std_formatter proc_name;
     let res = match exit_summaries_opt with 
     | None  -> ()
     | Some a -> DisjunctiveAnalyzer.TransferFunctions.Domain.pp F.std_formatter a in
     res;
     print_endline "process analysis end";
+    print_endline "------------------------------------------";
+          Utils.print_int !current_path; 
+          print_endline "=========================================="; *)
+          current_path := 1;
     let process_postconditions node posts_opt ~convert_normal_to_exceptional =
       match posts_opt with
       | Some (posts, non_disj_astate) ->
@@ -1759,9 +1787,9 @@ let analyze specialization
             else summary
           in
           (* PulseSummary.pp_pre_post_list F.std_formatter ~pp_kind:(fun _fmt -> ()) summary ; *)
-          print_endline "------------------------------------------";
+          (* print_endline "------------------------------------------";
           Utils.print_int (List.length summary);
-          print_endline "==========================================";
+          print_endline "=========================================="; *)
           report_topl_errors proc_desc err_log summary ;
           report_unnecessary_copies proc_desc err_log non_disj_astate ;
           report_unnecessary_parameter_copies tenv proc_desc err_log non_disj_astate ;
@@ -1810,7 +1838,7 @@ let checker ?specialization ({InterproceduralAnalysis.proc_desc} as analysis_dat
   (* Tenv.pp_per_file F.std_formatter (Tenv.FileLocal analysis_data.tenv); *)
   (* print_endline "===================="; *)
   let open IOption.Let_syntax in
-  if should_analyze proc_desc then (
+  if should_analyze (proc_desc:Procdesc.t) then (
     try
       match specialization with
       | None ->
@@ -1826,7 +1854,7 @@ let checker ?specialization ({InterproceduralAnalysis.proc_desc} as analysis_dat
     with AboutToOOM ->
       (* We trigger GC to avoid skipping the next procedure that will be analyzed. *)
       Gc.major () ;
-      None )
+      None ) 
   else None
 
 
