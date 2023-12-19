@@ -2393,7 +2393,7 @@ let ty_name t =
   |Some a -> a
 
 let type_list_conversion alist =
-    List.map alist ~f:(fun x -> match Typ.name x with |Some a -> a | None -> raise (Foo "not Typ.name")) 
+    List.map alist ~f:(fun x -> match Typ.name x with |Some a -> a | None -> raise (Foo "not Typ.name")) (*problem*)
 let check_dynamic_type_sat ty1 ty_list tenv= 
 
     let (yes,no) = ty_list in 
