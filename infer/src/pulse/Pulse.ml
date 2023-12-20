@@ -1762,6 +1762,7 @@ let analyze specialization
           Utils.print_int !current_path; 
           print_endline "=========================================="; *)
           current_path := 1;
+          Caml.Hashtbl.reset instr_latent_hash;
     let process_postconditions node posts_opt ~convert_normal_to_exceptional =
       match posts_opt with
       | Some (posts, non_disj_astate) ->
