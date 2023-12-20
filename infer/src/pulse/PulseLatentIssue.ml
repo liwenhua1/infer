@@ -102,7 +102,7 @@ let add_call call_and_loc call_subst astate latent_issue =
 
 (* require a summary because we don't want to stop reporting because some non-abducible condition is
    not true as calling context cannot possibly influence such conditions *)
-let should_report (astate : AbductiveDomain.Summary.t) (diagnostic : Diagnostic.t) =
+let should_report ?(current_path = -1) ?(instra_hash = Caml.Hashtbl.create 1000) ?(inst = None) (astate : AbductiveDomain.Summary.t) (diagnostic : Diagnostic.t) =
   match diagnostic with
   | ConfigUsage _
   | ConstRefableParameter _
@@ -118,13 +118,13 @@ let should_report (astate : AbductiveDomain.Summary.t) (diagnostic : Diagnostic.
       (* these issues are reported regardless of the calling context, not sure if that's the right
          decision yet *)
       `ReportNow
-  | JavaCastError latent -> if PulseArithmetic.is_manifest astate then `ReportNow
+  | JavaCastError latent -> if PulseArithmetic.is_manifest ~current_path:current_path ~instra_hash:instra_hash ~key:inst astate then `ReportNow
                                 else `DelayReport (JavaCastError latent)
   | AccessToInvalidAddress latent -> 
-      if PulseArithmetic.is_manifest astate then `ReportNow
+      if PulseArithmetic.is_manifest ~current_path:current_path ~instra_hash:instra_hash ~key:inst astate then `ReportNow
       else `DelayReport (AccessToInvalidAddress latent)
   | ErlangError latent ->
       if PulseArithmetic.is_manifest astate then `ReportNow else `DelayReport (ErlangError latent)
   | ReadUninitializedValue latent ->
-      if PulseArithmetic.is_manifest astate then `ReportNow
+      if PulseArithmetic.is_manifest ~current_path:current_path ~instra_hash:instra_hash ~key:inst astate then `ReportNow
       else `DelayReport (ReadUninitializedValue latent)

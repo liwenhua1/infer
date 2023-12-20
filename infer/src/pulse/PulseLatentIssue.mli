@@ -27,7 +27,11 @@ val pp : F.formatter -> t -> unit
 
 val to_diagnostic : t -> Diagnostic.t
 
-val should_report : AbductiveDomain.Summary.t -> Diagnostic.t -> [> `DelayReport of t | `ReportNow]
+val should_report : ?current_path:int ->
+  ?instra_hash:(Sil.instr, int) Caml.Hashtbl.t ->
+  ?inst:Sil.instr option ->
+  AbductiveDomain.Summary.summary ->
+  Diagnostic.t -> [> `DelayReport of t | `ReportNow ]
 
 val add_call :
      CallEvent.t * Location.t

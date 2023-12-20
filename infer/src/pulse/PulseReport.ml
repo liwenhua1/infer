@@ -212,7 +212,8 @@ let summary_error_of_error tenv proc_desc location (error : AccessResult.error) 
 
 
 (* the access error and summary must come from [summary_error_of_error] *)
-let report_summary_error tenv proc_desc err_log ((access_error : AccessResult.error), summary) :
+let report_summary_error tenv proc_desc err_log ?(current_path = -1) ?(instra_hash = Caml.Hashtbl.create 1000) ?(ins = None)
+  ((access_error : AccessResult.error), summary) :
     _ ExecutionDomain.base_t option =
   match access_error with
   | PotentialInvalidAccess {address; must_be_valid} ->
@@ -250,7 +251,7 @@ let report_summary_error tenv proc_desc err_log ((access_error : AccessResult.er
         is_suppressed tenv proc_desc ~is_nullptr_dereference ~is_constant_deref_without_invalidation
           summary
       in
-      match LatentIssue.should_report summary diagnostic with
+      match LatentIssue.should_report ~current_path:current_path ~instra_hash:instra_hash ~inst:ins summary diagnostic with
       | `ReportNow ->
           if is_suppressed then L.d_printfln "ReportNow suppressed error" ;
           report ~latent:false ~is_suppressed proc_desc err_log diagnostic ;
@@ -266,14 +267,15 @@ let report_summary_error tenv proc_desc err_log ((access_error : AccessResult.er
       assert false
 
 
-let report_error tenv proc_desc err_log location access_error =
+let report_error tenv proc_desc err_log location ?(current_path = -1) ?(instra_hash = Caml.Hashtbl.create 1000) ?(ins = None) 
+  access_error =
   (* let () = AccessResult.pp access_error in *)
   let open SatUnsat.Import in
   summary_error_of_error tenv proc_desc location access_error
-  >>| report_summary_error tenv proc_desc err_log
+  >>| report_summary_error tenv proc_desc err_log ~current_path:current_path ~instra_hash:instra_hash ~ins:ins
 
 
-let report_errors tenv proc_desc err_log location errors =
+let report_errors tenv proc_desc err_log location ?(current_path = -1) ?(instra_hash = Caml.Hashtbl.create 1000) ?(ins = None) errors =
     (* Utils.list_printer (fun x ->  AccessResult.pp x) errors; *)
   let open SatUnsat.Import in
   List.rev errors
@@ -283,10 +285,10 @@ let report_errors tenv proc_desc err_log location errors =
          | Unsat | Sat (Some _) ->
              sat_result
          | Sat None ->
-             report_error tenv proc_desc err_log location error )
+             report_error tenv proc_desc err_log location error ~current_path:current_path ~instra_hash:instra_hash ~ins:ins )
 
 
-let report_exec_results tenv proc_desc err_log location results =
+let report_exec_results tenv proc_desc err_log ?(current_path = -1) ?(instra_hash = Caml.Hashtbl.create 1000) ?(ins = None) location results =
   (* Utils.list_printer (fun x -> match PulseResult.fetal_error x with |None -> print_endline "None11" | Some a -> AccessResult.pp a) results; *)
   (* print_endline (Location.to_string location); *)
   List.filter_map results ~f:(fun exec_result ->
@@ -299,7 +301,7 @@ let report_exec_results tenv proc_desc err_log location results =
 
          (* Utils.list_printer (fun x ->  AccessResult.pp x) errors; *)
         (
-        match report_errors tenv proc_desc err_log location errors with
+        match report_errors tenv proc_desc err_log location errors ~current_path:current_path ~instra_hash:instra_hash ~ins:ins with
         | Unsat ->
             L.d_printfln "UNSAT discovered during error reporting" ;
             None
@@ -317,12 +319,12 @@ let report_exec_results tenv proc_desc err_log location results =
                     exec_state) ) )
 
 
-let report_results tenv proc_desc err_log location results =
+let report_results tenv proc_desc err_log location ?(current_disj = -1) ?(instra_latent_hash = Caml.Hashtbl.create 1000) ?(ins = None) results =
   let open PulseResult.Let_syntax in
   List.map results ~f:(fun result ->
       let+ astate = result in
       ExecutionDomain.ContinueProgram astate )
-  |> report_exec_results tenv proc_desc err_log location
+  |> report_exec_results tenv proc_desc err_log location ~current_path:current_disj ~instra_hash:instra_latent_hash ~ins:ins
 
 
 let report_result tenv proc_desc err_log location result =

@@ -14,11 +14,13 @@ open PulseDomainInterface
 open PulseOperationResult.Import
 
 
+
 (** raised when we detect that pulse is using too much memory to stop the analysis of the current
     procedure *)
 exception AboutToOOM
 exception Listhd
 
+let instr_latent_hash = Caml.Hashtbl.create 1000
 let current_path = ref 1
 let rec list_printer f alist = 
   match alist with
@@ -1108,7 +1110,7 @@ module PulseTransferFunctions = struct
           in
           let res1 = (List.concat_map astates ~f:deref_rhs) in
           current_path := (!current_path - 1 + (List.length res1));
-          let res2 = PulseReport.report_results tenv proc_desc err_log loc res1 in
+          let res2 = PulseReport.report_results tenv proc_desc err_log loc res1 ~current_disj:!current_path ~instra_latent_hash:instr_latent_hash ~ins: (Some instr) in
           let astates, path, non_disj = (res2, path, astate_n) in
           
           let astates =
@@ -1120,7 +1122,7 @@ module PulseTransferFunctions = struct
                       [ PulseTaintOperations.load procname tenv path loc ~lhs:(lhs_id, typ)
                           ~rhs:rhs_exp astate ]
                     in
-                    PulseReport.report_results tenv proc_desc err_log loc astates
+                    PulseReport.report_results tenv proc_desc err_log loc astates ~current_disj:!current_path ~instra_latent_hash:instr_latent_hash ~ins: (Some instr) 
                 | _ ->
                     [astate] )
           in
@@ -1168,7 +1170,7 @@ module PulseTransferFunctions = struct
           let astate_n = NonDisjDomain.set_captured_variables rhs_exp astate_n in
           let results = SatUnsat.to_list result in
           current_path := (!current_path - 1 + (List.length results));
-          (PulseReport.report_results tenv proc_desc err_log loc results, path, astate_n)
+          (PulseReport.report_results tenv proc_desc err_log loc results ~current_disj:!current_path ~instra_latent_hash:instr_latent_hash ~ins: (Some instr) , path, astate_n)
       | Call (ret, (call_exp:Exp.t), actuals, loc, (call_flags:CallFlags.t)) ->
         (* Exp.pp F.std_formatter call_exp; *)
         (match call_exp with 
@@ -1226,7 +1228,7 @@ module PulseTransferFunctions = struct
             let astates_before = !astates_before in
             current_path := (!current_path - 1 + (List.length res));
             (* Utils.list_printer (fun x -> match PulseResult.fetal_error x with |None -> print_endline "None11" | Some a -> AccessResult.pp a) res; *)
-            (PulseReport.report_exec_results tenv proc_desc err_log loc res, astates_before)
+            (PulseReport.report_exec_results tenv proc_desc err_log loc res ~current_path:!current_path ~instra_hash:instr_latent_hash ~ins: (Some instr) , astates_before)
           in
            (* Utils.list_printer (fun x -> ExecutionDomain.pp F.std_formatter x) astates; *)
           (* list_printer (fun x -> AbductiveDomain.pp F.std_formatter x) astates_before; (*state before*)
@@ -1322,7 +1324,7 @@ module PulseTransferFunctions = struct
             let astates_before = !astates_before in
             current_path := (!current_path - 1 + (List.length res));
             (* Utils.list_printer (fun x -> match PulseResult.fetal_error x with |None -> print_endline "None11" | Some a -> AccessResult.pp a) res; *)
-            (PulseReport.report_exec_results tenv proc_desc err_log loc res, astates_before)
+            (PulseReport.report_exec_results tenv proc_desc err_log loc res ~current_path:!current_path ~instra_hash:instr_latent_hash ~ins: (Some instr), astates_before)
           in
            (* Utils.list_printer (fun x -> ExecutionDomain.pp F.std_formatter x) astates; *)
           (* list_printer (fun x -> AbductiveDomain.pp F.std_formatter x) astates_before; (*state before*)
@@ -1405,7 +1407,7 @@ module PulseTransferFunctions = struct
               in (ast@astates,astb@astates_before))
             in
             current_path := (!current_path - 1 + (List.length astates_all1));
-            let astates_all = PulseReport.report_exec_results tenv proc_desc err_log loc astates_all1 in
+            let astates_all = PulseReport.report_exec_results tenv proc_desc err_log loc astates_all1 ~current_path:!current_path ~instra_hash:instr_latent_hash ~ins: (Some instr) in
              (* Utils.list_printer (fun x -> ExecutionDomain.pp F.std_formatter x) astates; *)
             (* list_printer (fun x -> AbductiveDomain.pp F.std_formatter x) astates_before; (*state before*)
             list_printer (fun x -> ExecutionDomain.pp F.std_formatter x) astates; state after *)
@@ -1458,7 +1460,7 @@ module PulseTransferFunctions = struct
               let astates_before = !astates_before in
               current_path := (!current_path - 1 + (List.length res));
               (* Utils.list_printer (fun x -> match PulseResult.fetal_error x with |None -> print_endline "None11" | Some a -> AccessResult.pp a) res; *)
-              (PulseReport.report_exec_results tenv proc_desc err_log loc res, astates_before)
+              (PulseReport.report_exec_results tenv proc_desc err_log loc res ~current_path:!current_path ~instra_hash:instr_latent_hash ~ins: (Some instr), astates_before)
             in
              (* Utils.list_printer (fun x -> ExecutionDomain.pp F.std_formatter x) astates; *)
             (* list_printer (fun x -> AbductiveDomain.pp F.std_formatter x) astates_before; (*state before*)
@@ -1519,7 +1521,7 @@ module PulseTransferFunctions = struct
             (* Utils.print_int (List.length res);
             print_endline "========="; *)
             (* Utils.list_printer (fun x -> match PulseResult.fetal_error x with |None -> print_endline "None11" | Some a -> AccessResult.pp a) res; *)
-            (PulseReport.report_exec_results tenv proc_desc err_log loc res, astates_before)
+            (PulseReport.report_exec_results tenv proc_desc err_log loc res ~current_path:!current_path ~instra_hash:instr_latent_hash ~ins: (Some instr), astates_before)
           in
            (* Utils.list_printer (fun x -> ExecutionDomain.pp F.std_formatter x) astates; *)
           (* list_printer (fun x -> AbductiveDomain.pp F.std_formatter x) astates_before; (*state before*)
@@ -1544,7 +1546,7 @@ module PulseTransferFunctions = struct
 
 
       | Prune (condition, loc, is_then_branch, if_kind) ->
-        Utils.print_bool is_then_branch;
+        (* Utils.print_bool is_then_branch; *)
         (* Exp.pp F.std_formatter condition; *)
         (* AbductiveDomain.pp F.std_formatter astate; *)
           let prune_result =
@@ -1579,7 +1581,7 @@ module PulseTransferFunctions = struct
             astate
           in
           if is_then_branch then current_path := (!current_path + (List.length results)) else current_path := (!current_path - 1 + (List.length results));
-          (PulseReport.report_exec_results tenv proc_desc err_log loc results, path, astate_n)
+          (PulseReport.report_exec_results tenv proc_desc err_log loc results ~current_path:!current_path ~instra_hash:instr_latent_hash ~ins: (Some instr), path, astate_n)
       | Metadata EndBranches ->
           (* We assume that terminated conditions are well-parenthesised, hence an [EndBranches]
              instruction terminates the most recently seen terminated conditional. The empty case

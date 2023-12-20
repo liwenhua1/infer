@@ -90,7 +90,9 @@ val prune_eq_one :
 
 val is_known_zero : AbductiveDomain.t -> AbstractValue.t -> bool
 
-val is_manifest : AbductiveDomain.Summary.t -> bool
+val is_manifest : ?current_path:int ->
+  ?instra_hash:(Sil.instr, int) Caml.Hashtbl.t ->
+  ?key:Sil.instr option -> AbductiveDomain.Summary.summary -> bool
 
 val and_is_int : AbstractValue.t -> AbductiveDomain.t -> AbductiveDomain.t AccessResult.t SatUnsat.t
 

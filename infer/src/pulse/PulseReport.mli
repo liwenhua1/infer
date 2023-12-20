@@ -16,7 +16,10 @@ val report_summary_error :
      Tenv.t
   -> Procdesc.t
   -> Errlog.t
-  -> AccessResult.error * AbductiveDomain.Summary.t
+  -> ?current_path:int ->
+   ?instra_hash:(Sil.instr, int) Caml.Hashtbl.t ->
+   ?ins:Sil.instr option  -> 
+   AccessResult.error * AbductiveDomain.Summary.t
   -> _ ExecutionDomain.base_t option
 (** [None] means that the execution can continue but we could not compute the continuation state
     (because this only takes a [AccessResult.error], which doesn't have the ok state) *)
@@ -34,6 +37,9 @@ val report_results :
   -> Procdesc.t
   -> Errlog.t
   -> Location.t
+  -> ?current_disj:int ->
+   ?instra_latent_hash:(Sil.instr, int) Caml.Hashtbl.t ->
+   ?ins:Sil.instr option 
   -> AbductiveDomain.t AccessResult.t list
   -> ExecutionDomain.t list
 
@@ -41,6 +47,8 @@ val report_exec_results :
      Tenv.t
   -> Procdesc.t
   -> Errlog.t
-  -> Location.t
+  -> ?current_path:int ->
+   ?instra_hash:(Sil.instr, int) Caml.Hashtbl.t ->
+   ?ins:Sil.instr option -> Location.t
   -> ExecutionDomain.t AccessResult.t list
   -> ExecutionDomain.t list

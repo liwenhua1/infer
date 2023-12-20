@@ -192,20 +192,30 @@ let stack_instance_check (summary:AbductiveDomain.Summary.summary) tenv=
   AbstractValue.Set.fold (fun x acc-> helper x && acc) abs_vars true
 
 
-
-
-let is_manifest summary =
+let is_manifest  ?(current_path = -1) ?(instra_hash: (Sil.instr, int) Caml.Hashtbl.t = Caml.Hashtbl.create 1000) ?(key : Sil.instr option = None) summary =
   let tenv = match (Tenv.load_global ()) with 
             | Some t -> t 
             | None -> Tenv.create ()
           in
   
+  let statge1 = 
   let path = AbductiveDomain.Summary.get_path_condition summary in 
  
   (Formula.is_manifest (AbductiveDomain.Summary.get_path_condition summary) ~is_allocated:(fun v ->
       if check_instance tenv v path summary then true else
       AbductiveDomain.Summary.is_heap_allocated summary v
-      || AbductiveDomain.Summary.get_must_be_valid v summary |> Option.is_some )) && stack_instance_check summary tenv
+      || AbductiveDomain.Summary.get_must_be_valid v summary |> Option.is_some )) && stack_instance_check summary tenv 
+      in 
+  let statge2 = 
+    if (Int.(=) current_path (-1)) then false else
+    match key with
+                | None -> false 
+                | Some instr -> (match Caml.Hashtbl.find_opt instra_hash instr with 
+                                | None -> Caml.Hashtbl.add instra_hash instr 1; false
+                                | Some num -> if (Int.(=) (num + 1) current_path) then (Caml.Hashtbl.replace instra_hash instr (num+1); true )
+                                              else (Caml.Hashtbl.replace instra_hash instr (num+1); false)
+                                  )  in 
+      statge1 || statge2
 
 
 let and_is_int v astate = map_path_condition astate ~f:(fun phi -> Formula.and_is_int v phi)
