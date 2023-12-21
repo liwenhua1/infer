@@ -230,6 +230,14 @@ class Supertype {
     typeOK(o);
   }
 
+    public void Bad_FN2() {
+    // should report a warning because the Subtype implementation
+    // of foo() returns null
+    Subtype o = new Subtype();
+    typeOK(o);
+  }
+
+
 
  }
 //  class Subtype2 extends Supertype {}
