@@ -1757,8 +1757,8 @@ let analyze specialization
     | None  -> ()
     | Some a -> DisjunctiveAnalyzer.TransferFunctions.Domain.pp F.std_formatter a in
     res;
-    print_endline "process analysis end";
-    print_endline "------------------------------------------";
+    print_endline "process analysis end"; *)
+    (*print_endline "------------------------------------------";
           Utils.print_int !current_path; 
           print_endline "=========================================="; *)
           current_path := 1;
