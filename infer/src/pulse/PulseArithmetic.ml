@@ -130,6 +130,7 @@ let checking_instanceof_var var (formula:t) static_type =
     Atom.Set.fold iter_atom atoms (v,false) in  *)
 
 let check_instance tenv argv path summary=
+try
 
 (* Formula.pp Format.std_formatter path; *)
 (* print_endline "yes";
@@ -166,7 +167,7 @@ AbstractValue.pp Format.std_formatter argv;  *)
                                                                         let res = (not(PatternMatch.is_subtype tenv typ1 typ2)) && (not(PatternMatch.is_subtype tenv typ2 typ1)) in 
                                                                         res                                              *)
     else false
-
+  with Formula.Foo _ -> false
 
 
 let stack_instance_check (summary:AbductiveDomain.Summary.summary) tenv= 

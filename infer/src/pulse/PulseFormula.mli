@@ -9,6 +9,7 @@ open! IStd
 module F = Format
 module SatUnsat = PulseSatUnsat
 module ValueHistory = PulseValueHistory
+exception Foo of string
 
 (* NOTE: using [Var] for [AbstractValue] here since this is how "abstract values" are interpreted,
    in particular as far as arithmetic is concerned *)

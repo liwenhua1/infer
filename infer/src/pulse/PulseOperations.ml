@@ -303,7 +303,9 @@ let need_prune_for_instance astate_value  =
         if not (fst res) then (true,astate_value) else (false,astate_value)) in
   List.fold var_list ~init:(false,astate_value) ~f:(fun (acc,_bcc) x -> let (a,b) = check x in (acc||a, b)) )
   
-  with Fo _ ->  (false,astate_value)
+  with |Fo _ ->  (false,astate_value)
+       |Formula.Foo _ -> (false,astate_value)
+       
   
 
 

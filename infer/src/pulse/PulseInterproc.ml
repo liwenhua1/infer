@@ -312,7 +312,7 @@ let materialize_pre_for_globals path call_location ~pre call_state =
       materialize_pre_from_address ~pre ~addr_pre ~addr_hist_caller call_state )
 
 let type_list_conversion alist =
-        List.map alist ~f:(fun x -> match Typ.name x with |Some a -> a | None -> raise (F "not Typ.name")) 
+        List.filter_map alist ~f:(fun x -> Typ.name x) 
 let check_dynamic_type_sat ty1 ty_list tenv= 
     
         let (yes,no) = ty_list in 

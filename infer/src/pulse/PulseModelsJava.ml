@@ -213,7 +213,8 @@ let java_cast (argv, hist) typeexpr : model =
                 (* Utils.list_printer (fun x -> Typ.print_name x) (Tenv.find_limited_sub name1 tenv); *)
         (* AbductiveDomain.pp Format.std_formatter astate; *)
         let (instance,not_instance) = Formula.get_all_instance_constrains argv astate.path_condition in 
-        let not_instance = List.map not_instance ~f:(fun x -> match Typ.name x with |Some a -> a | None -> raise (Foo "not Typ.name")) in 
+        (* Utils.list_printer (fun x -> Typ.pp Pp.text Format.std_formatter x) not_instance; *)
+        let not_instance = List.filter_map not_instance ~f:(fun x -> Typ.name x) in 
         (* Utils.list_printer (fun x -> print_endline ("yes "^(Typ.to_string x))) a;
         print_endline (Int.to_string (List.length a));
         Utils.list_printer (fun x -> print_endline ("no "^(Typ.to_string x))) b;
