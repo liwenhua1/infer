@@ -118,9 +118,11 @@ let should_report ?(current_path = -1) ?(instra_hash = Caml.Hashtbl.create 1000)
       (* these issues are reported regardless of the calling context, not sure if that's the right
          decision yet *)
       `ReportNow
-  | JavaCastError _latent -> `ReportNow
-    (* if PulseArithmetic.is_manifest ~current_path:current_path ~instra_hash:instra_hash ~key:inst astate then `ReportNow
-                                else `DelayReport (JavaCastError latent) *)
+  | JavaCastError latent -> 
+    (* `ReportNow *)
+    if PulseArithmetic.is_manifest ~current_path:current_path ~instra_hash:instra_hash ~key:inst astate then `ReportNow
+                                else if  not (Typ.Name.equal (latent.class_name) Typ.make_object) then `ReportNow
+                                else `DelayReport (JavaCastError latent)
   | AccessToInvalidAddress latent -> 
       if PulseArithmetic.is_manifest ~current_path:current_path ~instra_hash:instra_hash ~key:inst astate then `ReportNow
       else `DelayReport (AccessToInvalidAddress latent)

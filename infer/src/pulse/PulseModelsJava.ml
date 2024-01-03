@@ -98,7 +98,7 @@ let add_instance_of_info_succ is_instance argv typ astate =
     
     (* (PulseResult.map ~f) sat_result *)
     
-    let add_instance_of_info_fail is_instance argv typ astate1 javaname access_trace location :  (AbductiveDomain.t execution_domain_base_t, base_error) pulse_result list= 
+    let add_instance_of_info_fail is_instance argv typ astate1 class_name javaname access_trace location :  (AbductiveDomain.t execution_domain_base_t, base_error) pulse_result list= 
       let astate = astate1 in
       let res_addr = AbstractValue.mk_fresh () in 
       let astate = PulseArithmetic.and_equal_instanceof res_addr argv typ astate in
@@ -115,7 +115,7 @@ let add_instance_of_info_succ is_instance argv typ astate =
                   | None -> raise (Foo "impossible") 
                   | Some a -> let fc x = 
                     (* AbductiveDomain.pp Format.std_formatter x; *)
-                    (match (List.hd (Basic.err_cast_abort javaname access_trace location x)) with 
+                    (match (List.hd (Basic.err_cast_abort class_name javaname access_trace location x)) with 
                                            |None -> raise (Foo "impossible") 
                                            |Some a -> a  ) in
                     
@@ -204,10 +204,10 @@ let java_cast (argv, hist) typeexpr : model =
                     let res = PatternMatch.is_subtype tenv name1 name2 in
 
                
-                  let javaname = JavaClassName.from_string (Typ.to_string t) in
+                  (* let javaname = JavaClassName.from_string (Typ.to_string t) in *)
                   if not (res) then 
                         (* let () = (print_endline ("cast error detected at "^ (Location.to_string location))) in *)
-                            astate |> Basic.err_cast_abort javaname access_trace location
+                            astate |> Basic.err_cast_abort name1 name2 access_trace location
                             (* Basic.ok_continue *)
                   else
                   (* let () = print_endline ("no cast error at "^ (Location.to_string location)) in *)
@@ -239,7 +239,7 @@ let java_cast (argv, hist) typeexpr : model =
         
         match typeexpr with
         | Exp.Sizeof {typ} -> 
-          let javaname = JavaClassName.from_string (Typ.to_string typ) in
+          (* let javaname = JavaClassName.from_string (Typ.to_string typ) in *)
           let name2 =
             
             match (Typ.name typ) with
@@ -254,14 +254,14 @@ let java_cast (argv, hist) typeexpr : model =
                   let res2 = PatternMatch.is_subtype tenv yinstance name2 in
 
                 if not (res1) then
-                            astate |> Basic.err_cast_abort javaname access_trace location
+                            astate |> Basic.err_cast_abort yinstance name2 access_trace location
                          else if not (res2) then 
                               
-                              if not ( PatternMatch.is_subtype tenv name2 yinstance) then astate |> Basic.err_cast_abort javaname access_trace location
+                              if not ( PatternMatch.is_subtype tenv name2 yinstance) then astate |> Basic.err_cast_abort yinstance name2 access_trace location
                               else
                                 
                               let exe1 = add_instance_of_info_succ true argv typ astate in 
-                              let exe2 = add_instance_of_info_fail false argv typ astate javaname access_trace location in 
+                              let exe2 = add_instance_of_info_fail false argv typ astate yinstance name2 access_trace location in 
                              
                               let res_list = exe1 @ exe2 in 
                               (* Utils.print_int (List.length res_list); *)

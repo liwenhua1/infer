@@ -63,7 +63,7 @@ class Supertype {
       //   }
 
       public void tt() {
-        Object a = new Subtype();
+        Object a = new Object();
        foo1 (a); //cast err 1 disj
         
       }
