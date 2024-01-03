@@ -192,8 +192,17 @@ let java_cast (argv, hist) typeexpr : model =
                         let name2 = (match (Typ.name typ) with
                             | None -> raise (Foo "None target type")
                             | Some a -> a) in
+
+                  
             
-                  let res = PatternMatch.is_subtype tenv name1 name2 in
+                 
+                  let exist_super = match Tenv.get_parent tenv name1 with 
+                                    | Some _ -> true 
+                                    | None -> false in
+
+                  if ((not (Typ.Name.equal name1 Typ.make_object)) && not (exist_super)) then  astate |> Basic.ok_continue else
+                    let res = PatternMatch.is_subtype tenv name1 name2 in
+
                
                   let javaname = JavaClassName.from_string (Typ.to_string t) in
                   if not (res) then 
@@ -210,6 +219,12 @@ let java_cast (argv, hist) typeexpr : model =
           match AbductiveDomain.AddressAttributes.get_static_type argv astate with 
                 |None ->  astate |> Basic.ok_continue
                 |Some a -> let name1 = a in
+         
+                let exist_super = match Tenv.get_parent tenv name1 with 
+                                  | Some _ -> true 
+                                  | None -> false in
+
+                if ((not (Typ.Name.equal name1 Typ.make_object)) && not (exist_super)) then  astate |> Basic.ok_continue else
                 (* Utils.list_printer (fun x -> Typ.print_name x) (Tenv.find_limited_sub name1 tenv); *)
         (* AbductiveDomain.pp Format.std_formatter astate; *)
         let (instance,not_instance) = Formula.get_all_instance_constrains argv astate.path_condition in 
