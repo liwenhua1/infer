@@ -170,7 +170,7 @@ let java_cast (argv, hist) typeexpr : model =
         let typ1 = AbductiveDomain.AddressAttributes.get_dynamic_type argv astate in
         (* AbstractValue.pp Format.std_formatter argv;
         AbductiveDomain.pp Format.std_formatter astate; *)
-
+        try
        (* let () = match typ1 with 
         | None -> print_endline "not static type"
         | Some a -> (Typ.print_name a) in *)
@@ -186,11 +186,11 @@ let java_cast (argv, hist) typeexpr : model =
                   let name1  = 
                      match na1 with
                                   |Some t ->  t
-                                  | _ -> raise (Foo "None java type") in 
+                                  | _ -> raise UnsupportCast in 
                   (match typeexpr with
                       | Exp.Sizeof {typ} -> 
                         let name2 = (match (Typ.name typ) with
-                            | None -> raise (Foo "None target type")
+                            | None -> raise UnsupportCast
                             | Some a -> a) in
 
                   
@@ -236,7 +236,7 @@ let java_cast (argv, hist) typeexpr : model =
         print_endline (Int.to_string (List.length b)); *)
         (* let event = Hist.call_event path location "Java.cast" in
         let res_addr = AbstractValue.mk_fresh () in *)
-        try
+        
         match typeexpr with
         | Exp.Sizeof {typ} -> 
           let javaname = JavaClassName.from_string (Typ.to_string typ) in
