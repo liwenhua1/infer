@@ -1708,6 +1708,10 @@ let set_post_cell {PathContext.timestamp} (addr, history) (edges, attr_set) loca
         attrs
       |> BaseAddressAttributes.add addr attr_set )
 
+let get_number_instanceof summary argv= 
+        let condition = summary.path_condition in 
+        let number = Formula.get_number_instanceof condition argv in number
+
 
 module Summary = struct
   type summary = t [@@deriving compare, equal, yojson_of]
@@ -1718,9 +1722,9 @@ module Summary = struct
 
   let leq = leq
 
-  let get_number_instanceof summary = 
+  let get_number_instanceof summary argv = 
     let condition = summary.path_condition in 
-    let number = Formula.get_number_instanceof condition in number
+    let number = Formula.get_number_instanceof condition argv in number
 
  
 

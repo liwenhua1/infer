@@ -79,7 +79,7 @@ module Basic : sig
 
   val ok_continue : 'a -> ('a execution_domain_base_t, 'b) pulse_result list
 
-  val err_cast_abort : Typ.Name.t-> Typ.Name.t ->
+  val err_cast_abort : Typ.Name.t-> Typ.Name.t -> int ->
       Trace.t ->
       Location.t ->
       AbductiveDomain.t ->

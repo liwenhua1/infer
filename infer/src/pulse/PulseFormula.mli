@@ -24,7 +24,7 @@ type t [@@deriving compare, equal, yojson_of]
 val pp : F.formatter -> t -> unit
 
 val get_all_instance_constrains : Var.t -> t -> Typ.t list * Typ.t list
-val get_number_instanceof : t -> int
+val get_number_instanceof : t -> Var.t-> int
 
 val pp_with_pp_var : (F.formatter -> Var.t -> unit) -> F.formatter -> t -> unit
   [@@warning "-unused-value-declaration"]

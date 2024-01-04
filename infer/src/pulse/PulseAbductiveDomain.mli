@@ -333,6 +333,7 @@ val incorporate_new_eqs :
 val incorporate_new_eqs_on_val : Formula.new_eqs -> AbstractValue.t -> AbstractValue.t
 (** Similar to [incorporate_new_eqs], but apply to an abstract value. *)
 
+val get_number_instanceof : t -> AbstractValue.t -> int
 module Summary : sig
   (** private type to make sure {!of_post} is always called when creating summaries and that it is
       not called twice *)
@@ -378,7 +379,7 @@ module Summary : sig
 
   val get_post : summary -> BaseDomain.t
 
-  val get_number_instanceof : summary -> int
+  val get_number_instanceof : summary -> AbstractValue.t->int
 
   val get_path_condition : summary -> Formula.t
 

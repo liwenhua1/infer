@@ -2358,10 +2358,10 @@ let linear_var liva =
   |Some a -> a
   |None -> raise Linear
 
-let get_number_instanceof f = 
+let get_number_instanceof f argv= 
   let phi = f.phi in 
   let term_equ = phi.term_eqs in 
-  let number = Term.VarMap.fold (fun x _ acc -> match x with | IsInstanceOf _ -> acc + 1 | _ -> acc) term_equ 0 in number
+  let number = Term.VarMap.fold (fun x _ acc -> match x with | IsInstanceOf (a, _) -> if (Var.equal a argv) then acc + 1 else acc | _ -> acc) term_equ 0 in number
 
 let get_all_instance_constrains (argv:Var.t) (path:t) = 
   let yes = ref [] in 
