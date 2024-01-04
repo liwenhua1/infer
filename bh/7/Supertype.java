@@ -54,14 +54,15 @@ class Supertype {
         if (b instanceof Supertype ) {
            {
    
-            Subtype c = (Subtype) b;
+            // Supertype c = (Supertype) b;
             
 
             
-            return null;}
-        } else {
-            // Subtype c = (Subtype) b;
-        return "null";}
+            }
+        } 
+            Supertype d = (Supertype) b;
+             // Subtype c = (Subtype) b;
+        return "null";
        }
 
       //   public void tt3(Object a) {

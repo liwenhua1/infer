@@ -100,9 +100,11 @@ let add_instance_of_info_succ is_instance argv typ astate =
     
     let add_instance_of_info_fail is_instance argv typ astate1 class_name javaname access_trace location :  (AbductiveDomain.t execution_domain_base_t, base_error) pulse_result list= 
       let astate = astate1 in
+      AbductiveDomain.pp Format.std_formatter astate;
       let res_addr = AbstractValue.mk_fresh () in 
+     
       let astate = PulseArithmetic.and_equal_instanceof res_addr argv typ astate in
-        (* AbductiveDomain.pp Format.std_formatter astate; *)
+        
       let lhs_op = Formula.AbstractValueOperand res_addr in 
       let rhs_op = Formula.ConstOperand (Const.Cint IntLit.zero) in
       let bop = Binop.Eq in
@@ -219,7 +221,7 @@ let java_cast (argv, hist) typeexpr : model =
           match AbductiveDomain.AddressAttributes.get_static_type argv astate with 
                 |None ->  astate |> Basic.ok_continue
                 |Some a -> let name1 = a in
-               
+                
                 let exist_super = Tenv.non_empty_super tenv name1 in
                 (* Utils.print_bool exist_super; *)
                 (* Typ.print_name name1; *)
@@ -247,11 +249,12 @@ let java_cast (argv, hist) typeexpr : model =
             (* Utils.print_bool (PatternMatch.is_subtype tenv name1 name2);
             Utils.print_bool (PatternMatch.is_subtype tenv name2 name1); *)
             let (yinstance, b) = Formula.find_last_subclass tenv name1 instance in 
+            
             if b then let ninstance = Formula.check_not_instance tenv yinstance not_instance in 
                 if (fst ninstance) then 
                   let res1 =  List.fold not_instance ~init:true ~f:(fun acc x -> acc && if PatternMatch.is_subtype tenv name2 x then false else true) in 
                   let res2 = PatternMatch.is_subtype tenv yinstance name2 in
-
+                
                 if not (res1) then
                   add_instance_of_info_fail false argv typ astate name1 name2 access_trace location 
                             (* astate |> Basic.err_cast_abort yinstance name2 access_trace location *)

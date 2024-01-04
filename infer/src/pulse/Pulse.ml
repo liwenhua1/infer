@@ -1810,18 +1810,23 @@ let analyze specialization
     let ((exit_summaries_opt:DisjunctiveAnalyzer.TransferFunctions.Domain.t option), exn_sink_summaries_opt) =
       DisjunctiveAnalyzer.compute_post_including_exceptional analysis_data ~initial proc_desc
     in
-    let testmethod = "ClasspathOrder.addClasspathEntry" in 
-    let procname = Procname.get_complete_java_method proc_name in 
+    
+    let procname_java_class = Procname.get_class_name proc_name in
+     
     
     let () =
-    if (String.(=) testmethod procname) then 
-    print_endline "process analysis";
+    match procname_java_class with | None -> () 
+    | Some aa -> let test_name = "Super" in 
+  
+    if (String.is_suffix ~suffix:test_name aa) then 
+     
+    (print_endline "process analysis";
     Procname.pp_name_only F.std_formatter proc_name;
     let res = match exit_summaries_opt with 
     | None  -> ()
     | Some a -> DisjunctiveAnalyzer.TransferFunctions.Domain.pp F.std_formatter a in
     res;
-    print_endline "process analysis end" in
+    print_endline "process analysis end" )in
     (*print_endline "------------------------------------------";
           Utils.print_int !current_path; 
           print_endline "=========================================="; *)
