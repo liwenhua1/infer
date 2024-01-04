@@ -135,6 +135,10 @@ let get_parent tenv name =
   in
   find_map_supers tenv ~f name
 
+let non_empty_super tenv name = 
+  match lookup tenv name with 
+  |Some a -> let supers = a.supers in if List.is_empty supers then false else true
+  |None -> false 
 
 let implements_remodel_class tenv name =
   Option.exists Typ.Name.Objc.remodel_class ~f:(fun remodel_class ->

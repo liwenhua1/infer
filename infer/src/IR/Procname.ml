@@ -165,6 +165,8 @@ module Java = struct
 
   let get_method j = j.method_name
 
+  let get_complete_method j = Typ.Name.name j.class_name^"."^(j.method_name)
+
   let replace_method_name method_name j = {j with method_name}
 
   let replace_parameters parameters j = {j with parameters}
@@ -1419,6 +1421,7 @@ let rec get_parameters procname =
       (* TODO(vsiles) get inspiration from Hack :D *)
       []
 
+let get_complete_java_method p = match p with | Java a -> Java.get_complete_method a | _ -> ""
 
 let rec replace_parameters new_parameters procname =
   let params_to_java_params params =

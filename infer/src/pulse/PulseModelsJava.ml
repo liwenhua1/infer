@@ -196,9 +196,8 @@ let java_cast (argv, hist) typeexpr : model =
                   
             
                  
-                  let exist_super = match Tenv.get_parent tenv name1 with 
-                                    | Some _ -> true 
-                                    | None -> false in
+                  let exist_super = Tenv.non_empty_super tenv name1 in
+                                    
 
                   if ((not (Typ.Name.equal name1 Typ.make_object)) && not (exist_super)) then  astate |> Basic.ok_continue else
                     let res = PatternMatch.is_subtype tenv name1 name2 in
@@ -206,8 +205,9 @@ let java_cast (argv, hist) typeexpr : model =
                
                   (* let javaname = JavaClassName.from_string (Typ.to_string t) in *)
                   if not (res) then 
+                          add_instance_of_info_fail false argv typ astate name1 name2 access_trace location 
                         (* let () = (print_endline ("cast error detected at "^ (Location.to_string location))) in *)
-                            astate |> Basic.err_cast_abort name1 name2 access_trace location
+                            (* astate |> Basic.err_cast_abort name1 name2 access_trace location *)
                             (* Basic.ok_continue *)
                   else
                   (* let () = print_endline ("no cast error at "^ (Location.to_string location)) in *)
@@ -219,11 +219,10 @@ let java_cast (argv, hist) typeexpr : model =
           match AbductiveDomain.AddressAttributes.get_static_type argv astate with 
                 |None ->  astate |> Basic.ok_continue
                 |Some a -> let name1 = a in
-         
-                let exist_super = match Tenv.get_parent tenv name1 with 
-                                  | Some _ -> true 
-                                  | None -> false in
-
+               
+                let exist_super = Tenv.non_empty_super tenv name1 in
+                (* Utils.print_bool exist_super; *)
+                (* Typ.print_name name1; *)
                 if ((not (Typ.Name.equal name1 Typ.make_object)) && not (exist_super)) then  astate |> Basic.ok_continue else
                 (* Utils.list_printer (fun x -> Typ.print_name x) (Tenv.find_limited_sub name1 tenv); *)
         (* AbductiveDomain.pp Format.std_formatter astate; *)
@@ -254,10 +253,13 @@ let java_cast (argv, hist) typeexpr : model =
                   let res2 = PatternMatch.is_subtype tenv yinstance name2 in
 
                 if not (res1) then
-                            astate |> Basic.err_cast_abort yinstance name2 access_trace location
+                  add_instance_of_info_fail false argv typ astate name1 name2 access_trace location 
+                            (* astate |> Basic.err_cast_abort yinstance name2 access_trace location *)
                          else if not (res2) then 
                               
-                              if not ( PatternMatch.is_subtype tenv name2 yinstance) then astate |> Basic.err_cast_abort yinstance name2 access_trace location
+                              if not ( PatternMatch.is_subtype tenv name2 yinstance) then 
+                                add_instance_of_info_fail false argv typ astate name1 name2 access_trace location 
+                                (* astate |> Basic.err_cast_abort yinstance name2 access_trace location *)
                               else
                                 
                               let exe1 = add_instance_of_info_succ true argv typ astate in 

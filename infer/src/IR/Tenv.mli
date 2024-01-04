@@ -68,6 +68,8 @@ val mem_supers : t -> Typ.Name.t -> f:(Typ.Name.t -> Struct.t option -> bool) ->
 
 val get_parent : t -> Typ.Name.t -> Typ.Name.t option
 
+val non_empty_super :  t -> Typ.name -> bool
+
 val find_map_supers : t -> Typ.Name.t -> f:(Typ.Name.t -> Struct.t option -> 'a option) -> 'a option
 
 val implements_remodel_class : t -> Typ.Name.t -> bool

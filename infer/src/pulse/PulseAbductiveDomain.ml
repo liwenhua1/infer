@@ -1718,6 +1718,10 @@ module Summary = struct
 
   let leq = leq
 
+  let get_number_instanceof summary = 
+    let condition = summary.path_condition in 
+    let number = Formula.get_number_instanceof condition in number
+
  
 
   let find_edge_opt address access astate =

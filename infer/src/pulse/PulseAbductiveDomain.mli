@@ -378,6 +378,8 @@ module Summary : sig
 
   val get_post : summary -> BaseDomain.t
 
+  val get_number_instanceof : summary -> int
+
   val get_path_condition : summary -> Formula.t
 
   val get_topl : summary -> PulseTopl.state

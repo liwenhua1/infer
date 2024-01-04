@@ -83,6 +83,8 @@ module Java : sig
   val get_method : t -> string
   (** Return the method name of a java procedure name. *)
 
+  val get_complete_method : t -> string
+
   val get_parameters : t -> Typ.t list
   (** Return the parameters of a java procedure name. *)
 
@@ -289,6 +291,8 @@ val get_parameters : t -> Parameter.t list
 val replace_parameters : Parameter.t list -> t -> t
 
 val parameter_of_name : t -> Typ.Name.t -> Parameter.t
+
+val get_complete_java_method : t -> string
 
 val is_cpp_assignment_operator : t -> bool
 
