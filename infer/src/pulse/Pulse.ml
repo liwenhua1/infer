@@ -1811,12 +1811,12 @@ let analyze specialization
       DisjunctiveAnalyzer.compute_post_including_exceptional analysis_data ~initial proc_desc
     in
     
-    (* let procname_java_class = Procname.get_class_name proc_name in
+    let procname_java_class = Procname.get_class_name proc_name in
      
     
     let () =
     match procname_java_class with | None -> () 
-    | Some aa -> let test_name = "Super" in 
+    | Some aa -> let test_name = "ExternalContext_test" in 
   
     if (String.is_suffix ~suffix:test_name aa) then 
      
@@ -1826,7 +1826,7 @@ let analyze specialization
     | None  -> ()
     | Some a -> DisjunctiveAnalyzer.TransferFunctions.Domain.pp F.std_formatter a in
     res;
-    print_endline "process analysis end" )in *)
+    print_endline "process analysis end" )in
     (*print_endline "------------------------------------------";
           Utils.print_int !current_path; 
           print_endline "=========================================="; *)

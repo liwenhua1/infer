@@ -220,7 +220,9 @@ let java_cast (argv, hist) typeexpr : model =
                           astate |> Basic.ok_continue)
         |None ->  
           match AbductiveDomain.AddressAttributes.get_static_type argv astate with 
-                |None ->  astate |> Basic.ok_continue
+                |None ->  (  match typeexpr with
+                          | Exp.Sizeof {typ} -> add_instance_of_info_succ true argv typ astate (*assume cast success*)
+                          |_ ->  astate |> Basic.ok_continue)
                 |Some a -> let name1 = a in
                 
                 let exist_super = Tenv.non_empty_super tenv name1 in

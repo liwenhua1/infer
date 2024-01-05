@@ -321,3 +321,17 @@ class Supertype {
 //         }
     
 //       }
+
+ class ExternalContext_test { 
+
+    public Object request ;
+    public Object response;
+
+
+    public  Object getRequest() {
+
+      // request = new Object();
+      return (Object) request;}
+
+    public  Object getResponse() {return (Object) response;}
+ }
