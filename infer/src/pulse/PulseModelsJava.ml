@@ -114,7 +114,7 @@ let add_instance_of_info_succ is_instance argv typ astate =
       (* let apply :(AbductiveDomain.t AccessResult.t -> (AbductiveDomain.t * ValueHistory.t) AccessResult.t)
         = PulseResult.map ~f:(fun x -> (x,hist)) in *)
       let res1 = match SatUnsat.sat astate with 
-                  | None -> raise (Foo "impossible") 
+                  | None -> raise UnsupportCast
                   | Some a -> let fc x = 
                     (* AbductiveDomain.pp Format.std_formatter x; *)
                     (match (List.hd (Basic.err_cast_abort class_name javaname (num+1) access_trace location x)) with 
