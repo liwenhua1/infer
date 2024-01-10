@@ -20,7 +20,7 @@ let check_addr_access path ?must_be_valid_reason access_mode location (address, 
   let access_trace = Trace.Immediate {location; history} in
   let* astate =
     AddressAttributes.check_valid path ?must_be_valid_reason access_trace address astate
-    |> Result.map_error ~f:(fun (invalidation, invalidation_trace) ->
+    |> Result.map_error ~f:(fun ((invalidation:Invalidation.t), invalidation_trace) ->
            ReportableError
              { diagnostic=
                  Diagnostic.AccessToInvalidAddress

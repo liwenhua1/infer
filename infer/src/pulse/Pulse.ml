@@ -1811,22 +1811,23 @@ let analyze specialization
       DisjunctiveAnalyzer.compute_post_including_exceptional analysis_data ~initial proc_desc
     in
     
-    let procname_java_class = Procname.get_class_name proc_name in
+    (* let procname_java_class = Procname.get_class_name proc_name in *)
      
     
-    let () =
+    (* let () =
     match procname_java_class with | None -> () 
     | Some aa -> let test_name = "ExternalContext_test" in 
   
-    if (String.is_suffix ~suffix:test_name aa) then 
+    if (String.is_suffix ~suffix:test_name aa) then  *)
      
-    (print_endline "process analysis";
+    print_endline "process analysis";
     Procname.pp_name_only F.std_formatter proc_name;
     let res = match exit_summaries_opt with 
     | None  -> ()
     | Some a -> DisjunctiveAnalyzer.TransferFunctions.Domain.pp F.std_formatter a in
     res;
-    print_endline "process analysis end" )in
+    print_endline "process analysis end" ;
+  (* in *)
     (*print_endline "------------------------------------------";
           Utils.print_int !current_path; 
           print_endline "=========================================="; *)
@@ -1907,7 +1908,7 @@ let analyze specialization
 
 let checker ?specialization ({InterproceduralAnalysis.proc_desc} as analysis_data) =
   (* Procdesc.pp_with_instrs ~print_types:true F.std_formatter proc_desc; *)
-  (* Tenv.pp_per_file F.std_formatter (Tenv.FileLocal analysis_data.tenv); *)
+  Tenv.pp_per_file F.std_formatter (Tenv.FileLocal analysis_data.tenv);
   (* print_endline "===================="; *)
   let open IOption.Let_syntax in
   if should_analyze (proc_desc:Procdesc.t) then (

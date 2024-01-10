@@ -199,7 +199,12 @@ let java_cast (argv, hist) typeexpr : model =
                   
             
                  
-                  let exist_super = Tenv.non_empty_super tenv name1 in
+                  let exist_super = 
+                    let is_interface = match Tenv.lookup tenv name1 with 
+                                       | None -> false 
+                                       | Some a -> Struct.is_java_interface a in
+
+                                       is_interface || Tenv.non_empty_super tenv name1 in
                                     
 
                   if ((not (Typ.Name.equal name1 Typ.make_object)) && not (exist_super)) then  astate |> Basic.ok_continue else
@@ -225,7 +230,12 @@ let java_cast (argv, hist) typeexpr : model =
                           |_ ->  astate |> Basic.ok_continue)
                 |Some a -> let name1 = a in
                 
-                let exist_super = Tenv.non_empty_super tenv name1 in
+                let exist_super = 
+                  let is_interface = match Tenv.lookup tenv name1 with 
+                                     | None -> false 
+                                     | Some a -> Struct.is_java_interface a in
+
+                                     is_interface || Tenv.non_empty_super tenv name1 in
                 (* Utils.print_bool exist_super; *)
                 (* Typ.print_name name1; *)
                 if ((not (Typ.Name.equal name1 Typ.make_object)) && not (exist_super)) then  astate |> Basic.ok_continue else

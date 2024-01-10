@@ -45,6 +45,10 @@ type lookup = Typ.Name.t -> t option
 
 val is_java_abstract : t -> bool
 
+val is_java_interface : t -> bool
+
+val is_java_normal : t -> bool
+
 val pp_field : Pp.env -> F.formatter -> field -> unit
 
 val pp : Pp.env -> Typ.Name.t -> F.formatter -> t -> unit
