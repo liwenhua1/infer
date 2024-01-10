@@ -1820,13 +1820,13 @@ let analyze specialization
   
     if (String.is_suffix ~suffix:test_name aa) then  *)
      
-    print_endline "process analysis";
+    (* print_endline "process analysis";
     Procname.pp_name_only F.std_formatter proc_name;
     let res = match exit_summaries_opt with 
     | None  -> ()
     | Some a -> DisjunctiveAnalyzer.TransferFunctions.Domain.pp F.std_formatter a in
     res;
-    print_endline "process analysis end" ;
+    print_endline "process analysis end" ; *)
   (* in *)
     (*print_endline "------------------------------------------";
           Utils.print_int !current_path; 
@@ -1908,7 +1908,7 @@ let analyze specialization
 
 let checker ?specialization ({InterproceduralAnalysis.proc_desc} as analysis_data) =
   (* Procdesc.pp_with_instrs ~print_types:true F.std_formatter proc_desc; *)
-  Tenv.pp_per_file F.std_formatter (Tenv.FileLocal analysis_data.tenv);
+  (* Tenv.pp_per_file F.std_formatter (Tenv.FileLocal analysis_data.tenv); *)
   (* print_endline "===================="; *)
   let open IOption.Let_syntax in
   if should_analyze (proc_desc:Procdesc.t) then (
