@@ -76,7 +76,7 @@ let instance_of (argv, hist) typeexpr : model =
   | _ ->
       astate |> Basic.ok_continue
 
-let add_instance_of_info_succ is_instance argv typ astate = 
+let add_instance_of_info_succ is_instance argv typ astate ret_id path event= 
    
     let res_addr = AbstractValue.mk_fresh () in 
     let astate = PulseArithmetic.and_equal_instanceof res_addr argv typ astate in
@@ -88,7 +88,10 @@ let add_instance_of_info_succ is_instance argv typ astate =
   
     let (astate) = astate >>== (fun x -> (PulseArithmetic.prune_binop ~negated:is_instance bop lhs_op rhs_op x)) in
     let apply :(AbductiveDomain.t AccessResult.t -> (AbductiveDomain.t * ValueHistory.t) AccessResult.t)
-      = PulseResult.map ~f:(fun x -> (x,hist)) in
+      = PulseResult.map ~f:(fun x -> (
+        let astate = PulseOperations.write_id ret_id (argv, Hist.single_event path event) x in 
+                   
+      (astate,hist))) in
     let res = SatUnsat.map apply astate in 
     let results =
       let<++> astate, _ = res in
@@ -98,7 +101,7 @@ let add_instance_of_info_succ is_instance argv typ astate =
     
     (* (PulseResult.map ~f) sat_result *)
     
-    let add_instance_of_info_fail num is_instance argv typ astate1 class_name javaname access_trace location :  (AbductiveDomain.t execution_domain_base_t, base_error) pulse_result list= 
+    let add_instance_of_info_fail num is_instance argv typ astate1 class_name javaname access_trace location ret_id path event:  (AbductiveDomain.t execution_domain_base_t, base_error) pulse_result list= 
       let astate = astate1 in
       
       let res_addr = AbstractValue.mk_fresh () in 
@@ -116,6 +119,8 @@ let add_instance_of_info_succ is_instance argv typ astate =
       let res1 = match SatUnsat.sat astate with 
                   | None -> raise UnsupportCast
                   | Some a -> let fc x = 
+                    let x = PulseOperations.write_id ret_id (argv, Hist.single_event path event) x in 
+                    
                     (* AbductiveDomain.pp Format.std_formatter x; *)
                     (match (List.hd (Basic.err_cast_abort class_name javaname (num+1) access_trace location x)) with 
                                            |None -> raise (Foo "impossible") 
@@ -159,7 +164,8 @@ let java_cast (argv, hist) typeexpr : model =
         | Exp.Sizeof a -> Exp.ppsz a
         | _ -> print_endline (Exp.to_string typeexpr));  *)
       
-       fun {location; path = _; ret= _, _;} (astate:AbductiveDomain.t) ->
+       fun {location; path ; ret= ret_id, _;} (astate:AbductiveDomain.t) ->
+        let event = Hist.call_event path location "JavaCast" in
         (* AbductiveDomain.pp Format.std_formatter astate; *)
           let tenv = match (Tenv.load_global ()) with 
             | Some t -> t 
@@ -207,27 +213,33 @@ let java_cast (argv, hist) typeexpr : model =
                                        is_interface || Tenv.non_empty_super tenv name1 in
                                     
 
-                  if ((not (Typ.Name.equal name1 Typ.make_object)) && not (exist_super)) then  astate |> Basic.ok_continue else
+                  if ((not (Typ.Name.equal name1 Typ.make_object)) && not (exist_super)) then  
+                    let astate = PulseOperations.write_id ret_id (argv, Hist.single_event path event) astate in 
+                    astate |> Basic.ok_continue else
                     let res = PatternMatch.is_subtype tenv name1 name2 in
 
                
                   (* let javaname = JavaClassName.from_string (Typ.to_string t) in *)
                   if not (res) then 
-                          add_instance_of_info_fail num_instance false argv typ astate name1 name2 access_trace location 
+                          add_instance_of_info_fail num_instance false argv typ astate name1 name2 access_trace location ret_id path event
                         (* let () = (print_endline ("cast error detected at "^ (Location.to_string location))) in *)
                             (* astate |> Basic.err_cast_abort name1 name2 access_trace location *)
                             (* Basic.ok_continue *)
                   else
                   (* let () = print_endline ("no cast error at "^ (Location.to_string location)) in *)
                 
-                         astate |> Basic.ok_continue
-                        | _ ->
-                          astate |> Basic.ok_continue)
+                  let astate = PulseOperations.write_id ret_id (argv, Hist.single_event path event) astate in 
+                  astate |> Basic.ok_continue
+                        | _ -> let astate = PulseOperations.write_id ret_id (argv, Hist.single_event path event) astate in 
+                                astate |> Basic.ok_continue)
         |None ->  
           match AbductiveDomain.AddressAttributes.get_static_type argv astate with 
                 |None ->  (  match typeexpr with
-                          | Exp.Sizeof {typ} -> add_instance_of_info_succ true argv typ astate (*assume cast success*)
-                          |_ ->  astate |> Basic.ok_continue)
+                          (* |Exp.Sizeof {typ} -> add_instance_of_info_succ true argv typ astate  *)
+                          (* assume cast success *)
+                          |_ ->  let astate = PulseOperations.write_id ret_id (argv, Hist.single_event path event) astate in 
+                                  astate |> Basic.ok_continue)
+
                 |Some a -> let name1 = a in
                 
                 let exist_super = 
@@ -238,7 +250,10 @@ let java_cast (argv, hist) typeexpr : model =
                                      is_interface || Tenv.non_empty_super tenv name1 in
                 (* Utils.print_bool exist_super; *)
                 (* Typ.print_name name1; *)
-                if ((not (Typ.Name.equal name1 Typ.make_object)) && not (exist_super)) then  astate |> Basic.ok_continue else
+                if ((not (Typ.Name.equal name1 Typ.make_object)) && not (exist_super)) then 
+                  let astate = PulseOperations.write_id ret_id (argv, Hist.single_event path event) astate in 
+                  astate |> Basic.ok_continue
+                else
                 (* Utils.list_printer (fun x -> Typ.print_name x) (Tenv.find_limited_sub name1 tenv); *)
         (* AbductiveDomain.pp Format.std_formatter astate; *)
         let (instance,not_instance) = Formula.get_all_instance_constrains argv astate.path_condition in 
@@ -269,17 +284,17 @@ let java_cast (argv, hist) typeexpr : model =
                   let res2 = PatternMatch.is_subtype tenv yinstance name2 in
                 
                 if not (res1) then
-                  add_instance_of_info_fail num_instance false argv typ astate name1 name2 access_trace location 
+                  add_instance_of_info_fail num_instance false argv typ astate name1 name2 access_trace location ret_id path event 
                             (* astate |> Basic.err_cast_abort yinstance name2 access_trace location *)
                          else if not (res2) then 
                               
                               if not ( PatternMatch.is_subtype tenv name2 yinstance) then 
-                                add_instance_of_info_fail num_instance false argv typ astate name1 name2 access_trace location 
+                                add_instance_of_info_fail num_instance false argv typ astate name1 name2 access_trace location ret_id path event
                                 (* astate |> Basic.err_cast_abort yinstance name2 access_trace location *)
                               else
                                 
-                              let exe1 = add_instance_of_info_succ true argv typ astate in 
-                              let exe2 = add_instance_of_info_fail num_instance false argv typ astate yinstance name2 access_trace location in 
+                              let exe1 = add_instance_of_info_succ true argv typ astate ret_id path event in 
+                              let exe2 = add_instance_of_info_fail num_instance false argv typ astate yinstance name2 access_trace location ret_id path event in 
                              
                               let res_list = exe1 @ exe2 in 
                               (* Utils.print_int (List.length res_list); *)
@@ -289,12 +304,15 @@ let java_cast (argv, hist) typeexpr : model =
                           (* let () =(print_endline ("possible cast error detected at "^ (Location.to_string location))) in  *)
                          (* astate |> Basic.ok_continue *)
                          else 
-                         astate |> Basic.ok_continue
+                          let astate = PulseOperations.write_id ret_id (argv, Hist.single_event path event) astate in 
+                          astate |> Basic.ok_continue
                 else 
                   let () =print_endline ("infeasible path so cast is safe at "^ (Location.to_string location)) in
+                  let astate = PulseOperations.write_id ret_id (argv, Hist.single_event path event) astate in 
                   astate |> Basic.ok_continue
             else
             let () =print_endline ("infeasible path so cast is safe at "^ (Location.to_string location)) in
+            let astate = PulseOperations.write_id ret_id (argv, Hist.single_event path event) astate in 
             astate |> Basic.ok_continue
            
             
@@ -302,9 +320,11 @@ let java_cast (argv, hist) typeexpr : model =
            This seems to be introduced by inline mechanism of Java synthetic methods during preanalysis *)
         | _ ->
         
-            astate |> Basic.ok_continue
+          let astate = PulseOperations.write_id ret_id (argv, Hist.single_event path event) astate in 
+          astate |> Basic.ok_continue
 
-        with UnsupportCast -> astate |> Basic.ok_continue
+        with UnsupportCast -> let astate = PulseOperations.write_id ret_id (argv, Hist.single_event path event) astate in 
+                              astate |> Basic.ok_continue
 let call_may_throw_exception (exn : JavaClassName.t) : model =
  fun {location; path; analysis_data} astate ->
   let ret_addr = AbstractValue.mk_fresh () in
