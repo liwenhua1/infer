@@ -37,8 +37,6 @@ struct LikeFBString {
   LikeFBString(const LikeFBString& src) {
     category_ = src.category();
     switch (src.category_) {
-      case small:
-        break;
       case medium:
         copyMedium(src);
         break;
@@ -53,7 +51,7 @@ struct LikeFBString {
   ~LikeFBString() {
     if (category() == medium) {
       free(buffer_);
-    } else if (category() == large) {
+    } else {
       decr_ref_count();
     }
   }

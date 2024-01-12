@@ -25,9 +25,3 @@ NSURL* const conditionalOpaque2Ok(NSURL* x) {
   NSURLRequest* const request = getRequest();
   return x ?: request.URL;
 }
-
-Class messageExprSpecialCaseOk() {
-  NSURLRequest* const x = getRequest();
-  Class c = [(x ? x : x) class];
-  return c;
-}

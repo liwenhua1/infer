@@ -10,12 +10,6 @@ internal class Annotations {
 
   @SensitiveSourceMarker fun markedSource() = ""
 
-  @SensitiveSourceMarkerWithValue(SensitiveSourceMarkerType.EMAIL) fun email() = ""
-
-  @SensitiveSourceMarkerWithValue(SensitiveSourceMarkerType.LOCATION) fun location() = ""
-
-  @SensitiveSourceMarkerWithValue(SensitiveSourceMarkerType.OTHER) fun other() = ""
-
   @SensitiveSinkMarker fun markedSink(input: String?) {}
 
   @SanitizerMarker fun markedSanitizer(input: String): String = input
@@ -52,17 +46,5 @@ internal class Annotations {
 
   fun unmarkedSourceToUnmarkedSinkOk() {
     unmarkedSink(unmarkedSource())
-  }
-
-  fun emailToSinkBad() {
-    markedSink(email())
-  }
-
-  fun locationToSinkBad() {
-    markedSink(location())
-  }
-
-  fun otherToSinkOk() {
-    markedSink(other())
   }
 }

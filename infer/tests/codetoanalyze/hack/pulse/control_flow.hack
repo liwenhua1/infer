@@ -9,10 +9,7 @@ class SensitiveClass {
   public function __construct(public $flag) {}
 }
 
-function typeCheckDoesntConfuseTheAnalysis_maintainsTaint_Bad(
-  mixed $arg1,
-  SensitiveClass $sc,
-): void {
+function typeCheckDoesntConfuseTheAnalysis_maintainsTaint_Bad(mixed $arg1, SensitiveClass $sc): void {
   if ($arg1 is Foo) {
     \Level1\taintSink($sc);
   }
@@ -88,6 +85,7 @@ function logWhenC(mixed $arg): void {
   }
 }
 
+
 function loggingSensitiveViaCBad(SensitiveClass $sc, mixed $carrier): void {
   if ($carrier is C) {
     $carrier->data = $sc;
@@ -95,10 +93,7 @@ function loggingSensitiveViaCBad(SensitiveClass $sc, mixed $carrier): void {
   }
 }
 
-function FP_notLoggingSensitiveViaDOk(
-  SensitiveClass $sc,
-  mixed $carrier,
-): void {
+function FP_notLoggingSensitiveViaDOk(SensitiveClass $sc, mixed $carrier): void {
   if ($carrier is D) {
     $carrier->data = $sc;
     logWhenC($carrier);

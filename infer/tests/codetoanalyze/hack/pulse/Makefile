@@ -4,12 +4,16 @@
 # LICENSE file in the root directory of this source tree.
 
 TESTS_DIR = ../../..
-
-INFER_OPTIONS = --pulse-only --debug-exceptions --pulse-specialization-partial \
-  --pulse-max-disjuncts 8 \
-  --pulse-transitive-access-config transitive-access-config.json
+INFER_OUT ?= infer-out$(TEST_SUFFIX)
 INFERPRINT_OPTIONS = --issues-tests
+
+include $(TESTS_DIR)/infer.make
 
 SOURCES = $(sort $(wildcard *.hack))
 
-include $(TESTS_DIR)/hack.make
+default: test
+
+$(INFER_OUT)/report.json: $(SOURCES) $(INFER_BIN) $(HACKC)
+	$(INFER_BIN) --quiet --no-progress-bar --debug-exceptions\
+		--dump-duplicate-symbols -o $(INFER_OUT) \
+		--hackc-binary $(HACKC) -- hackc compile-infer $(SOURCES)

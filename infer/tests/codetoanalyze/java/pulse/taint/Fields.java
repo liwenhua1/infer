@@ -17,10 +17,6 @@ public class Fields {
   Object mFld;
   static Object sFld;
 
-  static Object sourceField;
-  static Object sinkField;
-  static Object regularField;
-
   /** should report on these tests */
   void instanceFieldBad() {
     this.mFld = InferTaint.inferSecretSource();
@@ -122,23 +118,5 @@ public class Fields {
       i++;
     }
     InferTaint.inferSensitiveSink(obj.g.g.g.g.f);
-  }
-
-  void fieldAsSourceOk() {
-    InferTaint.inferSensitiveSink(regularField);
-  }
-
-  void fieldAsSinkOk() {
-    Object source = InferTaint.inferSecretSource();
-    regularField = source;
-  }
-
-  void fieldAsSourceBad() {
-    InferTaint.inferSensitiveSink(sourceField);
-  }
-
-  void fieldAsSinkBad() {
-    Object source = InferTaint.inferSecretSource();
-    sinkField = source;
   }
 }

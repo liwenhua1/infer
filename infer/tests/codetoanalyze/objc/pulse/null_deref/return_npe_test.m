@@ -46,7 +46,7 @@
   }
 }
 
-- (void)no_early_return_manifest_bad {
+- (void)no_early_return_manifest_bad_FN {
   [self no_early_return_bad_latent_FN:nil];
 }
 

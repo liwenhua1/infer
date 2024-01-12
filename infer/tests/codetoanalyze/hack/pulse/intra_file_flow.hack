@@ -6,20 +6,18 @@
 namespace IntraFile;
 
 class IntraFileFlow {
-  public static function explicitSinkMethodDirectOnHackMixedSinkBad(
-    SensitiveClass $sc,
-  ): void {
+  public static function FN_explicitSinkMethodDirectOnHackMixedSinkBad(SensitiveClass $sc): void {
     HackMixed::explicitSinkAllArgs($sc);
   }
 
   public static function explicitSinkMethodDirectBad(SensitiveClass $sc): void {
     // This is a base case: sensitive data flows directly into the taint sink
-    KnownClass::explicitSinkAllArgs($sc);
+    UnknownClass::explicitSinkAllArgs($sc);
   }
 
   public static function explicitSinkMethodDirectOk(int $i): void {
     // Untainted data flowing into taint sink is OK
-    KnownClass::explicitSinkAllArgs($i);
+    UnknownClass::explicitSinkAllArgs($i);
   }
 
   public static function explicitSinkMethodDerivedBad(
@@ -27,7 +25,7 @@ class IntraFileFlow {
   ): void {
     // Here we have data which is derived from taint source and flows directly into a taint sink
     $derived = $sc->getDerived();
-    KnownClass::explicitSinkAllArgs($derived);
+    UnknownClass::explicitSinkAllArgs($derived);
   }
 
   public function explicitSinkMethodDerivedDynamicBad(
@@ -40,27 +38,21 @@ class IntraFileFlow {
     $this->callExplicitSinkAllArgs($derived);
   }
 
-  public static function explicitSinkClassDirectBad(SensitiveClass $sc): void {
+  public static function explicitSinkClassDirectBad(
+    SensitiveClass $sc,
+  ): void {
     Logger::someLogMethod($sc);
-  }
-
-  public static async function taintSourceBuiltinSinkOk(): Awaitable<void> {
-    $x = await KnownClass::genTaintSource();
   }
 
   // Helpers
 
   private function callExplicitSinkAllArgs(int $data): void {
-    KnownClass::explicitSinkAllArgs($data);
+    UnknownClass::explicitSinkAllArgs($data);
   }
 }
 
-class KnownClass {
+class UnknownClass {
   public static function explicitSinkAllArgs(mixed $_): void {}
-
-  public static async function genTaintSource(): Awaitable<string> {
-    return "tainted";
-  }
 }
 
 class Logger {

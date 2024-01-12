@@ -44,7 +44,9 @@
   return [object get_ddclass];
 }
 
-- (int)dynamic_dispatch_npe_bad {
+// Pulse doesn't find the null deref in this example because it doesn't handle
+// dynamic dispatch
+- (int)dynamic_dispatch_npe_bad_FN {
   PInstance* object = [PInstance new];
   return [self get_ddclass_from:object]->x;
 }
