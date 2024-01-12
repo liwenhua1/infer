@@ -1348,7 +1348,7 @@ module PulseTransferFunctions = struct
             let static_ty = AbductiveDomain.AddressAttributes.get_static_type call_obj astate in 
             (match static_ty with
             |Some sty -> let possible_subclass = sty::(Tenv.find_limited_sub sty tenv) in 
-            let possible_subclass = List.filter possible_subclass ~f:(fun x -> not (Tenv.is_java_abstract_cls tenv x)) in
+            let possible_subclass = List.filter possible_subclass ~f:(fun x -> not (Tenv.is_java_abstract_cls tenv x || Tenv.is_java_interface_cls tenv x)) in
            
             let astate_n = check_modified_before_dtor actuals call_exp astate astate_n in
             let constrains = Formula.get_all_instance_constrains call_obj astate.path_condition in 
@@ -1811,14 +1811,14 @@ let analyze specialization
       DisjunctiveAnalyzer.compute_post_including_exceptional analysis_data ~initial proc_desc
     in
     
-    let procname_java_class = Procname.get_class_name proc_name in
+    (* let procname_java_class = Procname.get_class_name proc_name in *)
      
     
-    let () =
-    match procname_java_class with | None -> () 
+    (* let () =
+    (* match procname_java_class with | None -> () 
     | Some aa -> let test_name = "Ts" in 
   
-    if (String.is_suffix ~suffix:test_name aa) then 
+    if (String.is_suffix ~suffix:test_name aa) then  *)
     let ppp = 
     print_endline "process analysis";
     Procname.pp_name_only F.std_formatter proc_name;
@@ -1826,7 +1826,7 @@ let analyze specialization
     | None  -> ()
     | Some a -> DisjunctiveAnalyzer.TransferFunctions.Domain.pp F.std_formatter a in
     res;print_endline "process analysis end" in ppp
-    in
+    in *)
   (* in *)
     (*print_endline "------------------------------------------";
           Utils.print_int !current_path; 

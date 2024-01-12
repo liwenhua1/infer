@@ -7,7 +7,7 @@ namespace TypePropagation;
 
 class A {
 
-  public function getTainted() : int {
+  public function getTainted(): int {
     return \Level1\taintSource();
   }
 
@@ -21,12 +21,11 @@ abstract class C {
 
   public A $a;
 
-  public static A $global;
+  public static A $globalvar;
 
-  abstract public function get() : A;
+  abstract public function get(): A;
 
 }
-
 
 class Main {
 
@@ -56,12 +55,12 @@ class Main {
     \Level1\taintSink($c->a->getUntainted());
   }
 
-  public static function FN_fromGlobalBad(C $c) {
-    \Level1\taintSink(C::$global->getTainted());
+  public static function fromGlobalBad(C $c) {
+    \Level1\taintSink(C::$globalvar->getTainted());
   }
 
   public static function fromGlobalGood(C $c) {
-    \Level1\taintSink(C::$global->getUntainted());
+    \Level1\taintSink(C::$globalvar->getUntainted());
   }
 
   public static function FN_fromCallResultBad(C $c) {

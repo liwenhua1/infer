@@ -57,6 +57,10 @@ let is_java_abstract_cls tenv class_name =
     let str = lookup tenv class_name in 
     match str with |None -> false | Some s -> Struct.is_java_abstract s 
 
+let is_java_interface_cls tenv class_name = 
+      let str = lookup tenv class_name in 
+      match str with |None -> false | Some s -> Struct.is_java_interface s 
+
 let method_exsit (meth:Procname.Java.t) tenv =
     match lookup tenv (Procname.Java.get_class_type_name meth) with
     | None -> false

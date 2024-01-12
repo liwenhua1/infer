@@ -15,10 +15,12 @@
     test_call5_Bad/0,
     test_cast_Bad/0,
     test_call_callee_Bad/0,
-    test_start_link1_Bad/0,
+%% Not exported due to sporadic timeout in direct_erlang_compiler_test T169335380
+%    test_start_link1_Bad/0,
     test_start_link2_Ok/0,
-    test_start_link3_Ok/0,
-    test_start_link4_Bad/0
+    test_start_link3_Ok/0
+%% Not exported due to sporadic timeout in direct_erlang_compiler_test T169335380
+%    test_start_link4_Bad/0
 ]).
 
 -export([

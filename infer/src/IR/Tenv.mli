@@ -59,6 +59,8 @@ val add_field : t -> Typ.Name.t -> Struct.field -> unit
 
 val is_java_abstract_cls : t -> Typ.Name.t -> bool
 
+val is_java_interface_cls : t -> Typ.Name.t -> bool
+
 val pp : Format.formatter -> t -> unit
 (** print a type environment *)
 
