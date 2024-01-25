@@ -75,7 +75,7 @@ let instance_of (argv, hist) typeexpr : model =
      This seems to be introduced by inline mechanism of Java synthetic methods during preanalysis *)
   | _ ->
       astate |> Basic.ok_continue
-
+ (**)
 let add_instance_of_info_succ is_instance argv typ astate ret_id path event= 
    
     let res_addr = AbstractValue.mk_fresh () in 
