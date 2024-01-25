@@ -209,11 +209,13 @@ let is_manifest  ?(current_path = -1) ?(instra_hash: (Sil.instr, int) Caml.Hasht
       || AbductiveDomain.Summary.get_must_be_valid v summary |> Option.is_some )) && stack_instance_check summary tenv 
       in 
   let statge2 = 
-    if (Int.(=) current_path (-1)) then false else if (Int.(=) current_path (1)) then true else
+    
+    
+    if (Int.(=) current_path (-1)) then false else
     match key with
                 | None -> false 
                 | Some instr -> (match Caml.Hashtbl.find_opt instra_hash instr with 
-                                | None -> Caml.Hashtbl.add instra_hash instr 1; false
+                                | None -> if (Int.(=) current_path (1)) then (Caml.Hashtbl.add instra_hash instr 1; true) else (Caml.Hashtbl.add instra_hash instr 1; false)
                                 | Some num -> if (Int.(=) (num + 1) current_path) then (Caml.Hashtbl.replace instra_hash instr (num+1); true )
                                               else (Caml.Hashtbl.replace instra_hash instr (num+1); false)
                                   )  in 

@@ -1,0 +1,1222 @@
+process analysis
+Lists.removeElementBad2 disjuncts:
+                      #0: (conditions: {[v19] = 0}
+                           phi: linear_eqs: v9 = a1 +1 ∧ v12 = a2 +1 ∧ v13 = 4 ∧ v19 = 0
+                                && term_eqs: 0=v19∧4=v13∧LinkedList.<init>()([v9])=v10
+                                             ∧boolean List.add(Object)([v9],[v12])=v17
+                                             ∧boolean List.remove(Object)([v9],[v12])=v19
+                                             ∧[a1 +1]=v9∧[a2 +1]=v12
+                                && intervals: v9≥1 ∧ v12≥1 ∧ v13=4 ∧ v19=0
+                                && atoms: {is_int([v17]) = 1}∧{is_int([v19]) = 1}
+                           { roots={ &o=v5, &this=v1 };
+                             mem  ={ v1 -> { * -> v6 },
+                                     v2 -> { * -> v19 },
+                                     v3 -> { * -> v12 },
+                                     v4 -> { * -> v9 },
+                                     v6 -> { * -> v7 },
+                                     v9 -> { * -> v16 },
+                                     v12 -> { * -> v14 },
+                                     v14 -> { __infer_model_backing_int -> v15 },
+                                     v15 -> { * -> v13 },
+                                     v18 -> { * -> v17 } };
+                             attrs={ v1 -> { MustBeValid(, None, t=0) },
+                                     v2 -> { s&removed (variable `removed` declared here at line 96 :t0
+                                                        ) at line 101,
+                                             MustBeValid(, None, t=20),
+                                             WrittenTo (20, ) },
+                                     v3 -> { s&i (variable `i` declared here at line 96 :t0 ) at line 100,
+                                             MustBeValid(, None, t=7),
+                                             WrittenTo (7, ) },
+                                     v4 -> { s&l (variable `l` declared here at line 96 :t0 ) at line 100,
+                                             MustBeValid(, None, t=3),
+                                             WrittenTo (3, ) },
+                                     v5 -> { Uninitialized },
+                                     v6 -> { DynamicType Lists, SourceFile [None],
+                                             MustBeValid(, None, t=0) },
+                                     v9 -> { DynamicType java.util.LinkedList, SourceFile [None],
+                                             MustBeValid(, None, t=10),
+                                             PropagateTaintFrom([{v= v12}]),
+                                             UnknownEffect(function `LinkedList.<init>()` with no summary,
+                                                           in call to function `LinkedList.<init>()` with no summary at line 97 :t2
+                                                           [] ) },
+                                     v12 -> { DynamicType java.lang.Integer, SourceFile [None],
+                                              MustBeValid(, None, t=6),
+                                              UnknownEffect(function `boolean List.add(Object)` with no summary,
+                                                            in call to function `boolean List.add(Object)` with no summary at line 99 :t12
+                                                            [] ),
+                                              WrittenTo (6, ) },
+                                     v13 -> { Invalid ConstantDereference(is assigned to the constant 4) },
+                                     v14 -> { MustBeValid(, None, t=6) },
+                                     v15 -> { MustBeValid(, None, t=6), WrittenTo (6, ) },
+                                     v16 -> { Tainted{ } },
+                                     v17 -> { ReturnedFromUnknown([v9;v12]) },
+                                     v18 -> { MustBeValid(, None, t=13), WrittenTo (13, ) },
+                                     v19 -> { ReturnedFromUnknown([v9;v12]) } };}
+                           PRE=[{ roots={ &this=v1 };
+                                  mem  ={ v1 -> { * -> v6 }, v6 -> { * -> v7 }, v7 -> { } };
+                                  attrs={ v1 -> { MustBeInitialized(, t=0),
+                                                  MustBeValid(, None, t=0) },
+                                          v6 -> { MustBeInitialized(, t=0),
+                                                  MustBeValid(, None, t=0) } };}]
+                           need_closure_specialization=false
+                           need_dynamic_type_specialization={ v9 }
+                           skipped_calls={ LinkedList.<init>() -> call to skipped function occurs here,
+                                           boolean List.add(Object) -> call to skipped function occurs here,
+                                           boolean List.remove(Object) -> call to skipped function occurs here }
+                           Topl={len=0;content=
+                                  [  ]},
+                          conditions= [] timestamp= 31)
+                      #1: ({AbortProgram conditions: (empty) phi: (empty)
+                                         { roots={ &this=v1 };
+                                           mem  ={ v1 -> { * -> v6 }, v6 -> { * -> v7 } };
+                                           attrs={ v6 -> { DynamicType Lists, SourceFile [None] } };}
+                                         PRE=[{ roots={ &this=v1 };
+                                                mem  ={ v1 -> { * -> v6 }, v6 -> { * -> v7 } };
+                                                attrs={ v1 -> { MustBeInitialized(, t=0),
+                                                                MustBeValid(, None, t=0) },
+                                                        v6 -> { MustBeInitialized(, t=0),
+                                                                MustBeValid(, None, t=0) } };}]
+                                         need_closure_specialization=false
+                                         need_dynamic_type_specialization=
+                                         { v9 }
+                                         skipped_calls={ LinkedList.<init>() -> call to skipped function occurs here,
+                                                         boolean List.add(Object) -> call to skipped function occurs here,
+                                                         boolean List.remove(Object) -> call to skipped function occurs here }
+                                         Topl={len=0;content=
+                                                [  ]}},
+                          conditions= [] timestamp= 39)
+                      process analysis end
+process analysis
+
+                      Non-disj state: ⊤Lists.FN_latent_removeInvalidatesNonEmptinessNPEBad
+2 disjuncts:
+#0: (conditions: {[v11] = 0}
+     phi: var_eqs: v10=v11
+          && linear_eqs: v10 = 0
+          && term_eqs: 0=v10∧boolean List.isEmpty()([v5])=v11∧boolean List.removeAll(Collection)([v5],[v5])=v8
+          && intervals: v10=null ∧ v11=0
+          && atoms: {is_int([v8]) = 1}∧{is_int([v11]) = 1}
+     { roots={ &this=v1, &l=v2 };
+       mem  ={ v1 -> { * -> v4 },
+               v2 -> { * -> v5 },
+               v3 -> { * -> v10 },
+               v4 -> { * -> v6 },
+               v5 -> { * -> v7 },
+               v9 -> { * -> v8 },
+               v12 -> { * -> v11 } };
+       attrs={ v1 -> { MustBeValid(, None, t=0) },
+               v2 -> { MustBeValid(, None, t=0) },
+               v3 -> { s&o (variable `o` declared here at line 22 :t0 ) at line 25,
+                       MustBeValid(, None, t=8),
+                       WrittenTo (8, ) },
+               v4 -> { DynamicType Lists, SourceFile [None], MustBeValid(, None, t=0) },
+               v5 -> { DynamicType java.util.List, SourceFile [None],
+                       MustBeValid(, None, t=2),
+                       PropagateTaintFrom([{v= v5}]),
+                       StaticType class java.util.List,
+                       UnknownEffect(function `boolean List.removeAll(Collection)` with no summary,
+                                     in call to function `boolean List.removeAll(Collection)` with no summary at line 23 :t4
+                                     [] ) },
+               v7 -> { Tainted{ } },
+               v8 -> { ReturnedFromUnknown([v5;v5]) },
+               v9 -> { MustBeValid(, None, t=5), WrittenTo (5, ) },
+               v10 -> { Invalid ConstantDereference(is assigned to the null pointer),
+                        ReturnedFromUnknown([v5]) },
+               v11 -> { ReturnedFromUnknown([v5]) },
+               v12 -> { MustBeValid(, None, t=12), WrittenTo (12, ) } };}
+     PRE=[{ roots={ &this=v1, &l=v2 };
+            mem  ={ v1 -> { * -> v4 },
+                    v2 -> { * -> v5 },
+                    v4 -> { * -> v6 },
+                    v5 -> { * -> v7 },
+                    v6 -> { },
+                    v7 -> { } };
+            attrs={ v1 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                    v2 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                    v4 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                    v5 -> { MustBeInitialized(, t=2), MustBeValid(, None, t=2) } };}]
+     need_closure_specialization=false
+     need_dynamic_type_specialization={ v5 }
+     skipped_calls={ boolean List.isEmpty() -> call to skipped function occurs here,
+                     boolean List.removeAll(Collection) -> call to skipped function occurs here }
+     Topl={len=0;content=
+            [  ]},
+    conditions= [] timestamp= 23)
+#1: ({LatentAbortProgram(line 26: `o` could be null (null value originating from line 24) and is dereferenced)
+    AccessToInvalidAddress {calling_context=[]; invalid_address=[Some v10]:o;
+                            invalidation=ConstantDereference(is assigned to the null pointer);
+                            invalidation_trace=immediate; access_trace=immediate;
+                            must_be_valid_reason=None; }
+    conditions: {[v11] ≠ 0}
+    phi: term_eqs: boolean List.isEmpty()([v5])=v11∧boolean List.removeAll(Collection)([v5],[v5])=v8
+         && intervals: v11≠0
+         && atoms: {is_int([v8]) = 1}∧{is_int([v11]) = 1}∧{[v11] ≠ 0}
+    { roots={ &this=v1, &l=v2 };
+      mem  ={ v1 -> { * -> v4 }, v2 -> { * -> v5 }, v4 -> { * -> v6 }, v5 -> { * -> v7 } };
+      attrs={ v4 -> { DynamicType Lists, SourceFile [None] },
+              v5 -> { DynamicType java.util.List, SourceFile [None],
+                      PropagateTaintFrom([{v= v5}]),
+                      StaticType class java.util.List,
+                      UnknownEffect(function `boolean List.removeAll(Collection)` with no summary,
+                                    in call to function `boolean List.removeAll(Collection)` with no summary at line 23 :t4
+                                    [] ) } };}
+    PRE=[{ roots={ &this=v1, &l=v2 };
+           mem  ={ v1 -> { * -> v4 }, v2 -> { * -> v5 }, v4 -> { * -> v6 }, v5 -> { * -> v7 } };
+           attrs={ v1 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                   v2 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                   v4 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                   v5 -> { MustBeInitialized(, t=2), MustBeValid(, None, t=2) } };}]
+    need_closure_specialization=false
+    need_dynamic_type_specialization={ v5 }
+    skipped_calls={ boolean List.isEmpty() -> call to skipped function occurs here,
+                    boolean List.removeAll(Collection) -> call to skipped function occurs here }
+    Topl={len=0;content=
+           [  ]}},
+    conditions= [] timestamp= 29)
+process analysis end
+process analysis
+
+Non-disj state: ⊤Lists.plainGetOk1 disjuncts:
+                                   #0: (conditions: (empty)
+                                        phi: term_eqs: Object List.get(int)([v5],[v7])=v9
+                                                       ∧String Object.toString()([v9])=v12
+                                             && atoms: {is_int([v7]) = 1}
+                                        { roots={ &i=v3, &this=v1, &l=v2 };
+                                          mem  ={ v1 -> { * -> v4 },
+                                                  v2 -> { * -> v5 },
+                                                  v3 -> { * -> v7 },
+                                                  v4 -> { * -> v6 },
+                                                  v5 -> { * -> v8 },
+                                                  v9 -> { * -> v11 },
+                                                  v10 -> { * -> v9 },
+                                                  v13 -> { * -> v12 } };
+                                          attrs={ v1 -> { MustBeValid(, None, t=0) },
+                                                  v2 -> { MustBeValid(, None, t=0) },
+                                                  v3 -> { MustBeValid(, None, t=0) },
+                                                  v4 -> { DynamicType Lists, SourceFile [None],
+                                                          MustBeValid(, None, t=0) },
+                                                  v5 -> { DynamicType java.util.List, SourceFile [None],
+                                                          MustBeValid(, None, t=2),
+                                                          StaticType class java.util.List,
+                                                          UnknownEffect(function `Object List.get(int)` with no summary,
+                                                                    in call to function `Object List.get(int)` with no summary at line 40 :t4
+                                                                    [
+                                                                    ] ) },
+                                                  v9 -> { MustBeValid(, None, t=10),
+                                                          PropagateTaintFrom([{v= v5};{v= v7}]),
+                                                          ReturnedFromUnknown([v5;v7]),
+                                                          UnknownEffect(function `String Object.toString()` with no summary,
+                                                                    in call to function `String Object.toString()` with no summary at line 40 :t11
+                                                                    [
+                                                                    ] ) },
+                                                  v10 -> { MustBeValid(, None, t=5),
+                                                           WrittenTo (5, ) },
+                                                  v12 -> { PropagateTaintFrom([{v= v9}]),
+                                                           ReturnedFromUnknown([v9]) },
+                                                  v13 -> { MustBeValid(, None, t=12),
+                                                           WrittenTo (12, ) } };}
+                                        PRE=[{ roots={ &i=v3, &this=v1, &l=v2 };
+                                               mem  ={ v1 -> { * -> v4 },
+                                                       v2 -> { * -> v5 },
+                                                       v3 -> { * -> v7 },
+                                                       v4 -> { * -> v6 },
+                                                       v5 -> { * -> v8 },
+                                                       v6 -> { },
+                                                       v7 -> { },
+                                                       v8 -> { } };
+                                               attrs={ v1 -> { MustBeInitialized(, t=0),
+                                                               MustBeValid(, None, t=0) },
+                                                       v2 -> { MustBeInitialized(, t=0),
+                                                               MustBeValid(, None, t=0) },
+                                                       v3 -> { MustBeInitialized(, t=0),
+                                                               MustBeValid(, None, t=0) },
+                                                       v4 -> { MustBeInitialized(, t=0),
+                                                               MustBeValid(, None, t=0) },
+                                                       v5 -> { MustBeInitialized(, t=2),
+                                                               MustBeValid(, None, t=2) } };}]
+                                        need_closure_specialization=false
+                                        need_dynamic_type_specialization=
+                                        { v5, v9 }
+                                        skipped_calls={ Object List.get(int) -> call to skipped function occurs here,
+                                                        String Object.toString() -> call to skipped function occurs here }
+                                        Topl={len=0;content=
+                                               [  ]},
+                                       conditions= [] timestamp= 18)
+                                   
+                                   Non-disj state:
+                                     copy map: { }, parameter map: { }, 
+                                     destructor checked: { }, captured: { }, 
+                                     locked: false,
+                                     loads: ({ n$0 -> { l }, n$2 -> { i }, n$4 -> { $irvar0 } },
+                                     { i -> { line 40 -> { 3 } },
+                                       $irvar0 -> { line 40 -> { 9 } },
+                                       l -> { line 40 -> { 1 } } }),
+                                     passed to: { i -> { Object List.get(int) -> { line 40 -> { 4 } } },
+                                                  $irvar0 -> { String Object.toString() -> { line 40 -> { 11 } } },
+                                                  l -> { Object List.get(int) -> { line 40 -> { 4 } } } }process analysis end
+process analysis
+Lists.<init>
+1 disjuncts:
+#0: (conditions: (empty) phi: term_eqs: Lists.<init>()([v2])=v4
+     { roots={ &this=v1 };
+       mem  ={ v1 -> { * -> v2 }, v2 -> { * -> v3 } };
+       attrs={ v1 -> { MustBeValid(, None, t=0) },
+               v2 -> { DynamicType Lists, SourceFile [None],
+                       MustBeValid(, None, t=0),
+                       UnknownEffect(function `Lists.<init>()` with no summary,
+                                     in call to function `Lists.<init>()` with no summary at line 12 :t2
+                                     [] ) } };}
+     PRE=[{ roots={ &this=v1 };
+            mem  ={ v1 -> { * -> v2 }, v2 -> { * -> v3 }, v3 -> { } };
+            attrs={ v1 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                    v2 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) } };}]
+     need_closure_specialization=false
+     need_dynamic_type_specialization={ }
+     skipped_calls={ Lists.<init>() -> call to skipped function occurs here }
+     Topl={len=0;content=
+            [  ]},
+    conditions= [] timestamp= 7)
+
+Non-disj state:
+  copy map: { }, parameter map: { }, destructor checked: { }, captured: { }, 
+  locked: false, loads: ({ n$0 -> { this } },{ this -> { line 12 -> { 1 } } }),
+  process analysis end
+process analysis
+passed to: { this -> { Lists.<init>() -> { line 12 -> { 2 } } } }Lists.emptyRemembersOk
+1 disjuncts:
+#0: (conditions: (empty)
+     phi: var_eqs: v9=v11
+          && linear_eqs: v10 = 0
+          && term_eqs: 0=v10∧boolean List.isEmpty()([v6])=v9
+          && intervals: v10=null
+          && atoms: {is_int([v9]) = 1}
+     { roots={ &this=v1, &l=v2 };
+       mem  ={ v1 -> { * -> v5 },
+               v2 -> { * -> v6 },
+               v3 -> { * -> v10 },
+               v4 -> { * -> v9 },
+               v5 -> { * -> v7 },
+               v6 -> { * -> v8 },
+               v12 -> { * -> v9 } };
+       attrs={ v1 -> { MustBeValid(, None, t=0) },
+               v2 -> { MustBeValid(, None, t=0) },
+               v3 -> { s&o (variable `o` declared here at line 14 :t0 ) at line 17,
+                       MustBeValid(, None, t=6),
+                       WrittenTo (6, ) },
+               v4 -> { s&empty (variable `empty` declared here at line 14 :t0 ) at line 17,
+                       MustBeValid(, None, t=4),
+                       WrittenTo (4, ) },
+               v5 -> { DynamicType Lists, SourceFile [None], MustBeValid(, None, t=0) },
+               v6 -> { DynamicType java.util.List, SourceFile [None],
+                       MustBeValid(, None, t=2),
+                       StaticType class java.util.List,
+                       UnknownEffect(function `boolean List.isEmpty()` with no summary,
+                                     in call to function `boolean List.isEmpty()` with no summary at line 15 :t3
+                                     [] ) },
+               v9 -> { ReturnedFromUnknown([v6]) },
+               v10 -> { Invalid ConstantDereference(is assigned to the null pointer) },
+               v11 -> { ReturnedFromUnknown([v6]) },
+               v12 -> { MustBeValid(, None, t=10), WrittenTo (10, ) } };}
+     PRE=[{ roots={ &this=v1, &l=v2 };
+            mem  ={ v1 -> { * -> v5 },
+                    v2 -> { * -> v6 },
+                    v5 -> { * -> v7 },
+                    v6 -> { * -> v8 },
+                    v7 -> { },
+                    v8 -> { } };
+            attrs={ v1 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                    v2 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                    v5 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                    v6 -> { MustBeInitialized(, t=2), MustBeValid(, None, t=2) } };}]
+     need_closure_specialization=false
+     need_dynamic_type_specialization={ v6 }
+     skipped_calls={ boolean List.isEmpty() -> call to skipped function occurs here }
+     Topl={len=0;content=
+            [  ]},
+    conditions= [] timestamp= 23)
+
+Non-disj state:
+  copy map: { }, parameter map: { }, destructor checked: { }, captured: { }, 
+  locked: false,
+  loads: ({ n$0 -> { l }, n$3 -> { l }, n$6 -> { empty }, n$7 -> { $irvar0 } },
+  { $irvar0 -> { line 17 -> { 14 } },
+    empty -> { line 17 -> { 13 } },
+    l -> { line 15 -> { 1 }, line 17 -> { 7 } } }),
+  process analysis end
+process analysis
+passed to: { l -> { boolean List.isEmpty() -> { line 15 -> { 3 }, line 17 -> { 9 } } } }Lists.getElement
+2 disjuncts:
+#0: (conditions: {[v7] ≠ 0}
+     phi: linear_eqs: v9 = 0
+          && term_eqs: 0=v9∧boolean List.isEmpty()([v4])=v7
+          && intervals: v7≠0 ∧ v9=null
+          && atoms: {is_int([v7]) = 1}∧{[v7] ≠ 0}
+     { roots={ &this=v1, &l=v2, &return=v14 };
+       mem  ={ v1 -> { * -> v3 },
+               v2 -> { * -> v4 },
+               v3 -> { * -> v5 },
+               v4 -> { * -> v6 },
+               v8 -> { * -> v7 },
+               v10 -> { * -> v9 },
+               v14 -> { * -> v9 } };
+       attrs={ v1 -> { MustBeValid(, None, t=0) },
+               v2 -> { MustBeValid(, None, t=0) },
+               v3 -> { DynamicType Lists, SourceFile [None], MustBeValid(, None, t=0) },
+               v4 -> { DynamicType java.util.List, SourceFile [None],
+                       MustBeValid(, None, t=2),
+                       StaticType class java.util.List,
+                       UnknownEffect(function `boolean List.isEmpty()` with no summary,
+                                     in call to function `boolean List.isEmpty()` with no summary at line 44 :t3
+                                     [] ) },
+               v7 -> { ReturnedFromUnknown([v4]) },
+               v8 -> { MustBeValid(, None, t=4), WrittenTo (4, ) },
+               v9 -> { Invalid ConstantDereference(is assigned to the null pointer) },
+               v10 -> { MustBeValid(, None, t=10), WrittenTo (10, ) },
+               v14 -> { MustBeValid(, None, t=13), WrittenTo (13, ) } };}
+     PRE=[{ roots={ &this=v1, &l=v2 };
+            mem  ={ v1 -> { * -> v3 },
+                    v2 -> { * -> v4 },
+                    v3 -> { * -> v5 },
+                    v4 -> { * -> v6 },
+                    v5 -> { },
+                    v6 -> { } };
+            attrs={ v1 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                    v2 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                    v3 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                    v4 -> { MustBeInitialized(, t=2), MustBeValid(, None, t=2) } };}]
+     need_closure_specialization=false
+     need_dynamic_type_specialization={ v4 }
+     skipped_calls={ boolean List.isEmpty() -> call to skipped function occurs here }
+     Topl={len=0;content=
+            [  ]},
+    conditions= [] timestamp= 18)
+#1: (conditions: {[v7] = 0}
+     phi: var_eqs: v7=v9
+          && linear_eqs: v7 = 0
+          && term_eqs: 0=v7∧Object List.get(int)([v4],0)=v11∧boolean List.isEmpty()([v4])=v7
+          && intervals: v7=0 ∧ v9=0
+          && atoms: {is_int([v7]) = 1}
+     { roots={ &this=v1, &l=v2, &return=v15 };
+       mem  ={ v1 -> { * -> v3 },
+               v2 -> { * -> v4 },
+               v3 -> { * -> v5 },
+               v4 -> { * -> v6 },
+               v8 -> { * -> v7 },
+               v12 -> { * -> v11 },
+               v13 -> { * -> v11 },
+               v15 -> { * -> v11 } };
+       attrs={ v1 -> { MustBeValid(, None, t=0) },
+               v2 -> { MustBeValid(, None, t=0) },
+               v3 -> { DynamicType Lists, SourceFile [None], MustBeValid(, None, t=0) },
+               v4 -> { DynamicType java.util.List, SourceFile [None],
+                       MustBeValid(, None, t=2),
+                       StaticType class java.util.List,
+                       UnknownEffect(function `boolean List.isEmpty()` with no summary,
+                                     in call to function `boolean List.isEmpty()` with no summary at line 44 :t3
+                                     [] ) },
+               v7 -> { Invalid ConstantDereference(is assigned to the null pointer),
+                       ReturnedFromUnknown([v4]) },
+               v8 -> { MustBeValid(, None, t=4), WrittenTo (4, ) },
+               v11 -> { PropagateTaintFrom([{v= v4};{v= v9}]), ReturnedFromUnknown([v4;v9]) },
+               v12 -> { MustBeValid(, None, t=13), WrittenTo (13, ) },
+               v13 -> { MustBeValid(, None, t=17), WrittenTo (17, ) },
+               v15 -> { MustBeValid(, None, t=22), WrittenTo (22, ) } };}
+     PRE=[{ roots={ &this=v1, &l=v2 };
+            mem  ={ v1 -> { * -> v3 },
+                    v2 -> { * -> v4 },
+                    v3 -> { * -> v5 },
+                    v4 -> { * -> v6 },
+                    v5 -> { },
+                    v6 -> { } };
+            attrs={ v1 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                    v2 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                    v3 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                    v4 -> { MustBeInitialized(, t=2), MustBeValid(, None, t=2) } };}]
+     need_closure_specialization=false
+     need_dynamic_type_specialization={ v4 }
+     skipped_calls={ Object List.get(int) -> call to skipped function occurs here,
+                     boolean List.isEmpty() -> call to skipped function occurs here }
+     Topl={len=0;content=
+            [  ]},
+    conditions= [] timestamp= 27)
+
+Non-disj state:
+  copy map: { }, parameter map: { }, destructor checked: { }, captured: { }, 
+  locked: false,
+  loads: ({ n$0 -> { l }, n$3 -> { $irvar0 }, n$4 -> { l }, n$7 -> { $irvar1 }, n$8 -> { $T0_20 } },
+  { $T0_20 -> { line 44 -> { 12, 21 } },
+    $irvar1 -> { line 44 -> { 16 } },
+    $irvar0 -> { line 44 -> { 6 } },
+    l -> { line 44 -> { 1, 10 } } }),
+  passed to: { l -> { Object List.get(int) -> { line 44 -> { 12 } },
+                      boolean List.isEmpty() -> { line 44 -> { 3 } } } }process analysis end
+process analysis
+Lists.FP_removeOnEmptyListOk
+1 disjuncts:
+#0: (conditions: {[v11] = 0}
+     phi: var_eqs: v10=v11
+          && linear_eqs: v7 = a1 +1 ∧ v10 = 0
+          && term_eqs: 0=v10∧LinkedList.<init>()([v7])=v8∧Object List.remove(int)([v7],0)=v11
+                       ∧[a1 +1]=v7
+          && intervals: v7≥1 ∧ v10=0 ∧ v11=null
+     { roots={ &this=v1 };
+       mem  ={ v1 -> { * -> v4 },
+               v2 -> { * -> v11 },
+               v3 -> { * -> v7 },
+               v4 -> { * -> v5 },
+               v7 -> { * -> v9 } };
+       attrs={ v1 -> { MustBeValid(, None, t=0) },
+               v2 -> { s&removed (variable `removed` declared here at line 88 :t0 ) at line 91,
+                       MustBeValid(, None, t=8),
+                       WrittenTo (8, ) },
+               v3 -> { s&l (variable `l` declared here at line 88 :t0 ) at line 91,
+                       MustBeValid(, None, t=3),
+                       WrittenTo (3, ) },
+               v4 -> { DynamicType Lists, SourceFile [None], MustBeValid(, None, t=0) },
+               v7 -> { DynamicType java.util.LinkedList, SourceFile [None],
+                       MustBeValid(, None, t=6),
+                       UnknownEffect(function `LinkedList.<init>()` with no summary,
+                                     in call to function `LinkedList.<init>()` with no summary at line 89 :t2
+                                     [] ) },
+               v10 -> { Invalid ConstantDereference(is assigned to the null pointer),
+                        PropagateTaintFrom([{v= v7};{v= v10}]),
+                        ReturnedFromUnknown([v7;v10]) },
+               v11 -> { PropagateTaintFrom([{v= v7};{v= v10}]), ReturnedFromUnknown([v7;v10]) } };}
+     PRE=[{ roots={ &this=v1 };
+            mem  ={ v1 -> { * -> v4 }, v4 -> { * -> v5 }, v5 -> { } };
+            attrs={ v1 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                    v4 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) } };}]
+     need_closure_specialization=false
+     need_dynamic_type_specialization={ v7 }
+     skipped_calls={ LinkedList.<init>() -> call to skipped function occurs here,
+                     Object List.remove(int) -> call to skipped function occurs here }
+     Topl={len=0;content=
+            [  ]},
+    conditions= [] timestamp= 18)
+
+Non-disj state:
+  copy map: { }, parameter map: { }, destructor checked: { }, captured: { }, 
+  locked: false,
+  loads: ({ n$2 -> { l }, n$5 -> { removed } },
+  { removed -> { line 91 -> { 10 } }, l -> { line 90 -> { 5 } } }),
+  process analysis end
+process analysis
+passed to: { l -> { Object List.remove(int) -> { line 90 -> { 7 } } } }Lists.clearCausesEmptinessNPEBad
+2 disjuncts:
+#0: (conditions: {[v10] = 0}
+     phi: var_eqs: v9=v10
+          && linear_eqs: v9 = 0
+          && term_eqs: 0=v9∧void List.clear()([v5])=v8∧boolean List.isEmpty()([v5])=v10
+          && intervals: v9=null ∧ v10=0
+          && atoms: {is_int([v10]) = 1}
+     { roots={ &this=v1, &l=v2 };
+       mem  ={ v1 -> { * -> v4 },
+               v2 -> { * -> v5 },
+               v3 -> { * -> v9 },
+               v4 -> { * -> v6 },
+               v5 -> { * -> v7 },
+               v11 -> { * -> v10 } };
+       attrs={ v1 -> { MustBeValid(, None, t=0) },
+               v2 -> { MustBeValid(, None, t=0) },
+               v3 -> { s&o (variable `o` declared here at line 30 :t0 ) at line 33,
+                       MustBeValid(, None, t=5),
+                       WrittenTo (5, ) },
+               v4 -> { DynamicType Lists, SourceFile [None], MustBeValid(, None, t=0) },
+               v5 -> { DynamicType java.util.List, SourceFile [None],
+                       MustBeValid(, None, t=2),
+                       StaticType class java.util.List,
+                       UnknownEffect(function `void List.clear()` with no summary,
+                                     in call to function `void List.clear()` with no summary at line 31 :t3
+                                     [] ) },
+               v8 -> { ReturnedFromUnknown([v5]) },
+               v9 -> { Invalid ConstantDereference(is assigned to the null pointer),
+                       ReturnedFromUnknown([v5]) },
+               v10 -> { ReturnedFromUnknown([v5]) },
+               v11 -> { MustBeValid(, None, t=9), WrittenTo (9, ) } };}
+     PRE=[{ roots={ &this=v1, &l=v2 };
+            mem  ={ v1 -> { * -> v4 },
+                    v2 -> { * -> v5 },
+                    v4 -> { * -> v6 },
+                    v5 -> { * -> v7 },
+                    v6 -> { },
+                    v7 -> { } };
+            attrs={ v1 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                    v2 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                    v4 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                    v5 -> { MustBeInitialized(, t=2), MustBeValid(, None, t=2) } };}]
+     need_closure_specialization=false
+     need_dynamic_type_specialization={ v5 }
+     skipped_calls={ void List.clear() -> call to skipped function occurs here,
+                     boolean List.isEmpty() -> call to skipped function occurs here }
+     Topl={len=0;content=
+            [  ]},
+    conditions= [] timestamp= 20)
+#1: ({LatentAbortProgram(line 34: `o` could be null (null value originating from line 32) and is dereferenced)
+    AccessToInvalidAddress {calling_context=[]; invalid_address=[Some v9]:o;
+                            invalidation=ConstantDereference(is assigned to the null pointer);
+                            invalidation_trace=immediate; access_trace=immediate;
+                            must_be_valid_reason=None; }
+    conditions: {[v10] ≠ 0}
+    phi: term_eqs: void List.clear()([v5])=v8∧boolean List.isEmpty()([v5])=v10
+         && intervals: v10≠0
+         && atoms: {is_int([v10]) = 1}∧{[v10] ≠ 0}
+    { roots={ &this=v1, &l=v2 };
+      mem  ={ v1 -> { * -> v4 }, v2 -> { * -> v5 }, v4 -> { * -> v6 }, v5 -> { * -> v7 } };
+      attrs={ v4 -> { DynamicType Lists, SourceFile [None] },
+              v5 -> { DynamicType java.util.List, SourceFile [None],
+                      StaticType class java.util.List,
+                      UnknownEffect(function `void List.clear()` with no summary,
+                                    in call to function `void List.clear()` with no summary at line 31 :t3
+                                    [] ) } };}
+    PRE=[{ roots={ &this=v1, &l=v2 };
+           mem  ={ v1 -> { * -> v4 }, v2 -> { * -> v5 }, v4 -> { * -> v6 }, v5 -> { * -> v7 } };
+           attrs={ v1 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                   v2 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                   v4 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                   v5 -> { MustBeInitialized(, t=2), MustBeValid(, None, t=2) } };}]
+    need_closure_specialization=false
+    need_dynamic_type_specialization={ v5 }
+    skipped_calls={ void List.clear() -> call to skipped function occurs here,
+                    boolean List.isEmpty() -> call to skipped function occurs here }
+    Topl={len=0;content=
+           [  ]}},
+    conditions= [] timestamp= 26)
+process analysis end
+process analysis
+
+Non-disj state: ⊤Lists.addAndRemoveEmptinessNPEBad1 disjuncts:
+                                                    #0: (conditions: 
+                                                         {[v19] = 0}
+                                                         phi: linear_eqs: 
+                                                              v7 = a1 +1
+                                                               ∧ v10 = a2 +1
+                                                               ∧ v11 = 1
+                                                               ∧ v19 = 0
+                                                              && term_eqs: 
+                                                              0=v19∧1=v11
+                                                              ∧ArrayList.<init>()([v7])=v8
+                                                              ∧boolean List.add(Object)([v7],[v10])=v15
+                                                              ∧boolean List.isEmpty()([v7])=v19
+                                                              ∧boolean List.remove(Object)([v7],[v10])=v17
+                                                              ∧[a1 +1]=v7
+                                                              ∧[a2 +1]=v10
+                                                              && intervals: 
+                                                              v7≥1 ∧ v10≥1
+                                                               ∧ v11=1
+                                                               ∧ v19=0
+                                                              && atoms: 
+                                                              {is_int([v15]) = 1}
+                                                              ∧{is_int([v17]) = 1}
+                                                              ∧{is_int([v19]) = 1}
+                                                         { roots={ &this=v1 };
+                                                           mem  ={ v1 -> { * -> v4 },
+                                                                   v2 -> { * -> v10 },
+                                                                   v3 -> { * -> v7 },
+                                                                   v4 -> { * -> v5 },
+                                                                   v7 -> { * -> v14 },
+                                                                   v10 -> { * -> v12 },
+                                                                   v12 -> { __infer_model_backing_int -> v13 },
+                                                                   v13 -> { * -> v11 },
+                                                                   v16 -> { * -> v15 },
+                                                                   v18 -> { * -> v17 },
+                                                                   v20 -> { * -> v19 } };
+                                                           attrs={ v1 -> { MustBeValid(, None, t=0) },
+                                                                   v2 -> { s&i (variable `i` declared here at line 78 :t0
+                                                                    ) at line 82,
+                                                                    MustBeValid(, None, t=7),
+                                                                    WrittenTo (7, ) },
+                                                                   v3 -> { s&l (variable `l` declared here at line 78 :t0
+                                                                    ) at line 83,
+                                                                    MustBeValid(, None, t=3),
+                                                                    WrittenTo (3, ) },
+                                                                   v4 -> { DynamicType Lists, SourceFile [None],
+                                                                    MustBeValid(, None, t=0) },
+                                                                   v7 -> { DynamicType java.util.ArrayList, SourceFile [None],
+                                                                    MustBeValid(, None, t=10),
+                                                                    PropagateTaintFrom([{v= v10}]),
+                                                                    UnknownEffect(function `ArrayList.<init>()` with no summary,
+                                                                    in call to function `ArrayList.<init>()` with no summary at line 79 :t2
+                                                                    [
+                                                                    ] ) },
+                                                                   v10 -> { DynamicType java.lang.Integer, SourceFile [None],
+                                                                    MustBeValid(, None, t=6),
+                                                                    UnknownEffect(function `boolean List.add(Object)` with no summary,
+                                                                    in call to function `boolean List.add(Object)` with no summary at line 81 :t12
+                                                                    [
+                                                                    ] ),
+                                                                    WrittenTo (6, ) },
+                                                                   v11 -> { Invalid ConstantDereference(is assigned to the constant 1) },
+                                                                   v12 -> { MustBeValid(, None, t=6) },
+                                                                   v13 -> { MustBeValid(, None, t=6),
+                                                                    WrittenTo (6, ) },
+                                                                   v14 -> { Tainted{ } },
+                                                                   v15 -> { ReturnedFromUnknown([v7;v10]) },
+                                                                   v16 -> { MustBeValid(, None, t=13),
+                                                                    WrittenTo (13, ) },
+                                                                   v17 -> { ReturnedFromUnknown([v7;v10]) },
+                                                                   v18 -> { MustBeValid(, None, t=20),
+                                                                    WrittenTo (20, ) },
+                                                                   v19 -> { ReturnedFromUnknown([v7]) },
+                                                                   v20 -> { MustBeValid(, None, t=27),
+                                                                    WrittenTo (27, ) } };}
+                                                         PRE=[{ roots=
+                                                                { &this=v1 };
+                                                                mem  =
+                                                                { v1 -> { * -> v4 },
+                                                                  v4 -> { * -> v5 },
+                                                                  v5 -> { } };
+                                                                attrs=
+                                                                { v1 -> { MustBeInitialized(, t=0),
+                                                                    MustBeValid(, None, t=0) },
+                                                                  v4 -> { MustBeInitialized(, t=0),
+                                                                    MustBeValid(, None, t=0) } };}]
+                                                         need_closure_specialization=false
+                                                         need_dynamic_type_specialization=
+                                                         { v7 }
+                                                         skipped_calls=
+                                                         { ArrayList.<init>() -> call to skipped function occurs here,
+                                                           boolean List.add(Object) -> call to skipped function occurs here,
+                                                           boolean List.isEmpty() -> call to skipped function occurs here,
+                                                           boolean List.remove(Object) -> call to skipped function occurs here }
+                                                         Topl={len=0;content=
+                                                                [  ]},
+                                                        conditions= [] timestamp= 37)
+                                                    
+                                                    Non-disj state:
+                                                      copy map: { }, 
+                                                      parameter map: { }, 
+                                                      destructor checked: { }, 
+                                                      captured: { }, 
+                                                      locked: false,
+                                                      loads: ({ n$4 -> { l },
+                                                                n$6 -> { i },
+                                                                n$8 -> { l },
+                                                                n$10 -> { i },
+                                                                n$12 -> { l },
+                                                                n$15 -> { $irvar2 } },
+                                                      { i -> { line 81 -> { 11 },
+                                                               line 82 -> { 18 } },
+                                                        $irvar2 -> { line 83 -> { 29 } },
+                                                        l -> { line 81 -> { 9 },
+                                                               line 82 -> { 16 },
+                                                               line 83 -> { 24 } } }),
+                                                      passed to: { i -> { boolean List.add(Object) -> { line 81 -> { 12 } },
+                                                                    boolean List.remove(Object) -> { line 82 -> { 19 } } },
+                                                                   l -> { boolean List.add(Object) -> { line 81 -> { 12 } },
+                                                                    boolean List.isEmpty() -> { line 83 -> { 26 } },
+                                                                    boolean List.remove(Object) -> { line 82 -> { 19 } } } }process analysis end
+process analysis
+Lists.getElementOk
+2 disjuncts:
+#0: (conditions: {[v10] ≠ 0}
+     phi: linear_eqs: v7 = a1 +1
+          && term_eqs: ArrayList.<init>()([v7])=v8∧boolean List.isEmpty()([v7])=v10∧[a1 +1]=v7
+          && intervals: v7≥1 ∧ v10≠0
+          && atoms: {is_int([v10]) = 1}∧{[v10] ≠ 0}
+     { roots={ &o=v3, &this=v1 };
+       mem  ={ v1 -> { * -> v4 },
+               v2 -> { * -> v7 },
+               v4 -> { * -> v5 },
+               v7 -> { * -> v9 },
+               v11 -> { * -> v10 } };
+       attrs={ v1 -> { MustBeValid(, None, t=0) },
+               v2 -> { s&l (variable `l` declared here at line 62 :t0 ) at line 64,
+                       MustBeValid(, None, t=3),
+                       WrittenTo (3, ) },
+               v3 -> { Uninitialized },
+               v4 -> { DynamicType Lists, SourceFile [None], MustBeValid(, None, t=0) },
+               v7 -> { DynamicType java.util.ArrayList, SourceFile [None],
+                       MustBeValid(, None, t=6),
+                       UnknownEffect(function `ArrayList.<init>()` with no summary,
+                                     in call to function `ArrayList.<init>()` with no summary at line 63 :t2
+                                     [] ) },
+               v10 -> { ReturnedFromUnknown([v7]) },
+               v11 -> { MustBeValid(, None, t=8), WrittenTo (8, ) } };}
+     PRE=[{ roots={ &this=v1 };
+            mem  ={ v1 -> { * -> v4 }, v4 -> { * -> v5 }, v5 -> { } };
+            attrs={ v1 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                    v4 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) } };}]
+     need_closure_specialization=false
+     need_dynamic_type_specialization={ v7 }
+     skipped_calls={ ArrayList.<init>() -> call to skipped function occurs here,
+                     boolean List.isEmpty() -> call to skipped function occurs here }
+     Topl={len=0;content=
+            [  ]},
+    conditions= [] timestamp= 18)
+#1: ({AbortProgram conditions: (empty) phi: (empty)
+                   { roots={ &this=v1 };
+                     mem  ={ v1 -> { * -> v4 }, v4 -> { * -> v5 } };
+                     attrs={ v4 -> { DynamicType Lists, SourceFile [None] } };}
+                   PRE=[{ roots={ &this=v1 };
+                          mem  ={ v1 -> { * -> v4 }, v4 -> { * -> v5 } };
+                          attrs={ v1 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                                  v4 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) } };}]
+                   need_closure_specialization=false
+                   need_dynamic_type_specialization={ v7 }
+                   skipped_calls={ ArrayList.<init>() -> call to skipped function occurs here,
+                                   boolean List.isEmpty() -> call to skipped function occurs here }
+                   Topl={len=0;content=
+                          [  ]}},
+    conditions= [] timestamp= 26)
+process analysis end
+process analysis
+
+Non-disj state: ⊤Lists.getElement2 disjuncts:
+                                   #0: (conditions: {[v7] ≠ 0}
+                                        phi: linear_eqs: v9 = 0
+                                             && term_eqs: 0=v9∧boolean List.isEmpty()([v4])=v7
+                                             && intervals: v7≠0 ∧ v9=null
+                                             && atoms: {is_int([v7]) = 1}∧{[v7] ≠ 0}
+                                        { roots={ &this=v1, &l=v2, &return=v14 };
+                                          mem  ={ v1 -> { * -> v3 },
+                                                  v2 -> { * -> v4 },
+                                                  v3 -> { * -> v5 },
+                                                  v4 -> { * -> v6 },
+                                                  v8 -> { * -> v7 },
+                                                  v10 -> { * -> v9 },
+                                                  v14 -> { * -> v9 } };
+                                          attrs={ v1 -> { MustBeValid(, None, t=0) },
+                                                  v2 -> { MustBeValid(, None, t=0) },
+                                                  v3 -> { DynamicType Lists, SourceFile [None],
+                                                          MustBeValid(, None, t=0) },
+                                                  v4 -> { DynamicType java.util.List, SourceFile [None],
+                                                          MustBeValid(, None, t=2),
+                                                          StaticType class java.util.List,
+                                                          UnknownEffect(function `boolean List.isEmpty()` with no summary,
+                                                                    in call to function `boolean List.isEmpty()` with no summary at line 44 :t3
+                                                                    [
+                                                                    ] ) },
+                                                  v7 -> { ReturnedFromUnknown([v4]) },
+                                                  v8 -> { MustBeValid(, None, t=4),
+                                                          WrittenTo (4, ) },
+                                                  v9 -> { Invalid ConstantDereference(is assigned to the null pointer) },
+                                                  v10 -> { MustBeValid(, None, t=10),
+                                                           WrittenTo (10, ) },
+                                                  v14 -> { MustBeValid(, None, t=13),
+                                                           WrittenTo (13, ) } };}
+                                        PRE=[{ roots={ &this=v1, &l=v2 };
+                                               mem  ={ v1 -> { * -> v3 },
+                                                       v2 -> { * -> v4 },
+                                                       v3 -> { * -> v5 },
+                                                       v4 -> { * -> v6 },
+                                                       v5 -> { },
+                                                       v6 -> { } };
+                                               attrs={ v1 -> { MustBeInitialized(, t=0),
+                                                               MustBeValid(, None, t=0) },
+                                                       v2 -> { MustBeInitialized(, t=0),
+                                                               MustBeValid(, None, t=0) },
+                                                       v3 -> { DynamicType Lists, SourceFile [None],
+                                                               MustBeInitialized(, t=0),
+                                                               MustBeValid(, None, t=0) },
+                                                       v4 -> { DynamicType java.util.List, SourceFile [None],
+                                                               MustBeInitialized(, t=2),
+                                                               MustBeValid(, None, t=2),
+                                                               StaticType class java.util.List } };}]
+                                        need_closure_specialization=false
+                                        need_dynamic_type_specialization=
+                                        { v4 }
+                                        skipped_calls={ boolean List.isEmpty() -> call to skipped function occurs here }
+                                        Topl={len=0;content=
+                                               [  ]},
+                                       conditions= [] timestamp= 18)
+                                   #1: (conditions: {[v7] = 0}
+                                        phi: var_eqs: v7=v9
+                                             && linear_eqs: v7 = 0
+                                             && term_eqs: 0=v7∧Object List.get(int)([v4],0)=v11
+                                                          ∧boolean List.isEmpty()([v4])=v7
+                                             && intervals: v7=0 ∧ v9=0
+                                             && atoms: {is_int([v7]) = 1}
+                                        { roots={ &this=v1, &l=v2, &return=v15 };
+                                          mem  ={ v1 -> { * -> v3 },
+                                                  v2 -> { * -> v4 },
+                                                  v3 -> { * -> v5 },
+                                                  v4 -> { * -> v6 },
+                                                  v8 -> { * -> v7 },
+                                                  v12 -> { * -> v11 },
+                                                  v13 -> { * -> v11 },
+                                                  v15 -> { * -> v11 } };
+                                          attrs={ v1 -> { MustBeValid(, None, t=0) },
+                                                  v2 -> { MustBeValid(, None, t=0) },
+                                                  v3 -> { DynamicType Lists, SourceFile [None],
+                                                          MustBeValid(, None, t=0) },
+                                                  v4 -> { DynamicType java.util.List, SourceFile [None],
+                                                          MustBeValid(, None, t=2),
+                                                          StaticType class java.util.List,
+                                                          UnknownEffect(function `boolean List.isEmpty()` with no summary,
+                                                                    in call to function `boolean List.isEmpty()` with no summary at line 44 :t3
+                                                                    [
+                                                                    ] ) },
+                                                  v7 -> { Invalid ConstantDereference(is assigned to the null pointer),
+                                                          ReturnedFromUnknown([v4]) },
+                                                  v8 -> { MustBeValid(, None, t=4),
+                                                          WrittenTo (4, ) },
+                                                  v11 -> { PropagateTaintFrom([{v= v4};{v= v9}]),
+                                                           ReturnedFromUnknown([v4;v9]) },
+                                                  v12 -> { MustBeValid(, None, t=13),
+                                                           WrittenTo (13, ) },
+                                                  v13 -> { MustBeValid(, None, t=17),
+                                                           WrittenTo (17, ) },
+                                                  v15 -> { MustBeValid(, None, t=22),
+                                                           WrittenTo (22, ) } };}
+                                        PRE=[{ roots={ &this=v1, &l=v2 };
+                                               mem  ={ v1 -> { * -> v3 },
+                                                       v2 -> { * -> v4 },
+                                                       v3 -> { * -> v5 },
+                                                       v4 -> { * -> v6 },
+                                                       v5 -> { },
+                                                       v6 -> { } };
+                                               attrs={ v1 -> { MustBeInitialized(, t=0),
+                                                               MustBeValid(, None, t=0) },
+                                                       v2 -> { MustBeInitialized(, t=0),
+                                                               MustBeValid(, None, t=0) },
+                                                       v3 -> { DynamicType Lists, SourceFile [None],
+                                                               MustBeInitialized(, t=0),
+                                                               MustBeValid(, None, t=0) },
+                                                       v4 -> { DynamicType java.util.List, SourceFile [None],
+                                                               MustBeInitialized(, t=2),
+                                                               MustBeValid(, None, t=2),
+                                                               StaticType class java.util.List } };}]
+                                        need_closure_specialization=false
+                                        need_dynamic_type_specialization=
+                                        { v4 }
+                                        skipped_calls={ Object List.get(int) -> call to skipped function occurs here,
+                                                        boolean List.isEmpty() -> call to skipped function occurs here }
+                                        Topl={len=0;content=
+                                               [  ]},
+                                       conditions= [] timestamp= 27)
+                                   
+                                   Non-disj state:
+                                     copy map: { }, parameter map: { }, 
+                                     destructor checked: { }, captured: { }, 
+                                     locked: false,
+                                     loads: ({ n$0 -> { l },
+                                               n$3 -> { $irvar0 },
+                                               n$4 -> { l },
+                                               n$7 -> { $irvar1 },
+                                               n$8 -> { $T0_20 } },
+                                     { $T0_20 -> { line 44 -> { 12, 21 } },
+                                       $irvar1 -> { line 44 -> { 16 } },
+                                       $irvar0 -> { line 44 -> { 6 } },
+                                       l -> { line 44 -> { 1, 10 } } }),
+                                     passed to: { l -> { Object List.get(int) -> { line 44 -> { 12 } },
+                                                         boolean List.isEmpty() -> { line 44 -> { 3 } } } }process analysis end
+process analysis
+Lists.getElementOk
+2 disjuncts:
+#0: (conditions: {[v7] ≠ 0}
+     phi: term_eqs: boolean List.isEmpty()([v4])=v7
+          && intervals: v7≠0
+          && atoms: {is_int([v7]) = 1}∧{[v7] ≠ 0}
+     { roots={ &this=v1, &l=v2 };
+       mem  ={ v1 -> { * -> v3 },
+               v2 -> { * -> v4 },
+               v3 -> { * -> v5 },
+               v4 -> { * -> v6 },
+               v8 -> { * -> v7 } };
+       attrs={ v1 -> { MustBeValid(, None, t=0) },
+               v2 -> { MustBeValid(, None, t=0) },
+               v3 -> { DynamicType Lists, SourceFile [None], MustBeValid(, None, t=0) },
+               v4 -> { DynamicType java.util.List, SourceFile [None],
+                       MustBeValid(, None, t=2),
+                       StaticType class java.util.List,
+                       UnknownEffect(function `boolean List.isEmpty()` with no summary,
+                                     in call to function `boolean List.isEmpty()` with no summary at line 48 :t3
+                                     [] ) },
+               v7 -> { ReturnedFromUnknown([v4]) },
+               v8 -> { MustBeValid(, None, t=4), WrittenTo (4, ) } };}
+     PRE=[{ roots={ &this=v1, &l=v2 };
+            mem  ={ v1 -> { * -> v3 },
+                    v2 -> { * -> v4 },
+                    v3 -> { * -> v5 },
+                    v4 -> { * -> v6 },
+                    v5 -> { },
+                    v6 -> { } };
+            attrs={ v1 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                    v2 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                    v3 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                    v4 -> { MustBeInitialized(, t=2), MustBeValid(, None, t=2) } };}]
+     need_closure_specialization=false
+     need_dynamic_type_specialization={ v4 }
+     skipped_calls={ boolean List.isEmpty() -> call to skipped function occurs here }
+     Topl={len=0;content=
+            [  ]},
+    conditions= [] timestamp= 12)
+#1: (conditions: {[v7] = 0}∧{[v13] = 0}
+     phi: var_eqs: v7=v13
+          && linear_eqs: v7 = 0
+          && term_eqs: 0=v7∧Object List.get(int)([v4],0)=v14∧boolean List.isEmpty()([v4])=v7
+                       ∧String Object.toString()([v14])=v19
+          && intervals: v7=0
+          && atoms: {boolean List.isEmpty()([v4]) = 0}∧{is_int([v7]) = 1}
+     { roots={ &this=v1, &l=v2 };
+       mem  ={ v1 -> { * -> v3 },
+               v2 -> { * -> v4 },
+               v3 -> { * -> v5 },
+               v4 -> { * -> v6 },
+               v8 -> { * -> v7 },
+               v14 -> { * -> v18 },
+               v17 -> { * -> v14 },
+               v20 -> { * -> v19 } };
+       attrs={ v1 -> { MustBeValid(, None, t=0) },
+               v2 -> { MustBeValid(, None, t=0) },
+               v3 -> { DynamicType Lists, SourceFile [None], MustBeValid(, None, t=0) },
+               v4 -> { DynamicType java.util.List, SourceFile [None],
+                       MustBeValid(, None, t=2),
+                       StaticType class java.util.List,
+                       UnknownEffect(function `boolean List.isEmpty()` with no summary,
+                                     in call to function `boolean List.isEmpty()` with no summary at line 48 :t3
+                                     [] ) },
+               v7 -> { ReturnedFromUnknown([v4]) },
+               v8 -> { MustBeValid(, None, t=4), WrittenTo (4, ) },
+               v14 -> { MustBeValid(, None, t=19),
+                        PropagateTaintFrom([{v= v4}]),
+                        ReturnedFromUnknown([v4]),
+                        UnknownEffect(function `String Object.toString()` with no summary,
+                                      in call to function `String Object.toString()` with no summary at line 51 :t20
+                                      [] ) },
+               v17 -> { MustBeValid(, None, t=14), WrittenTo (14, ) },
+               v19 -> { PropagateTaintFrom([{v= v14}]), ReturnedFromUnknown([v14]) },
+               v20 -> { MustBeValid(, None, t=21), WrittenTo (21, ) } };}
+     PRE=[{ roots={ &this=v1, &l=v2 };
+            mem  ={ v1 -> { * -> v3 },
+                    v2 -> { * -> v4 },
+                    v3 -> { * -> v5 },
+                    v4 -> { * -> v6 },
+                    v5 -> { },
+                    v6 -> { } };
+            attrs={ v1 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                    v2 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                    v3 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                    v4 -> { MustBeInitialized(, t=2), MustBeValid(, None, t=2) } };}]
+     need_closure_specialization=false
+     need_dynamic_type_specialization={ v4, v14 }
+     skipped_calls={ Object List.get(int) -> call to skipped function occurs here,
+                     boolean List.isEmpty() -> call to skipped function occurs here,
+                     String Object.toString() -> call to skipped function occurs here }
+     Topl={len=0;content=
+            [  ]},
+    conditions= [] timestamp= 27)
+
+Non-disj state:
+  copy map: { }, parameter map: { }, destructor checked: { }, captured: { }, 
+  locked: false,
+  loads: ({ n$0 -> { l }, n$3 -> { $irvar0 }, n$4 -> { this }, n$6 -> { l }, n$8 -> { $irvar1 } },
+  { $irvar1 -> { line 51 -> { 18 } },
+    this -> { line 51 -> { 10 } },
+    $irvar0 -> { line 48 -> { 6 } },
+    l -> { line 48 -> { 1 }, line 51 -> { 12 } } }),
+  passed to: { $irvar1 -> { String Object.toString() -> { line 51 -> { 20 } } },
+               this -> { Object Lists.getElement(List) -> { line 51 -> { 13 } } },
+               l -> { Object Lists.getElement(List) -> { line 51 -> { 13 } },
+                      boolean List.isEmpty() -> { line 48 -> { 3 } } } }process analysis end
+process analysis
+Lists.getElementNPEBad
+1 disjuncts:
+#0: (conditions: {[v9] = 0}
+     phi: linear_eqs: v6 = a1 +1 ∧ v9 = 0
+          && term_eqs: 0=v9∧ArrayList.<init>()([v6])=v7∧boolean List.isEmpty()([v6])=v9
+                       ∧[a1 +1]=v6
+          && intervals: v6≥1 ∧ v9=0
+          && atoms: {is_int([v9]) = 1}
+     { roots={ &this=v1 };
+       mem  ={ v1 -> { * -> v3 },
+               v2 -> { * -> v6 },
+               v3 -> { * -> v4 },
+               v6 -> { * -> v8 },
+               v10 -> { * -> v9 } };
+       attrs={ v1 -> { MustBeValid(, None, t=0) },
+               v2 -> { s&l (variable `l` declared here at line 54 :t0 ) at line 56,
+                       MustBeValid(, None, t=3),
+                       WrittenTo (3, ) },
+               v3 -> { DynamicType Lists, SourceFile [None], MustBeValid(, None, t=0) },
+               v6 -> { DynamicType java.util.ArrayList, SourceFile [None],
+                       MustBeValid(, None, t=6),
+                       UnknownEffect(function `ArrayList.<init>()` with no summary,
+                                     in call to function `ArrayList.<init>()` with no summary at line 55 :t2
+                                     [] ) },
+               v9 -> { ReturnedFromUnknown([v6]) },
+               v10 -> { MustBeValid(, None, t=8), WrittenTo (8, ) } };}
+     PRE=[{ roots={ &this=v1 };
+            mem  ={ v1 -> { * -> v3 }, v3 -> { * -> v4 }, v4 -> { } };
+            attrs={ v1 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                    v3 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) } };}]
+     need_closure_specialization=false
+     need_dynamic_type_specialization={ v6 }
+     skipped_calls={ ArrayList.<init>() -> call to skipped function occurs here,
+                     boolean List.isEmpty() -> call to skipped function occurs here }
+     Topl={len=0;content=
+            [  ]},
+    conditions= [] timestamp= 17)
+
+Non-disj state:
+  copy map: { }, parameter map: { }, destructor checked: { }, captured: { }, 
+  locked: false,
+  loads: ({ n$2 -> { l }, n$5 -> { $irvar0 } },
+  { $irvar0 -> { line 56 -> { 10 } }, l -> { line 56 -> { 5 } } }),
+  process analysis end
+process analysis
+passed to: { l -> { boolean List.isEmpty() -> { line 56 -> { 7 } } } }Lists.addInvalidatesEmptinessNPEBad
+2 disjuncts:
+#0: (conditions: {[v21] ≠ 0}
+     phi: var_eqs: v12=v20
+          && linear_eqs: v8 = a1 +1 ∧ v12 = 0 ∧ v13 = 1
+          && term_eqs: 0=v12∧1=v13∧Object.<init>()([v8])=v9∧boolean List.isEmpty()([v5])=v21
+                       ∧[a1 +1]=v8
+          && intervals: v8≥1 ∧ v12=null ∧ v13=1 ∧ v20=0 ∧ v21≠0
+          && atoms: {is_int([v21]) = 1}∧{[v21] ≠ 0}
+     { roots={ &this=v1, &l=v2 };
+       mem  ={ v1 -> { * -> v4 },
+               v2 -> { * -> v5 },
+               v3 -> { * -> v12 },
+               v4 -> { * -> v6 },
+               v5 -> { * -> v11 },
+               v10 -> { * -> v8 },
+               v11 -> { __infer_model_backing_collection_empty -> v18,
+                        __infer_model_backing_collection_snd -> v16,
+                        __infer_model_backing_collection_fst -> v14 },
+               v14 -> { * -> v17 },
+               v16 -> { * -> v8 },
+               v18 -> { * -> v20 },
+               v22 -> { * -> v21 } };
+       attrs={ v1 -> { MustBeValid(, None, t=0) },
+               v2 -> { MustBeValid(, None, t=0) },
+               v3 -> { s&o (variable `o` declared here at line 70 :t0 ) at line 73,
+                       MustBeValid(, None, t=11),
+                       WrittenTo (11, ) },
+               v4 -> { DynamicType Lists, SourceFile [None], MustBeValid(, None, t=0) },
+               v5 -> { DynamicType java.util.List, SourceFile [None],
+                       MustBeValid(, None, t=6),
+                       StaticType class java.util.List,
+                       UnknownEffect(function `boolean List.isEmpty()` with no summary,
+                                     in call to function `boolean List.isEmpty()` with no summary at line 73 :t14
+                                     [] ) },
+               v8 -> { DynamicType java.lang.Object, SourceFile [None],
+                       UnknownEffect(function `Object.<init>()` with no summary,
+                                     in call to function `Object.<init>()` with no summary at line 71 :t2
+                                     [] ) },
+               v10 -> { MustBeValid(, None, t=3), WrittenTo (3, ) },
+               v11 -> { MustBeValid(, None, t=8) },
+               v12 -> { Invalid ConstantDereference(is assigned to the null pointer) },
+               v14 -> { MustBeValid(, None, t=8), WrittenTo (8, ) },
+               v15 -> { AlwaysReachable },
+               v16 -> { MustBeValid(, None, t=8), WrittenTo (8, ) },
+               v18 -> { MustBeValid(, None, t=8), WrittenTo (8, ) },
+               v21 -> { ReturnedFromUnknown([v5]) },
+               v22 -> { MustBeValid(, None, t=15), WrittenTo (15, ) } };}
+     PRE=[{ roots={ &this=v1, &l=v2 };
+            mem  ={ v1 -> { * -> v4 },
+                    v2 -> { * -> v5 },
+                    v4 -> { * -> v6 },
+                    v5 -> { * -> v11 },
+                    v6 -> { },
+                    v11 -> { __infer_model_backing_collection_empty -> v18,
+                             __infer_model_backing_collection_snd -> v16,
+                             __infer_model_backing_collection_fst -> v14 },
+                    v14 -> { * -> v15 },
+                    v15 -> { },
+                    v16 -> { * -> v17 },
+                    v17 -> { },
+                    v18 -> { * -> v19 },
+                    v19 -> { } };
+            attrs={ v1 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                    v2 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                    v4 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                    v5 -> { MustBeInitialized(, t=6), MustBeValid(, None, t=6) },
+                    v11 -> { MustBeInitialized(, t=8), MustBeValid(, None, t=8) },
+                    v14 -> { MustBeInitialized(, t=8), MustBeValid(, None, t=8) },
+                    v16 -> { MustBeInitialized(, t=8), MustBeValid(, None, t=8) },
+                    v18 -> { MustBeInitialized(, t=8), MustBeValid(, None, t=8) } };}]
+     need_closure_specialization=false
+     need_dynamic_type_specialization={ v5 }
+     skipped_calls={ Object.<init>() -> call to skipped function occurs here,
+                     boolean List.isEmpty() -> call to skipped function occurs here }
+     Topl={len=0;content=
+            [  ]},
+    conditions= [] timestamp= 26)
+#1: ({LatentAbortProgram(line 74: `o` could be null (null value originating from line 72) and is dereferenced)
+    AccessToInvalidAddress {calling_context=[]; invalid_address=[Some v12]:o;
+                            invalidation=ConstantDereference(is assigned to the null pointer);
+                            invalidation_trace=immediate; access_trace=immediate;
+                            must_be_valid_reason=None; }
+    conditions: {[v12] = 0}
+    phi: linear_eqs: v8 = a1 +1 ∧ v12 = 0
+         && term_eqs: 0=v12∧Object.<init>()([v8])=v9∧boolean List.isEmpty()([v5])=v12
+                      ∧[a1 +1]=v8
+         && intervals: v8≥1 ∧ v12=null
+         && atoms: {boolean List.isEmpty()([v5]) = 0}
+    { roots={ &this=v1, &l=v2 };
+      mem  ={ v1 -> { * -> v4 },
+              v2 -> { * -> v5 },
+              v4 -> { * -> v6 },
+              v5 -> { * -> v11 },
+              v11 -> { __infer_model_backing_collection_empty -> v18,
+                       __infer_model_backing_collection_snd -> v16,
+                       __infer_model_backing_collection_fst -> v14 },
+              v14 -> { * -> v17 },
+              v16 -> { * -> v8 },
+              v18 -> { * -> v12 } };
+      attrs={ v4 -> { DynamicType Lists, SourceFile [None] },
+              v5 -> { DynamicType java.util.List, SourceFile [None],
+                      StaticType class java.util.List,
+                      UnknownEffect(function `boolean List.isEmpty()` with no summary,
+                                    in call to function `boolean List.isEmpty()` with no summary at line 73 :t14
+                                    [] ) },
+              v8 -> { DynamicType java.lang.Object, SourceFile [None],
+                      UnknownEffect(function `Object.<init>()` with no summary,
+                                    in call to function `Object.<init>()` with no summary at line 71 :t2
+                                    [] ) },
+              v12 -> { Invalid ConstantDereference(is assigned to the null pointer),
+                       ReturnedFromUnknown([v5]) },
+              v14 -> { WrittenTo (8, ) },
+              v15 -> { AlwaysReachable },
+              v16 -> { WrittenTo (8, ) },
+              v18 -> { WrittenTo (8, ) } };}
+    PRE=[{ roots={ &this=v1, &l=v2 };
+           mem  ={ v1 -> { * -> v4 },
+                   v2 -> { * -> v5 },
+                   v4 -> { * -> v6 },
+                   v5 -> { * -> v11 },
+                   v11 -> { __infer_model_backing_collection_empty -> v18,
+                            __infer_model_backing_collection_snd -> v16,
+                            __infer_model_backing_collection_fst -> v14 },
+                   v14 -> { * -> v15 },
+                   v16 -> { * -> v17 },
+                   v18 -> { * -> v19 } };
+           attrs={ v1 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                   v2 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                   v4 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                   v5 -> { MustBeInitialized(, t=6), MustBeValid(, None, t=6) },
+                   v11 -> { MustBeInitialized(, t=8), MustBeValid(, None, t=8) },
+                   v14 -> { MustBeInitialized(, t=8), MustBeValid(, None, t=8) },
+                   v16 -> { MustBeInitialized(, t=8), MustBeValid(, None, t=8) },
+                   v18 -> { MustBeInitialized(, t=8), MustBeValid(, None, t=8) } };}]
+    need_closure_specialization=false
+    need_dynamic_type_specialization={ v5 }
+    skipped_calls={ Object.<init>() -> call to skipped function occurs here,
+                    boolean List.isEmpty() -> call to skipped function occurs here }
+    Topl={len=0;content=
+           [  ]}},
+    conditions= [] timestamp= 32)
+process analysis end
+
+Non-disj state: ⊤
+Lists.java:66: error: Null Dereference
+  `o` could be null (null value originating from line 65) and is dereferenced. 
+  64.       if (!l.isEmpty()) {
+  65.         Object o = null;
+  66. >       o.toString();
+  67.       }
+  68.     }
+
+Lists.java:103: error: Null Dereference
+  `o` could be null (null value originating from line 102) and is dereferenced. 
+  101.       if (removed) {
+  102.         Object o = null;
+  103. >       o.toString();
+  104.       }
+  105.     }
+
+
+Found 2 issues
+             Issue Type(ISSUED_TYPE_ID): #
+  Null Dereference(NULLPTR_DEREFERENCE): 2

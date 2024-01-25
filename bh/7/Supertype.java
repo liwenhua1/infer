@@ -1,7 +1,7 @@
 
 class Supertype {
    
-
+  int t;
   
 
     //      public Integer foo(int b) 
@@ -43,7 +43,9 @@ class Supertype {
       //       // Subtype c = (Subtype) b;
       //   return "null";}
       //  }
-        
+        public Supertype() {
+          t = 4;
+        }
          public String foo1(Object b) 
        //seems input parameter has no type, but constructed parameter has type
        //static //presumes this::Supertype<> achieves this::Supertype<> * res::Objec<>;

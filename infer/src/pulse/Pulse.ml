@@ -21,7 +21,8 @@ exception AboutToOOM
 exception Listhd
 
 let instr_latent_hash = Caml.Hashtbl.create 1000
-let current_path = ref 1
+let current_path_table : (Procname.t,int) Caml.Hashtbl.t= Caml.Hashtbl.create 1000
+
 let rec list_printer f alist = 
   match alist with
   | [] -> print_endline ""
@@ -1109,8 +1110,10 @@ module PulseTransferFunctions = struct
                 astate_n
           in
           let res1 = (List.concat_map astates ~f:deref_rhs) in
-          current_path := (!current_path - 1 + (List.length res1));
-          let res2 = PulseReport.report_results tenv proc_desc err_log loc res1 ~current_disj:!current_path ~instra_latent_hash:instr_latent_hash ~ins: (Some instr) in
+          let p_path = Caml.Hashtbl.find current_path_table (Procdesc.get_proc_name proc_desc) in 
+          let current_path = (p_path - 1 + (List.length res1)) in 
+          Caml.Hashtbl.replace current_path_table (Procdesc.get_proc_name proc_desc) current_path;
+          let res2 = PulseReport.report_results tenv proc_desc err_log loc res1 ~current_disj:current_path ~instra_latent_hash:instr_latent_hash ~ins: (Some instr) in
           let astates, path, non_disj = (res2, path, astate_n) in
           
           let astates =
@@ -1122,7 +1125,7 @@ module PulseTransferFunctions = struct
                       [ PulseTaintOperations.load procname tenv path loc ~lhs:(lhs_id, typ)
                           ~rhs:rhs_exp astate ]
                     in
-                    PulseReport.report_results tenv proc_desc err_log loc astates ~current_disj:!current_path ~instra_latent_hash:instr_latent_hash ~ins: (Some instr) 
+                    PulseReport.report_results tenv proc_desc err_log loc astates ~current_disj:current_path ~instra_latent_hash:instr_latent_hash ~ins: (Some instr) 
                 | _ ->
                     [astate] )
           in
@@ -1169,8 +1172,12 @@ module PulseTransferFunctions = struct
           in
           let astate_n = NonDisjDomain.set_captured_variables rhs_exp astate_n in
           let results = SatUnsat.to_list result in
-          current_path := (!current_path - 1 + (List.length results));
-          (PulseReport.report_results tenv proc_desc err_log loc results ~current_disj:!current_path ~instra_latent_hash:instr_latent_hash ~ins: (Some instr) , path, astate_n)
+          let p_path = Caml.Hashtbl.find current_path_table (Procdesc.get_proc_name proc_desc) in 
+          let current_path = (p_path - 1 + (List.length results)) in 
+          Caml.Hashtbl.replace current_path_table (Procdesc.get_proc_name proc_desc) current_path;
+
+         
+          (PulseReport.report_results tenv proc_desc err_log loc results ~current_disj:current_path ~instra_latent_hash:instr_latent_hash ~ins: (Some instr) , path, astate_n)
       | Call (ret, (call_exp:Exp.t), actuals, loc, (call_flags:CallFlags.t)) ->
         (try
         (* Exp.pp F.std_formatter call_exp; *)
@@ -1227,9 +1234,12 @@ module PulseTransferFunctions = struct
             in
             (* print_endline ((Location.to_string loc)^ "calling location"); *)
             let astates_before = !astates_before in
-            current_path := (!current_path - 1 + (List.length res));
+            let p_path = Caml.Hashtbl.find current_path_table (Procdesc.get_proc_name proc_desc) in 
+            let current_path =  (p_path - 1 + (List.length res)) in 
+            Caml.Hashtbl.replace current_path_table (Procdesc.get_proc_name proc_desc) current_path;
+     
             (* Utils.list_printer (fun x -> match PulseResult.fetal_error x with |None -> print_endline "None11" | Some a -> AccessResult.pp a) res; *)
-            (PulseReport.report_exec_results tenv proc_desc err_log loc res ~current_path:!current_path ~instra_hash:instr_latent_hash ~ins: (Some instr) , astates_before)
+            (PulseReport.report_exec_results tenv proc_desc err_log loc res ~current_path:current_path ~instra_hash:instr_latent_hash ~ins: (Some instr) , astates_before)
           in
            (* Utils.list_printer (fun x -> ExecutionDomain.pp F.std_formatter x) astates; *)
           (* list_printer (fun x -> AbductiveDomain.pp F.std_formatter x) astates_before; (*state before*)
@@ -1323,9 +1333,14 @@ module PulseTransferFunctions = struct
             in
             (* print_endline ((Location.to_string loc)^ "calling location"); *)
             let astates_before = !astates_before in
-            current_path := (!current_path - 1 + (List.length res));
+
+            let p_path = Caml.Hashtbl.find current_path_table (Procdesc.get_proc_name proc_desc) in 
+            let current_path = (p_path - 1 + (List.length res))  in 
+            Caml.Hashtbl.replace current_path_table (Procdesc.get_proc_name proc_desc) current_path;
+
+      
             (* Utils.list_printer (fun x -> match PulseResult.fetal_error x with |None -> print_endline "None11" | Some a -> AccessResult.pp a) res; *)
-            (PulseReport.report_exec_results tenv proc_desc err_log loc res ~current_path:!current_path ~instra_hash:instr_latent_hash ~ins: (Some instr), astates_before)
+            (PulseReport.report_exec_results tenv proc_desc err_log loc res ~current_path:current_path ~instra_hash:instr_latent_hash ~ins: (Some instr), astates_before)
           in
            (* Utils.list_printer (fun x -> ExecutionDomain.pp F.std_formatter x) astates; *)
           (* list_printer (fun x -> AbductiveDomain.pp F.std_formatter x) astates_before; (*state before*)
@@ -1407,8 +1422,13 @@ module PulseTransferFunctions = struct
               (* (PulseReport.report_exec_results tenv proc_desc err_log loc res, astates_before) *)
               in (ast@astates,astb@astates_before))
             in
-            current_path := (!current_path - 1 + (List.length astates_all1));
-            let astates_all = PulseReport.report_exec_results tenv proc_desc err_log loc astates_all1 ~current_path:!current_path ~instra_hash:instr_latent_hash ~ins: (Some instr) in
+
+            let p_path = Caml.Hashtbl.find current_path_table (Procdesc.get_proc_name proc_desc) in 
+            let current_path = (p_path - 1 + (List.length astates_all1)) in 
+            Caml.Hashtbl.replace current_path_table (Procdesc.get_proc_name proc_desc) current_path;
+
+         
+            let astates_all = PulseReport.report_exec_results tenv proc_desc err_log loc astates_all1 ~current_path:current_path ~instra_hash:instr_latent_hash ~ins: (Some instr) in
              (* Utils.list_printer (fun x -> ExecutionDomain.pp F.std_formatter x) astates; *)
             (* list_printer (fun x -> AbductiveDomain.pp F.std_formatter x) astates_before; (*state before*)
             list_printer (fun x -> ExecutionDomain.pp F.std_formatter x) astates; state after *)
@@ -1459,9 +1479,13 @@ module PulseTransferFunctions = struct
               in
               (* print_endline ((Location.to_string loc)^ "calling location"); *)
               let astates_before = !astates_before in
-              current_path := (!current_path - 1 + (List.length res));
+
+              let p_path = Caml.Hashtbl.find current_path_table (Procdesc.get_proc_name proc_desc) in 
+              let current_path = (p_path - 1 + (List.length res)) in 
+              Caml.Hashtbl.replace current_path_table (Procdesc.get_proc_name proc_desc) current_path;
+         
               (* Utils.list_printer (fun x -> match PulseResult.fetal_error x with |None -> print_endline "None11" | Some a -> AccessResult.pp a) res; *)
-              (PulseReport.report_exec_results tenv proc_desc err_log loc res ~current_path:!current_path ~instra_hash:instr_latent_hash ~ins: (Some instr), astates_before)
+              (PulseReport.report_exec_results tenv proc_desc err_log loc res ~current_path:current_path ~instra_hash:instr_latent_hash ~ins: (Some instr), astates_before)
             in
              (* Utils.list_printer (fun x -> ExecutionDomain.pp F.std_formatter x) astates; *)
             (* list_printer (fun x -> AbductiveDomain.pp F.std_formatter x) astates_before; (*state before*)
@@ -1518,11 +1542,16 @@ module PulseTransferFunctions = struct
             in
             (* print_endline ((Location.to_string loc)^ "calling location"); *)
             let astates_before = !astates_before in
-            current_path := (!current_path - 1 + (List.length res));
+
+            let p_path = Caml.Hashtbl.find current_path_table (Procdesc.get_proc_name proc_desc) in 
+            let current_path =(p_path - 1 + (List.length res)) in 
+            Caml.Hashtbl.replace current_path_table (Procdesc.get_proc_name proc_desc) current_path;
+
+
             (* Utils.print_int (List.length res);
             print_endline "========="; *)
             (* Utils.list_printer (fun x -> match PulseResult.fetal_error x with |None -> print_endline "None11" | Some a -> AccessResult.pp a) res; *)
-            (PulseReport.report_exec_results tenv proc_desc err_log loc res ~current_path:!current_path ~instra_hash:instr_latent_hash ~ins: (Some instr), astates_before)
+            (PulseReport.report_exec_results tenv proc_desc err_log loc res ~current_path:current_path ~instra_hash:instr_latent_hash ~ins: (Some instr), astates_before)
           in
            (* Utils.list_printer (fun x -> ExecutionDomain.pp F.std_formatter x) astates; *)
           (* list_printer (fun x -> AbductiveDomain.pp F.std_formatter x) astates_before; (*state before*)
@@ -1576,11 +1605,16 @@ module PulseTransferFunctions = struct
             in
             (* print_endline ((Location.to_string loc)^ "calling location"); *)
             let astates_before = !astates_before in
-            current_path := (!current_path - 1 + (List.length res));
+
+            let p_path = Caml.Hashtbl.find current_path_table (Procdesc.get_proc_name proc_desc) in 
+            let current_path =(p_path - 1 + (List.length res)) in 
+            Caml.Hashtbl.replace current_path_table (Procdesc.get_proc_name proc_desc) current_path;
+
+
             (* Utils.print_int (List.length res);
             print_endline "========="; *)
             (* Utils.list_printer (fun x -> match PulseResult.fetal_error x with |None -> print_endline "None11" | Some a -> AccessResult.pp a) res; *)
-            (PulseReport.report_exec_results tenv proc_desc err_log loc res ~current_path:!current_path ~instra_hash:instr_latent_hash ~ins: (Some instr), astates_before)
+            (PulseReport.report_exec_results tenv proc_desc err_log loc res ~current_path:current_path ~instra_hash:instr_latent_hash ~ins: (Some instr), astates_before)
           in
            (* Utils.list_printer (fun x -> ExecutionDomain.pp F.std_formatter x) astates; *)
           (* list_printer (fun x -> AbductiveDomain.pp F.std_formatter x) astates_before; (*state before*)
@@ -1639,8 +1673,15 @@ module PulseTransferFunctions = struct
             (* AbductiveDomain.pp F.std_formatter astate; *)
             astate
           in
-          if is_then_branch then current_path := (!current_path + (List.length results)) else current_path := (!current_path - 1 + (List.length results));
-          (PulseReport.report_exec_results tenv proc_desc err_log loc results ~current_path:!current_path ~instra_hash:instr_latent_hash ~ins: (Some instr), path, astate_n)
+
+          let p_path = Caml.Hashtbl.find current_path_table (Procdesc.get_proc_name proc_desc) in 
+          let current_path = if is_then_branch then (p_path + (List.length results)) else (p_path - 1 + (List.length results))  in 
+          Caml.Hashtbl.replace current_path_table (Procdesc.get_proc_name proc_desc) current_path;
+
+          (* Utils.print_int current_path; *)
+          
+        
+          (PulseReport.report_exec_results tenv proc_desc err_log loc results ~current_path:current_path ~instra_hash:instr_latent_hash ~ins: (Some instr), path, astate_n)
       | Metadata EndBranches ->
           (* We assume that terminated conditions are well-parenthesised, hence an [EndBranches]
              instruction terminates the most recently seen terminated conditional. The empty case
@@ -1673,6 +1714,8 @@ module PulseTransferFunctions = struct
     ( match Config.pulse_max_heap with
     | Some max_heap_size when heap_size > max_heap_size ->
         let pname = Procdesc.get_proc_name analysis_data.InterproceduralAnalysis.proc_desc in
+       
+
         L.internal_error
           "OOM danger: heap size is %d words, more than the specified threshold of %d words. \
            Aborting the analysis of the procedure %a to avoid running out of memory.@\n"
@@ -1786,6 +1829,11 @@ let analyze specialization
     (* Tenv.pp F.std_formatter tenv; print_endline "=========================="; *)
   if should_analyze proc_desc then
     let proc_name = Procdesc.get_proc_name proc_desc in
+    let () = match Caml.Hashtbl.find_opt current_path_table proc_name with 
+    | None -> Caml.Hashtbl.add current_path_table proc_name 1 
+    | _ -> ()
+
+    in 
     (* let nodes = Procdesc.get_nodes proc_desc in 
     Utils.unitf_on_list nodes (fun x -> Instrs.pp Pp.text F.std_formatter (Procdesc.Node.get_instrs x)); *)
     (* let () = Procname.process_java_name_iter [proc_name] in *)
@@ -1814,7 +1862,7 @@ let analyze specialization
     (* let procname_java_class = Procname.get_class_name proc_name in *)
      
     
-    (* let () =
+    let () =
     (* match procname_java_class with | None -> () 
     | Some aa -> let test_name = "Ts" in 
   
@@ -1826,12 +1874,12 @@ let analyze specialization
     | None  -> ()
     | Some a -> DisjunctiveAnalyzer.TransferFunctions.Domain.pp F.std_formatter a in
     res;print_endline "process analysis end" in ppp
-    in *)
+    in
   (* in *)
     (*print_endline "------------------------------------------";
           Utils.print_int !current_path; 
           print_endline "=========================================="; *)
-          current_path := 1;
+          Caml.Hashtbl.remove current_path_table (Procdesc.get_proc_name proc_desc);
           Caml.Hashtbl.reset instr_latent_hash;
     let process_postconditions node posts_opt ~convert_normal_to_exceptional =
       match posts_opt with
@@ -1907,7 +1955,7 @@ let analyze specialization
 
 
 let checker ?specialization ({InterproceduralAnalysis.proc_desc} as analysis_data) =
-  (* Procdesc.pp_with_instrs ~print_types:true F.std_formatter proc_desc; *)
+  Procdesc.pp_with_instrs ~print_types:true F.std_formatter proc_desc;
   (* Tenv.pp_per_file F.std_formatter (Tenv.FileLocal analysis_data.tenv); *)
   (* print_endline "===================="; *)
   let open IOption.Let_syntax in
