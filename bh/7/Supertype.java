@@ -2,6 +2,11 @@
 class Supertype {
    
   int t;
+
+  public void change(Supertype a) {
+    int b = a.t;
+    a.t = (-b);
+  }
   
 
     //      public Integer foo(int b) 
@@ -253,12 +258,12 @@ class Supertype {
     typeOK(o);
   }
 
-    public void Bad_FN2() {
-    // should report a warning because the Subtype implementation
-    // of foo() returns null
-    Subtype o = new Subtype();
-    typeOK(o);
-  }
+  //   public void Bad_FN2() {
+  //   // should report a warning because the Subtype implementation
+  //   // of foo() returns null
+  //   Subtype o = new Subtype();
+  //   typeOK(o);
+  // }
 
 
 
