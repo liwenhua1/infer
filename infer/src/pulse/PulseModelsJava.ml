@@ -37,8 +37,11 @@ let write_field path field new_val location addr astate =
   PulseOperations.write_deref path location ~ref:field_addr ~obj:new_val astate
 
 
-let instance_of (argv, hist) typeexpr : model =
-  (* print_endline "instanceof"; *)
+let instance_of (argv, (hist:ValueHistory.t)) typeexpr : model =
+ 
+  (* print_endline "instanceof";
+  AbstractValue.pp Format.std_formatter argv;
+  print_endline ""; *)
   (* let tenv = match (Tenv.load_global ()) with 
     | Some t -> t 
     | None -> Tenv.create ()
@@ -51,13 +54,19 @@ let instance_of (argv, hist) typeexpr : model =
   | Exp.Sizeof a -> Exp.ppsz a
   | _ -> print_endline (Exp.to_string typeexpr));  *)
 
- fun {location; path; ret= ret_id, _} astate ->
+ fun {location; path ;analysis_data;ret= ret_id, _} astate ->
+      let () = 
+      let proc = analysis_data.proc_desc in 
+      let pname = Procdesc.get_proc_name proc in 
+      print_endline (Procname.to_string pname) in
+
+  
   (* let tenv = match (Tenv.load_global ()) with 
     | Some t -> t 
     | None -> Tenv.create ()
   in *)
  
-  let event = Hist.call_event path location "Java.instanceof" in
+  let event = Hist.call_event path location "Java.instanceof1" in
   let res_addr = AbstractValue.mk_fresh () in
   match typeexpr with
   | Exp.Sizeof {typ} -> 
@@ -70,10 +79,15 @@ let instance_of (argv, hist) typeexpr : model =
       
       let<++> astate = PulseArithmetic.and_equal_instanceof res_addr argv typ astate in
       (* AbductiveDomain.pp Format.std_formatter astate; *)
-      PulseOperations.write_id (ret_id:Ident.t) (res_addr, Hist.add_event path event hist) astate
+      let r = Hist.add_event path event hist in
+      (* Utils.print_bool (ValueHistory.apply_instanceof_before r); *)
+      PulseOperations.write_id (ret_id:Ident.t) (res_addr, r) astate 
+
+      
   (* The type expr is sometimes a Var expr but this is not expected.
      This seems to be introduced by inline mechanism of Java synthetic methods during preanalysis *)
   | _ ->
+
       astate |> Basic.ok_continue
  (**)
 let add_instance_of_info_succ is_instance argv typ astate ret_id path event= 
@@ -154,12 +168,12 @@ let add_instance_of_info_succ is_instance argv typ astate ret_id path event=
 
 
 
-let _java_cast (argv, hist) typeexpr : model =
-        
+let java_cast (argv, hist) typeexpr : model =
+      Utils.print_bool (ValueHistory.apply_instanceof_before hist);
+        (* print_endline "====";
+        AbstractValue.pp Format.std_formatter argv;
        
-        (* AbstractValue.pp Format.std_formatter argv; *)
-        (* ValueHistory.pp Format.std_formatter hist; *)
-        
+        print_endline "===="; *)
         (* (match typeexpr with
         | Exp.Sizeof a -> Exp.ppsz a
         | _ -> print_endline (Exp.to_string typeexpr));  *)
@@ -1065,7 +1079,7 @@ let matchers : matcher list =
     &:: "next" <>$ capt_arg_payload
     $!--> Iterator.next ~desc:"Iterator.next()"
   ; +BuiltinDecl.(match_builtin __instanceof) <>$ capt_arg_payload $+ capt_exp $--> instance_of
-  (* ; +BuiltinDecl.(match_builtin __cast) <>$ capt_arg_payload $+ capt_exp $--> java_cast *)
+  ; +BuiltinDecl.(match_builtin __cast) <>$ capt_arg_payload $+ capt_exp $--> java_cast
   ; ( +map_context_tenv PatternMatch.Java.implements_enumeration
     &:: "nextElement" <>$ capt_arg_payload
     $!--> fun x ->

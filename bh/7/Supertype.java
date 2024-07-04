@@ -27,50 +27,50 @@ class Supertype {
     //     k.toString();
     //    }
      
-      //    public String foo1(Object b) 
-      //  //seems input parameter has no type, but constructed parameter has type
-      //  //static //presumes this::Supertype<> achieves this::Supertype<> * res::Objec<>;
-      //  //dynamic //presumes this::Supertype<> achieves this::Supertype<> * res::Objec<>;
-      //  {
-        
-      //   Supertype q = (Supertype) b;
-      //   if (b instanceof Subtype ) {
-      //      {
-      //       q.toString();
-      //       Subtype c = (Subtype) b;
-            
-
-      //       if (b instanceof Subtype2) {
-      //           Subtype z = (Subtype) b;
-      //       }
-      //       return null;}
-      //   } else {
-      //       // Subtype c = (Subtype) b;
-      //   return "null";}
-      //  }
-        public Supertype() {
-          t = 4;
-        }
          public String foo1(Object b) 
        //seems input parameter has no type, but constructed parameter has type
        //static //presumes this::Supertype<> achieves this::Supertype<> * res::Objec<>;
        //dynamic //presumes this::Supertype<> achieves this::Supertype<> * res::Objec<>;
        {
         
-    
-        if (b instanceof Supertype ) {
+        Supertype q = (Supertype) b;
+        if (b instanceof Subtype ) {
            {
+            q.toString();
+            Subtype c = (Subtype) b;
+            
+
+            if (b instanceof Subtype2) {
+                Subtype z = (Subtype) b;
+            }
+            return null;}
+        } else {
+            Subtype c = (Subtype) b;
+        return "null";}
+       }
+      //   public Supertype() {
+      //     t = 4;
+      //   }
+      //    public String foo1(Object b) 
+      //  //seems input parameter has no type, but constructed parameter has type
+      //  //static //presumes this::Supertype<> achieves this::Supertype<> * res::Objec<>;
+      //  //dynamic //presumes this::Supertype<> achieves this::Supertype<> * res::Objec<>;
+      //  {
+        
+    
+        // if (b instanceof Supertype ) {
+        //    {
    
-            // Supertype c = (Supertype) b;
+        //     // Supertype c = (Supertype) b;
             
 
             
-            }
-        } 
-            Supertype d = (Supertype) b;
-             // Subtype c = (Subtype) b;
-        return "null";
-       }
+        //     }
+        // } 
+        //     Supertype d = (Supertype) b;
+        //      // Subtype c = (Subtype) b;
+        // return "null";
+       
 
       //   public void tt3(Object a) {
         
@@ -268,9 +268,9 @@ class Supertype {
 
 
  }
-//  class Subtype2 extends Supertype {}
-//  class Sub extends Subtype{}
-//  class Sub1 extends Sub{}
+ class Subtype2 extends Supertype {}
+ class Sub extends Subtype{}
+ class Sub1 extends Sub{}
    
 //        public Object foo() 
 //        //static //presumes this::Subtype<> achieves this::Subtype<> & res = null;

@@ -94,3 +94,5 @@ val add_to_errlog : nesting:int -> t -> Errlog.loc_trace_elem list -> Errlog.loc
 val get_first_main_event : t -> event option
 
 val exists_main : t -> f:(event -> bool) -> bool
+
+val apply_instanceof_before : t -> bool

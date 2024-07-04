@@ -32,6 +32,7 @@ type event =
   | TaintSource of TaintItem.t * Location.t * Timestamp.t
   | VariableAccessed of Pvar.t * Location.t * Timestamp.t
   | VariableDeclared of Pvar.t * Location.t * Timestamp.t
+  
 
 and t =
   | Epoch
@@ -181,10 +182,25 @@ and rev_iter ~main_only (history : t) ~f =
   | BinaryOp (_, hist1, hist2) ->
       rev_iter_branches ~main_only [hist1; hist2] ~f
 
+let is_instanceof_event evt = 
+    (match evt with
+    | Call a -> (match a.f with
+                   | Model "Java.instanceof1" -> true
+                   | _ ->  false) 
+    | _ -> false)
+
 
 let rev_iter_main = rev_iter ~main_only:true
 
 let iter ~main_only history ~f = Iter.rev (Iter.from_labelled_iter (rev_iter ~main_only history)) f
+
+let apply_instanceof_before hist = 
+    let res = ref false in
+    let () = iter ~main_only:(false) hist ~f:(fun x -> match x with 
+                                                      |Event a -> if is_instanceof_event a then res := true else ()
+                                                      |_ -> ())
+    in !res 
+
 
 let yojson_of_event = [%yojson_of: _]
 
