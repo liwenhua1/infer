@@ -21,7 +21,11 @@ exception AboutToOOM
 exception Listhd
 
 let instr_latent_hash = Caml.Hashtbl.create 1000
+
+
 let current_path_table : (Procname.t,int) Caml.Hashtbl.t= Caml.Hashtbl.create 1000
+
+
 
 let rec list_printer f alist = 
   match alist with
@@ -1834,6 +1838,11 @@ let analyze specialization
     | _ -> ()
 
     in 
+    let () = match Caml.Hashtbl.find_opt PulseModelsJava.instance_apply_before_abv proc_name with 
+    | None -> Caml.Hashtbl.add PulseModelsJava.instance_apply_before_abv proc_name []
+    | _ -> ()
+
+    in 
     (* let nodes = Procdesc.get_nodes proc_desc in 
     Utils.unitf_on_list nodes (fun x -> Instrs.pp Pp.text F.std_formatter (Procdesc.Node.get_instrs x)); *)
     (* let () = Procname.process_java_name_iter [proc_name] in *)
@@ -1881,6 +1890,7 @@ let analyze specialization
           print_endline "=========================================="; *)
           Caml.Hashtbl.remove current_path_table (Procdesc.get_proc_name proc_desc);
           Caml.Hashtbl.reset instr_latent_hash;
+          Caml.Hashtbl.remove PulseModelsJava.instance_apply_before_abv (Procdesc.get_proc_name proc_desc);
     let process_postconditions node posts_opt ~convert_normal_to_exceptional =
       match posts_opt with
       | Some (posts, non_disj_astate) ->

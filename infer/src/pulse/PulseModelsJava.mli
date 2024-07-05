@@ -9,6 +9,9 @@ open! IStd
 open PulseModelsImport
 open PulseBasicInterface
 open PulseDomainInterface
+module Cplusplus = PulseModelsCpp
+module GenericArrayBackedCollection = PulseModelsGenericArrayBackedCollection
+
 
 val load_field :
      PathContext.t
@@ -20,3 +23,5 @@ val load_field :
      AccessResult.t
 
 val matchers : matcher list
+
+val instance_apply_before_abv : (Procname.t, AbstractValue.t list) Caml.Hashtbl.t

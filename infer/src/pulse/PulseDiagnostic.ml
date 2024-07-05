@@ -56,7 +56,7 @@ let pp_access_to_invalid_address fmt
     Invalidation.pp invalidation (Trace.pp ~pp_immediate) invalidation_trace
     (Trace.pp ~pp_immediate) access_trace Invalidation.pp_must_be_valid_reason must_be_valid_reason
 
-type cast_err = {calling_context: calling_context; class_name: Typ.Name.t; target_class:Typ.Name.t; allocation_trace: Trace.t; location: Location.t;num_instance:int}
+type cast_err = {calling_context: calling_context; class_name: Typ.Name.t; target_class:Typ.Name.t; allocation_trace: Trace.t; location: Location.t;num_instance:int;apply_before:bool}
     [@@deriving compare, equal]
     
 let yojson_of_cast_err= [%yojson_of: _]

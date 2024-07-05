@@ -9,6 +9,8 @@ module F = Format
 
 type t = int [@@deriving compare, equal, hash]
 
+
+
 let initial_next_fresh = 1
 
 let next_fresh = ref initial_next_fresh

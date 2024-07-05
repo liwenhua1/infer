@@ -84,7 +84,7 @@ module Basic = struct
   let continue astate = ContinueProgram astate
 
   let ok_continue post = [Ok (ContinueProgram post)]
-  let err_cast_abort (name:Typ.Name.t) (target:Typ.Name.t) num_instance trace loc post : (AbductiveDomain.t execution_domain_base_t, base_error) pulse_result list= [FatalError (
+  let err_cast_abort (name:Typ.Name.t) (target:Typ.Name.t) num_instance trace loc post ap_before: (AbductiveDomain.t execution_domain_base_t, base_error) pulse_result list= [FatalError (
                                     ReportableError
                                  { diagnostic=
                                      JavaCastError
@@ -93,7 +93,8 @@ module Basic = struct
                                         target_class = target;
                                        allocation_trace = trace ;
                                        location = loc;  
-                                       num_instance = num_instance;                              
+                                       num_instance = num_instance; 
+                                       apply_before = ap_before;                             
                                        }
                                  ; astate= post }
                              ,[]) ]

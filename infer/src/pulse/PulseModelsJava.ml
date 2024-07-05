@@ -16,6 +16,9 @@ module StringSet = Caml.Set.Make (String)
 
 exception Foo of string
 exception UnsupportCast
+
+let instance_apply_before_abv : (Procname.t, AbstractValue.t list) Caml.Hashtbl.t = Caml.Hashtbl.create 1000
+
 let mk_java_field pkg clazz field =
   Fieldname.make (Typ.JavaClass (JavaClassName.make ~package:(Some pkg) ~classname:clazz)) field
 
@@ -54,11 +57,16 @@ let instance_of (argv, (hist:ValueHistory.t)) typeexpr : model =
   | Exp.Sizeof a -> Exp.ppsz a
   | _ -> print_endline (Exp.to_string typeexpr));  *)
 
+(* Caml.Hashtbl.iter (fun x _ -> print_endline (Procname.to_string x)) instance_apply_before_abv; *)
+
  fun {location; path ;analysis_data;ret= ret_id, _} astate ->
-      let () = 
+  
       let proc = analysis_data.proc_desc in 
       let pname = Procdesc.get_proc_name proc in 
-      print_endline (Procname.to_string pname) in
+   
+      let initial_vars = Caml.Hashtbl.find instance_apply_before_abv pname in
+      let () = 
+      Caml.Hashtbl.replace instance_apply_before_abv pname (argv::initial_vars) in
 
   
   (* let tenv = match (Tenv.load_global ()) with 
@@ -115,7 +123,7 @@ let add_instance_of_info_succ is_instance argv typ astate ret_id path event=
     
     (* (PulseResult.map ~f) sat_result *)
     
-    let add_instance_of_info_fail num is_instance argv typ astate1 class_name javaname access_trace location ret_id path event:  (AbductiveDomain.t execution_domain_base_t, base_error) pulse_result list= 
+    let add_instance_of_info_fail num is_instance argv typ astate1 class_name javaname access_trace location ret_id path event applied_before:  (AbductiveDomain.t execution_domain_base_t, base_error) pulse_result list= 
       let astate = astate1 in
       
       let res_addr = AbstractValue.mk_fresh () in 
@@ -136,7 +144,7 @@ let add_instance_of_info_succ is_instance argv typ astate ret_id path event=
                     let x = PulseOperations.write_id ret_id (argv, Hist.single_event path event) x in 
                     
                     (* AbductiveDomain.pp Format.std_formatter x; *)
-                    (match (List.hd (Basic.err_cast_abort class_name javaname (num+1) access_trace location x)) with 
+                    (match (List.hd (Basic.err_cast_abort class_name javaname (num+1) access_trace location x applied_before)) with 
                                            |None -> raise (Foo "impossible") 
                                            |Some a -> a  ) in
                     
@@ -169,7 +177,7 @@ let add_instance_of_info_succ is_instance argv typ astate ret_id path event=
 
 
 let java_cast (argv, hist) typeexpr : model =
-      Utils.print_bool (ValueHistory.apply_instanceof_before hist);
+        
         (* print_endline "====";
         AbstractValue.pp Format.std_formatter argv;
        
@@ -178,7 +186,16 @@ let java_cast (argv, hist) typeexpr : model =
         | Exp.Sizeof a -> Exp.ppsz a
         | _ -> print_endline (Exp.to_string typeexpr));  *)
       
-       fun {location; path ; ret= ret_id, _;} (astate:AbductiveDomain.t) ->
+       fun {location; path ;analysis_data; ret= ret_id, _;} (astate:AbductiveDomain.t) ->
+
+        let proc = analysis_data.proc_desc in 
+        let pname = Procdesc.get_proc_name proc in 
+     
+        let initial_vars = Caml.Hashtbl.find instance_apply_before_abv pname in
+        let app_before = Utils.item_in_list argv initial_vars AbstractValue.equal in 
+        (* let () = Utils.list_printer (fun x -> Utils.print_bool (AbstractValue.equal x argv)) initial_vars in *)
+
+
         let event = Hist.call_event path location "JavaCast" in
         (* AbductiveDomain.pp Format.std_formatter astate; *)
           let tenv = match (Tenv.load_global ()) with 
@@ -235,7 +252,7 @@ let java_cast (argv, hist) typeexpr : model =
                
                   (* let javaname = JavaClassName.from_string (Typ.to_string t) in *)
                   if not (res) then 
-                          add_instance_of_info_fail num_instance false argv typ astate name1 name2 access_trace location ret_id path event
+                          add_instance_of_info_fail num_instance false argv typ astate name1 name2 access_trace location ret_id path event app_before
                         (* let () = (print_endline ("cast error detected at "^ (Location.to_string location))) in *)
                             (* astate |> Basic.err_cast_abort name1 name2 access_trace location *)
                             (* Basic.ok_continue *)
@@ -298,17 +315,17 @@ let java_cast (argv, hist) typeexpr : model =
                   let res2 = PatternMatch.is_subtype tenv yinstance name2 in
                 
                 if not (res1) then
-                  add_instance_of_info_fail num_instance false argv typ astate name1 name2 access_trace location ret_id path event 
+                  add_instance_of_info_fail num_instance false argv typ astate name1 name2 access_trace location ret_id path event app_before
                             (* astate |> Basic.err_cast_abort yinstance name2 access_trace location *)
                          else if not (res2) then 
                               
                               if not ( PatternMatch.is_subtype tenv name2 yinstance) then 
-                                add_instance_of_info_fail num_instance false argv typ astate name1 name2 access_trace location ret_id path event
+                                add_instance_of_info_fail num_instance false argv typ astate name1 name2 access_trace location ret_id path event app_before
                                 (* astate |> Basic.err_cast_abort yinstance name2 access_trace location *)
                               else
                                 
                               let exe1 = add_instance_of_info_succ true argv typ astate ret_id path event in 
-                              let exe2 = add_instance_of_info_fail num_instance false argv typ astate yinstance name2 access_trace location ret_id path event in 
+                              let exe2 = add_instance_of_info_fail num_instance false argv typ astate yinstance name2 access_trace location ret_id path event app_before in 
                              
                               let res_list = exe1 @ exe2 in 
                               (* Utils.print_int (List.length res_list); *)

@@ -603,4 +603,10 @@ let rec unitf_on_list list f =
         match list with
         | [] -> ()
         | x::xs -> f x ; print_endline "" ;unitf_on_list xs f
+
+let rec item_in_list item alist f = 
+    match alist with
+    | x::xs -> if f item x then true else item_in_list item xs f 
+    | [] -> false
+
       
