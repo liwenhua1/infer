@@ -271,6 +271,8 @@ let add_static_type typ address memory = add_one address (Attribute.StaticType t
 
 let get_static_type attrs v = get_attribute Attributes.get_static_type v attrs
 
+let get_unknown_effect attrs v = get_attribute Attributes.get_unknown_effect v attrs
+
 let add_ref_counted address memory = add_one address Attribute.RefCounted memory
 
 let is_ref_counted address attrs =
@@ -418,6 +420,8 @@ module type S = sig
   val add_dynamic_type_source_file : Typ.t -> SourceFile.t -> key -> t -> t
 
   val get_dynamic_type : t -> key -> Typ.t option
+
+  val get_unknown_effect : t -> key -> (CallEvent.t * ValueHistory.t) option
 
   val get_dynamic_type_source_file : t -> key -> (Typ.t * SourceFile.t option) option
 

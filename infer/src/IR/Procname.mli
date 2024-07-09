@@ -124,6 +124,8 @@ module Java : sig
   val is_class_initializer : t -> bool
   (** Check if this is a class initializer. *)
 
+  val is_getclass_method : t -> bool
+
   val get_class_initializer : Typ.Name.t -> t
   (** Given a java class, generate the procname of its static initializer. *)
 

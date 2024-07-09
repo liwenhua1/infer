@@ -502,6 +502,11 @@ module Internal = struct
     let get_dynamic_type addr astate =
       BaseAddressAttributes.get_dynamic_type (astate.post :> base_domain).attrs addr
 
+    let get_unknown_effect addr astate =
+        BaseAddressAttributes.get_unknown_effect (astate.post :> base_domain).attrs addr
+
+    
+
 
     let get_dynamic_type_source_file addr astate =
       BaseAddressAttributes.get_dynamic_type_source_file (astate.post :> base_domain).attrs addr
@@ -1739,6 +1744,9 @@ module Summary = struct
   let get_pre = get_pre
   let get_dynamic_type v astate =
     SafeAttributes.get_dynamic_type (CanonValue.canon' astate v) astate
+  
+  let get_unknown_effect v astate =
+      SafeAttributes.get_unknown_effect (CanonValue.canon' astate v) astate
 
 
   let get_dynamic_type_source_file v astate =
@@ -2138,6 +2146,9 @@ module AddressAttributes = struct
 
   let get_dynamic_type v astate =
     SafeAttributes.get_dynamic_type (CanonValue.canon' astate v) astate
+
+  let get_unknown_effect v astate =
+      SafeAttributes.get_unknown_effect (CanonValue.canon' astate v) astate
 
 
   let get_dynamic_type_source_file v astate =

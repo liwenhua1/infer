@@ -223,6 +223,8 @@ module Java = struct
 
   let is_class_initializer {method_name} = String.equal method_name class_initializer_method_name
 
+  let is_getclass_method {method_name} = String.equal method_name "getClass()"
+
   let get_class_initializer class_name =
     { method_name= class_initializer_method_name
     ; parameters= []

@@ -17,6 +17,8 @@ type t =
 
 val pp : F.formatter -> t -> unit
 
+val is_getclass_call : t -> bool
+
 val describe : F.formatter -> t -> unit
 
 val pp_name_only : F.formatter -> t -> unit

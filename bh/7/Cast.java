@@ -1,6 +1,26 @@
 public class Cast {
     static class Supertype {
-
+            public boolean foo1(Object obj){
+                if (this == obj)
+                {
+                    return true;
+                }
+                if (obj == null)
+                {
+                    return false;
+                }
+                if (getClass() != obj.getClass())
+                {
+                    if (obj instanceof Sub2)
+                    {
+                        // hitting this branch means that the warning on top of the class wasn't read
+                        
+                    }
+                    return false;
+                }
+                final Supertype other = (Supertype) obj;
+                return true;
+            }
          
            
             public String foo() 
@@ -11,10 +31,10 @@ public class Cast {
               
               Supertype q = get();
               Subtype b = (Subtype) q;
-              if (b instanceof Subtype ) {
+              if (b instanceof Sub2 ) {
                  {
           
-                  Sub c = (Sub) b;}}
+                  Sub1 c = (Sub1) b;}}
 
             //   Object a = new Object();
             //   Supertype o = (Supertype) a;
@@ -33,6 +53,7 @@ public class Cast {
              public Supertype get() { return this;}
     }
     static class Subtype extends Supertype {}
-    static class Sub extends Subtype{}
-    static class Sub1 extends Sub{}
+    static class Sub2 extends Subtype{}
+    static class Sub1 extends Subtype{}
+{}
 }

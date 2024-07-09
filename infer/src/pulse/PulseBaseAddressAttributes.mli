@@ -75,6 +75,8 @@ module type S = sig
 
   val get_dynamic_type : t -> key -> Typ.t option
 
+  val get_unknown_effect : t -> key -> (CallEvent.t * ValueHistory.t) option
+
   val get_dynamic_type_source_file : t -> key -> (Typ.t * SourceFile.t option) option
 
   val add_static_type : Typ.Name.t -> key -> t -> t

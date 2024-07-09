@@ -217,6 +217,8 @@ module AddressAttributes : sig
 
   val get_dynamic_type : AbstractValue.t -> t -> Typ.t option
 
+  val get_unknown_effect : AbstractValue.t -> t -> (CallEvent.t * ValueHistory.t) option
+
   val get_dynamic_type_source_file : AbstractValue.t -> t -> (Typ.t * SourceFile.t option) option
 
   val get_static_type : AbstractValue.t -> t -> Typ.Name.t option
@@ -386,6 +388,9 @@ module Summary : sig
   val get_topl : summary -> PulseTopl.state
 
   val get_dynamic_type : AbstractValue.t -> summary -> Typ.t option
+
+  val get_unknown_effect : AbstractValue.t -> summary -> (CallEvent.t * ValueHistory.t) option
+
 
   val get_dynamic_type_source_file : AbstractValue.t -> summary -> (Typ.t * SourceFile.t option) option
 

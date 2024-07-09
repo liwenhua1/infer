@@ -179,7 +179,7 @@ let add_instance_of_info_succ is_instance argv typ astate ret_id path event=
 let java_cast (argv, hist) typeexpr : model =
         
         (* print_endline "====";
-        AbstractValue.pp Format.std_formatter argv;
+        
        
         print_endline "===="; *)
         (* (match typeexpr with
@@ -187,6 +187,16 @@ let java_cast (argv, hist) typeexpr : model =
         | _ -> print_endline (Exp.to_string typeexpr));  *)
       
        fun {location; path ;analysis_data; ret= ret_id, _;} (astate:AbductiveDomain.t) ->
+        let unknown_effect = AbductiveDomain.AddressAttributes.get_unknown_effect argv astate in 
+        
+        let apply_get_class = match unknown_effect with 
+                              | Some unkown -> let (mtd:CallEvent.t) = fst unkown in CallEvent.pp Format.std_formatter mtd; CallEvent.is_getclass_call mtd 
+                              | _ -> false
+        in
+        AbstractValue.pp Format.std_formatter argv;
+        Utils.print_bool apply_get_class;
+        
+
 
         let proc = analysis_data.proc_desc in 
         let pname = Procdesc.get_proc_name proc in 
@@ -203,6 +213,9 @@ let java_cast (argv, hist) typeexpr : model =
             | None -> Tenv.create ()
           in
         let access_trace = Trace.Immediate {location; history = hist} in 
+        if apply_get_class then 
+          let astate = PulseOperations.write_id ret_id (argv, Hist.single_event path event) astate in 
+                    astate |> Basic.ok_continue else
         (* print_endline "..............";
         AbstractValue.pp Format.std_formatter argv;
         print_endline ".............."; *)

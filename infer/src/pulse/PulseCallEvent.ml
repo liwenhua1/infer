@@ -14,6 +14,10 @@ type t =
   | SkippedUnknownCall of Exp.t
 [@@deriving compare, equal]
 
+let is_getclass_call evt = match evt with 
+                        | Call a -> (match a with | Java mtd -> Procname.Java.is_getclass_method mtd | _ -> false)
+                        | _ -> false
+
 let pp_config ~verbose fmt =
   let pp_proc_name = if verbose then Procname.pp else Procname.describe in
   function
