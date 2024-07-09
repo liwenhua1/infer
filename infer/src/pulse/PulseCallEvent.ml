@@ -15,7 +15,7 @@ type t =
 [@@deriving compare, equal]
 
 let is_getclass_call evt = match evt with 
-                        | Call a -> (match a with | Java mtd -> Procname.Java.is_getclass_method mtd | _ -> false)
+                        | SkippedKnownCall a -> (match a with | Java mtd ->  Procname.Java.is_getclass_method mtd | _ -> false)
                         | _ -> false
 
 let pp_config ~verbose fmt =

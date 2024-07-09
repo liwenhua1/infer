@@ -190,11 +190,10 @@ let java_cast (argv, hist) typeexpr : model =
         let unknown_effect = AbductiveDomain.AddressAttributes.get_unknown_effect argv astate in 
         
         let apply_get_class = match unknown_effect with 
-                              | Some unkown -> let (mtd:CallEvent.t) = fst unkown in CallEvent.pp Format.std_formatter mtd; CallEvent.is_getclass_call mtd 
+                              | Some unkown -> let (mtd:CallEvent.t) = fst unkown in CallEvent.is_getclass_call mtd 
                               | _ -> false
         in
-        AbstractValue.pp Format.std_formatter argv;
-        Utils.print_bool apply_get_class;
+       
         
 
 
