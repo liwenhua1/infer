@@ -120,6 +120,8 @@ let should_report ?(current_path = -1) ?(instra_hash = Caml.Hashtbl.create 1000)
       `ReportNow
   | JavaCastError latent -> 
     (* `ReportNow *)
+    (* print_endline (IR.Typ.Name.to_string latent.class_name); *)
+    if String.equal (IR.Typ.Name.to_string latent.class_name) "class java.lang.Object" then `DelayReport (JavaCastError latent) else
     if latent.apply_before then `ReportNow else `DelayReport (JavaCastError latent)
     (* if PulseArithmetic.is_manifest ~current_path:current_path ~instra_hash:instra_hash ~key:inst astate then `ReportNow
                                 (* else if  not (Typ.Name.equal (latent.class_name) Typ.make_object) then `ReportNow.*)
