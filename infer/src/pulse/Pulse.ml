@@ -1873,7 +1873,7 @@ let analyze specialization
     
     (* let () =
     (* match procname_java_class with | None -> () 
-    | Some aa -> let test_name = "Ts" in 
+    | Some aa -> let test_name = "PDDestinationNameTreeNode" in 
     
   
     if (String.is_suffix ~suffix:test_name aa) then  *)

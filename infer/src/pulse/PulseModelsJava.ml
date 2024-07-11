@@ -133,9 +133,13 @@ let add_instance_of_info_succ is_instance argv typ astate ret_id path event=
       let lhs_op = Formula.AbstractValueOperand res_addr in 
       let rhs_op = Formula.ConstOperand (Const.Cint IntLit.zero) in
       let bop = Binop.Eq in
+      (* AbstractValue.pp Format.std_formatter argv;
+      print_endline "=============";
+      AbductiveDomain.pp Format.std_formatter astate1;  *)
       (* let hist =ValueHistory.binary_op bop ValueHistory.epoch ValueHistory.epoch in *)
     
       let (astate) = astate >>== (fun x -> (PulseArithmetic.prune_binop ~negated:is_instance bop lhs_op rhs_op x)) in
+      
       (* let apply :(AbductiveDomain.t AccessResult.t -> (AbductiveDomain.t * ValueHistory.t) AccessResult.t)
         = PulseResult.map ~f:(fun x -> (x,hist)) in *)
       let res1 = match SatUnsat.sat astate with 
@@ -187,6 +191,10 @@ let java_cast (argv, hist) typeexpr : model =
         | _ -> print_endline (Exp.to_string typeexpr));  *)
       
        fun {location; path ;analysis_data; ret= ret_id, _;} (astate:AbductiveDomain.t) ->
+        let invalid_reason = AbductiveDomain.AddressAttributes.get_invalid argv astate in 
+        let is_null = match invalid_reason with | Some a -> 
+                                                    (match fst a with | Invalidation.ConstantDereference _ -> true |_ -> false)
+                                                | _ -> false in 
         let unknown_effect = AbductiveDomain.AddressAttributes.get_unknown_effect argv astate in 
         
         let apply_get_class = match unknown_effect with 
@@ -212,7 +220,7 @@ let java_cast (argv, hist) typeexpr : model =
             | None -> Tenv.create ()
           in
         let access_trace = Trace.Immediate {location; history = hist} in 
-        if apply_get_class then 
+        if (apply_get_class || is_null) then 
           let astate = PulseOperations.write_id ret_id (argv, Hist.single_event path event) astate in 
                     astate |> Basic.ok_continue else
         (* print_endline "..............";

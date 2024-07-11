@@ -504,6 +504,9 @@ module Internal = struct
 
     let get_unknown_effect addr astate =
         BaseAddressAttributes.get_unknown_effect (astate.post :> base_domain).attrs addr
+    
+    let get_invalid addr astate =
+          BaseAddressAttributes.get_invalid (astate.post :> base_domain).attrs addr
 
     
 
@@ -1748,6 +1751,9 @@ module Summary = struct
   let get_unknown_effect v astate =
       SafeAttributes.get_unknown_effect (CanonValue.canon' astate v) astate
 
+  let get_invalid v astate =
+        SafeAttributes.get_invalid (CanonValue.canon' astate v) astate
+
 
   let get_dynamic_type_source_file v astate =
     SafeAttributes.get_dynamic_type_source_file (CanonValue.canon' astate v) astate
@@ -2149,6 +2155,9 @@ module AddressAttributes = struct
 
   let get_unknown_effect v astate =
       SafeAttributes.get_unknown_effect (CanonValue.canon' astate v) astate
+
+  let get_invalid v astate =
+        SafeAttributes.get_invalid (CanonValue.canon' astate v) astate
 
 
   let get_dynamic_type_source_file v astate =
