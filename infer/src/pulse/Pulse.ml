@@ -26,6 +26,9 @@ let instr_latent_hash = Caml.Hashtbl.create 1000
 let current_path_table : (Procname.t,int) Caml.Hashtbl.t= Caml.Hashtbl.create 1000
 
 
+let function_know_unknown : (Procname.t,bool) Caml.Hashtbl.t= Caml.Hashtbl.create 1000
+
+
 
 let rec list_printer f alist = 
   match alist with
@@ -640,6 +643,13 @@ module PulseTransferFunctions = struct
           PerfEvent.(log (fun logger -> log_end_event logger ())) ;
           r
     in
+    
+    (match callee_pname with 
+    | Some pname -> Caml.Hashtbl.replace function_know_unknown pname (match call_was_unknown with |`KnownCall -> true |_ -> false)
+    |_ -> ());
+    
+    
+
     (*haven't reach post*)
     let exec_states_res =
      
@@ -656,7 +666,7 @@ module PulseTransferFunctions = struct
                   Either.Second proc_name
             in
             let call_was_unknown =
-              match call_was_unknown with `UnknownCall -> true | `KnownCall -> false
+              match call_was_unknown with (`UnknownCall) -> true | `KnownCall -> false
             in
             
             let+ astate =
@@ -1376,6 +1386,7 @@ module PulseTransferFunctions = struct
             let possible_subclass_sat = List.fold possible_subclass ~init:[] ~f:(fun acc x -> if Formula.check_dynamic_type_sat x (yes_instance,not_instance) tenv then x::acc else acc ) in
 
             
+            
             let astates_all1, astates_before_all =  List.fold possible_subclass_sat ~init:([],[]) ~f:( fun (ast,astb) cls_name -> 
             
             let call_exp = 
@@ -1871,7 +1882,7 @@ let analyze specialization
     (* let procname_java_class = Procname.get_class_name proc_name in *)
      
     
-    (* let () =
+    let () =
     (* match procname_java_class with | None -> () 
     | Some aa -> let test_name = "PDDestinationNameTreeNode" in 
     
@@ -1884,7 +1895,7 @@ let analyze specialization
     | None  -> ()
     | Some a -> DisjunctiveAnalyzer.TransferFunctions.Domain.pp F.std_formatter a in
     res;print_endline "process analysis end" in ppp
-    in *)
+    in
   (* in *)
     (*print_endline "------------------------------------------";
           Utils.print_int !current_path; 

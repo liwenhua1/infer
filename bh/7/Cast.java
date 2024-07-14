@@ -2,6 +2,11 @@ import java.io.IOException;
 
 public class Cast {
     static class Supertype {
+
+        public void test(Supertype a) {
+          Class b =  a.getClass();
+          Subtype c = (Sub2) a;
+        }
             // public boolean foo1(Object obj){
             //     if (this == obj)
             //     {
@@ -55,45 +60,45 @@ public class Cast {
             //  public Supertype get() { return this;}
 
 
-        protected Subtype convertCOSToPD( Supertype base ) throws IOException
-        {
-        Supertype destination = base;
-        if( base instanceof Subtype )
-        {
-            //the destination is sometimes stored in the D dictionary
-            //entry instead of being directly an array, so just dereference
-            //it for now
-            // destination = ((COSDictionary)base).getDictionaryObject( COSName.D );
-        }
-        return (Sub3)Subtype.create( destination );
-    }
+    //     protected Subtype convertCOSToPD( Supertype base ) throws IOException
+    //     {
+    //     Supertype destination = base;
+    //     if( base instanceof Subtype )
+    //     {
+    //         //the destination is sometimes stored in the D dictionary
+    //         //entry instead of being directly an array, so just dereference
+    //         //it for now
+    //         // destination = ((COSDictionary)base).getDictionaryObject( COSName.D );
+    //     }
+    //     return (Sub3)Subtype.create( destination );
+    // }
    }
     static class Subtype extends Supertype { 
         
-    public static Subtype create( Supertype base ) throws IOException
-        {
-            Subtype retval = null;
-            if( base == null )
-            {
-                return retval;
-                //this is ok, just return null.
-            }
+    // public static Subtype create( Supertype base ) throws IOException
+    //     {
+    //         Subtype retval = null;
+    //         if( base == null )
+    //         {
+    //             return retval;
+    //             //this is ok, just return null.
+    //         }
            
                    
-            else if( base instanceof Sub1 )
-            {
-                retval = new Sub1();
-            }
-            else if( base instanceof Sub2 )
-            {
-                retval = new Sub2();
-            }
-            else
-            {
-                throw new IOException( "Error: can't convert to Destination " + base );
-            }
-            return retval;
-        }
+    //         else if( base instanceof Sub1 )
+    //         {
+    //             retval = new Sub1();
+    //         }
+    //         else if( base instanceof Sub2 )
+    //         {
+    //             retval = new Sub2();
+    //         }
+    //         else
+    //         {
+    //             throw new IOException( "Error: can't convert to Destination " + base );
+    //         }
+    //         return retval;
+    //     }
     }
     static class Sub2 extends Subtype{
         // public Supertype test(Subtype a) {
