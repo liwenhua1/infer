@@ -729,7 +729,7 @@ module PulseTransferFunctions = struct
           |> PulseResult.of_some )
     else exec_states_res
 
-  let _fun_is_known
+  let fun_is_known
     ({InterproceduralAnalysis.tenv; proc_desc;exe_env} as analysis_data) path ret
     call_exp func_args call_loc flags astate callee_pname =
     (* print_endline (Exp.to_string call_exp); *)
@@ -1305,15 +1305,15 @@ module PulseTransferFunctions = struct
         
         
         ->
-          (* let is_known_call = ref true in 
+          let is_known_call = ref true in 
           let is_known_call_aux = eval_function_call_args path call_exp actuals loc astate >>|| fun (astate, call_exp, callee_pname, func_args)
                 -> fun_is_known analysis_data path ret call_exp func_args loc
                       call_flags astate callee_pname 
                       in
-          let _tryss =  is_known_call_aux >>|| (fun x -> if x then is_known_call := true else is_known_call := false ; x) in *)
+          let _tryss =  is_known_call_aux >>|| (fun x -> if x then is_known_call := true else is_known_call := false ; x) in
                       
           if (Procname.equal p BuiltinDecl.__new) || (Procname.equal p BuiltinDecl.__cast) 
-            (* || (not (!is_known_call)) *)
+            || (not (!is_known_call))
             ||(List.is_empty actuals) || Procname.is_java_static_method p then
         
         (* let all_possible_subtypes = 

@@ -5,9 +5,9 @@ public class Cast {
 
         public void test(Supertype a) {
          // Class b =  a.getClass();
-         //Subtype c = (Subtype) a;
-         Supertype d = get();
-        //   Class b = d.getClass();
+         Subtype c = (Subtype) a;
+        // Supertype d = get();
+        Class b = c.getClass();
         }
             // public boolean foo1(Object obj){
             //     if (this == obj)
