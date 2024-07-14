@@ -26,7 +26,7 @@ let instr_latent_hash = Caml.Hashtbl.create 1000
 let current_path_table : (Procname.t,int) Caml.Hashtbl.t= Caml.Hashtbl.create 1000
 
 
-let function_know_unknown : (Procname.t,bool) Caml.Hashtbl.t= Caml.Hashtbl.create 1000
+
 
 
 
@@ -536,7 +536,7 @@ module PulseTransferFunctions = struct
     | Some IsClass | None ->
         (astate, func_args)
 
-
+    
   let rec dispatch_call_eval_args
       ({InterproceduralAnalysis.tenv; proc_desc; err_log; exe_env} as analysis_data) path ret
       call_exp actuals func_args call_loc flags astate callee_pname : ExecutionDomain.t AccessResult.t list=
@@ -643,13 +643,6 @@ module PulseTransferFunctions = struct
           PerfEvent.(log (fun logger -> log_end_event logger ())) ;
           r
     in
-    
-    (match callee_pname with 
-    | Some pname -> Caml.Hashtbl.replace function_know_unknown pname (match call_was_unknown with |`KnownCall -> true |_ -> false)
-    |_ -> ());
-    
-    
-
     (*haven't reach post*)
     let exec_states_res =
      
@@ -735,6 +728,117 @@ module PulseTransferFunctions = struct
            |> SatUnsat.sat )
           |> PulseResult.of_some )
     else exec_states_res
+
+  let _fun_is_known
+    ({InterproceduralAnalysis.tenv; proc_desc;exe_env} as analysis_data) path ret
+    call_exp func_args call_loc flags astate callee_pname =
+    (* print_endline (Exp.to_string call_exp); *)
+  let method_info, astate =
+    let default_info = Option.map ~f:Tenv.MethodInfo.mk_class callee_pname in
+    if flags.CallFlags.cf_virtual then
+      match get_receiver callee_pname func_args with
+      | None ->
+          L.internal_error "No receiver on virtual call" ;
+          (default_info, astate)
+      | Some {ProcnameDispatcher.Call.FuncArg.arg_payload= receiver} -> (
+        match
+          improve_receiver_static_type astate (ValuePath.value receiver) callee_pname
+          |> resolve_virtual_call exe_env tenv astate (ValuePath.value receiver)
+        with
+        | Some (info, `ExactDevirtualization) ->
+            (Some info, astate)
+        | Some (info, `ApproxDevirtualization) ->
+            (Some info, need_dynamic_type_specialization astate (ValuePath.value receiver))
+        | None ->
+            (None, astate) )
+    else if Language.curr_language_is Hack then
+      (* In Hack, a static method can be inherited *)
+      let proc_name = Procdesc.get_proc_name proc_desc in
+      resolve_hack_static_method path call_loc astate tenv proc_name callee_pname
+    else (default_info, astate)
+   
+  in   
+  let callee_pname = Option.map ~f:Tenv.MethodInfo.get_procname method_info in
+  let astate, func_args = add_self_for_hack_traits astate method_info func_args in
+  
+  let astate =
+    match (callee_pname, func_args) with
+    | Some callee_pname, [{ProcnameDispatcher.Call.FuncArg.arg_payload= arg}]
+      when Procname.is_std_move callee_pname ->
+        AddressAttributes.add_one (ValuePath.value arg) StdMoved astate
+    | _, _ ->
+        astate
+  in
+  let astate =
+    List.fold func_args ~init:astate
+      ~f:(fun acc {ProcnameDispatcher.Call.FuncArg.arg_payload= arg; exp} ->
+        match exp with
+        | Cast (typ, _) when Typ.is_rvalue_reference typ ->
+            AddressAttributes.add_one (ValuePath.value arg) StdMoved acc
+        | _ ->
+            acc )
+  in     
+  let model =
+    match callee_pname with
+    | Some callee_pname -> (
+      match DoliToTextual.matcher callee_pname with
+      | Some procname ->
+          DoliModel procname
+      | None ->
+          PulseModels.dispatch tenv callee_pname func_args
+          |> Option.value_map ~default:NoModel ~f:(fun model -> OcamlModel (model, callee_pname))
+      )
+    | None ->
+        (* unresolved function pointer, etc.: skip *)
+        NoModel
+  in
+  (* do interprocedural call then destroy objects going out of scope *)
+  let _, call_was_unknown =
+    match model with
+    | OcamlModel (model, callee_procname) ->
+      
+        L.d_printfln "Found ocaml model for call@\n" ;
+        let astate =
+          let arg_values =
+            List.map func_args ~f:(fun {ProcnameDispatcher.Call.FuncArg.arg_payload= value} ->
+                ValuePath.value value )
+          in
+          PulseOperations.conservatively_initialize_args arg_values astate
+        in
+        ( model
+            { analysis_data
+            ; dispatch_call_eval_args
+            ; path
+            ; callee_procname
+            ; location= call_loc
+            ; ret }
+            astate
+        , `KnownCall )
+    | DoliModel callee_pname ->
+   
+        L.d_printfln "Found doli model %a for call@\n" Procname.pp callee_pname ;
+        PerfEvent.(log (fun logger -> log_begin_event logger ~name:"pulse interproc call" ())) ;
+        let r =
+          interprocedural_call analysis_data path ret (Some callee_pname) call_exp func_args
+            call_loc flags astate
+        in
+        PerfEvent.(log (fun logger -> log_end_event logger ())) ;
+        r
+    | NoModel ->
+      (*goes to here*)
+        PerfEvent.(log (fun logger -> log_begin_event logger ~name:"pulse interproc call" ())) ;
+        let r =
+          interprocedural_call analysis_data path ret callee_pname call_exp func_args call_loc
+            flags astate
+        in
+        PerfEvent.(log (fun logger -> log_end_event logger ())) ;
+        r
+  in
+  
+  match call_was_unknown with 
+  |`KnownCall -> true 
+  |`UnknownCall -> false
+
 
 
   let eval_function_call_args path call_exp actuals call_loc astate =
@@ -1200,7 +1304,17 @@ module PulseTransferFunctions = struct
         |Const (Cfun p) when Procname.is_java p
         
         
-        -> if (Procname.equal p BuiltinDecl.__new) || (Procname.equal p BuiltinDecl.__cast)||(List.is_empty actuals) || Procname.is_java_static_method p then
+        ->
+          (* let is_known_call = ref true in 
+          let is_known_call_aux = eval_function_call_args path call_exp actuals loc astate >>|| fun (astate, call_exp, callee_pname, func_args)
+                -> fun_is_known analysis_data path ret call_exp func_args loc
+                      call_flags astate callee_pname 
+                      in
+          let _tryss =  is_known_call_aux >>|| (fun x -> if x then is_known_call := true else is_known_call := false ; x) in *)
+                      
+          if (Procname.equal p BuiltinDecl.__new) || (Procname.equal p BuiltinDecl.__cast) 
+            (* || (not (!is_known_call)) *)
+            ||(List.is_empty actuals) || Procname.is_java_static_method p then
         
         (* let all_possible_subtypes = 
         in *)

@@ -4,8 +4,10 @@ public class Cast {
     static class Supertype {
 
         public void test(Supertype a) {
-          Class b =  a.getClass();
-          Subtype c = (Sub2) a;
+         // Class b =  a.getClass();
+         //Subtype c = (Subtype) a;
+         Supertype d = get();
+        //   Class b = d.getClass();
         }
             // public boolean foo1(Object obj){
             //     if (this == obj)
@@ -57,7 +59,7 @@ public class Cast {
             //   return "null";}
             //  return "s";}
 
-            //  public Supertype get() { return this;}
+             public Supertype get() { return this;}
 
 
     //     protected Subtype convertCOSToPD( Supertype base ) throws IOException
@@ -110,7 +112,7 @@ public class Cast {
         //     return a;
         // }
     }
-    static class Sub1 extends Subtype{}
-    static class Sub3 extends Subtype{}
+    //static class Sub1 extends Subtype{}
+    //static class Sub3 extends Subtype{}
 
     }
