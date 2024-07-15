@@ -1495,7 +1495,7 @@ module PulseTransferFunctions = struct
             (match static_ty with
             |Some sty -> let possible_subclass = sty::(Tenv.find_limited_sub sty tenv) in 
             let possible_subclass = List.filter possible_subclass ~f:(fun x -> not (Tenv.is_java_abstract_cls tenv x || Tenv.is_java_interface_cls tenv x)) in
-           
+            (* Utils.print_int (List.length possible_subclass); *)
             let astate_n = check_modified_before_dtor actuals call_exp astate astate_n in
             let constrains = Formula.get_all_instance_constrains call_obj astate.path_condition in 
             let yes_instance = Formula.type_list_conversion (fst constrains) in 
