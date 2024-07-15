@@ -191,6 +191,12 @@ let java_cast (argv, hist) typeexpr : model =
         | _ -> print_endline (Exp.to_string typeexpr));  *)
       
        fun {location; path ;analysis_data; ret= ret_id, _;} (astate:AbductiveDomain.t) ->
+
+        (* AbstractValue.pp Format.std_formatter argv;
+        print_endline "=====";
+        AbductiveDomain.pp Format.std_formatter astate; *)
+
+
         let invalid_reason = AbductiveDomain.AddressAttributes.get_invalid argv astate in 
         let is_null = match invalid_reason with | Some a -> 
                                                     (match fst a with | Invalidation.ConstantDereference _ -> true |_ -> false)
@@ -271,11 +277,14 @@ let java_cast (argv, hist) typeexpr : model =
 
                
                   (* let javaname = JavaClassName.from_string (Typ.to_string t) in *)
-                  if not (res) then 
-                          add_instance_of_info_fail num_instance false argv typ astate name1 name2 access_trace location ret_id path event app_before
+                  if not (res) then ( match AbductiveDomain.AddressAttributes.get_static_type argv astate with |None ->
+                         
+                          add_instance_of_info_fail num_instance false argv typ astate name1 name2 access_trace location ret_id path event true
                         (* let () = (print_endline ("cast error detected at "^ (Location.to_string location))) in *)
                             (* astate |> Basic.err_cast_abort name1 name2 access_trace location *)
                             (* Basic.ok_continue *)
+                            | _ ->   add_instance_of_info_fail num_instance false argv typ astate name1 name2 access_trace location ret_id path event app_before
+                            )
                   else
                   (* let () = print_endline ("no cast error at "^ (Location.to_string location)) in *)
                 

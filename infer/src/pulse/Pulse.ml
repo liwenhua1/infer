@@ -15,15 +15,18 @@ open PulseOperationResult.Import
 
 
 
+
 (** raised when we detect that pulse is using too much memory to stop the analysis of the current
     procedure *)
 exception AboutToOOM
 exception Listhd
 
-let instr_latent_hash = Caml.Hashtbl.create 1000
+let instr_latent_hash : (Sil.instr, int) Caml.Hashtbl.t= Caml.Hashtbl.create 1000
 
 
 let current_path_table : (Procname.t,int) Caml.Hashtbl.t= Caml.Hashtbl.create 1000
+
+
 
 
 
@@ -1996,7 +1999,7 @@ let analyze specialization
     (* let procname_java_class = Procname.get_class_name proc_name in *)
      
     
-    let () =
+    (* let () =
     (* match procname_java_class with | None -> () 
     | Some aa -> let test_name = "PDDestinationNameTreeNode" in 
     
@@ -2009,13 +2012,14 @@ let analyze specialization
     | None  -> ()
     | Some a -> DisjunctiveAnalyzer.TransferFunctions.Domain.pp F.std_formatter a in
     res;print_endline "process analysis end" in ppp
-    in
+    in *)
   (* in *)
     (*print_endline "------------------------------------------";
           Utils.print_int !current_path; 
           print_endline "=========================================="; *)
           Caml.Hashtbl.remove current_path_table (Procdesc.get_proc_name proc_desc);
-          Caml.Hashtbl.reset instr_latent_hash;
+          (* Caml.Hashtbl.reset instr_latent_hash; *)
+          (* Caml.Hashtbl.reset LatentIssue.reported_casting; *)
           Caml.Hashtbl.remove PulseModelsJava.instance_apply_before_abv (Procdesc.get_proc_name proc_desc);
     let process_postconditions node posts_opt ~convert_normal_to_exceptional =
       match posts_opt with

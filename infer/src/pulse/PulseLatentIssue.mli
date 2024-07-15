@@ -39,3 +39,5 @@ val add_call :
   -> AbductiveDomain.t
   -> t
   -> t
+
+val reported_casting : (Location.t,bool) Caml.Hashtbl.t

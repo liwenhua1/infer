@@ -3,11 +3,13 @@ import java.io.IOException;
 public class Cast {
     static class Supertype {
 
-        public void test(Supertype a) {
-         // Class b =  a.getClass();
-         Subtype c = (Subtype) a;
-        // Supertype d = get();
-        Class b = c.getClass();
+        public void test(Subtype a) {
+        //  // Class b =  a.getClass();
+        //  Subtype c = (Subtype) a;
+        // // Supertype d = get();
+        // Class b = c.getClass();
+        Subtype b = get(a);
+        Subtype c = (Sub2) b;
         }
             // public boolean foo1(Object obj){
             //     if (this == obj)
@@ -59,7 +61,20 @@ public class Cast {
             //   return "null";}
             //  return "s";}
 
-             public Supertype get() { return this;}
+             public Subtype get(Subtype s) { 
+                if (s instanceof Sub1) {
+                    return new Sub1();
+                }
+
+                else if (s instanceof Sub2) {
+                    return new Sub2();
+                }
+
+                else {
+                    return new Sub3();
+                }
+                
+               }
 
 
     //     protected Subtype convertCOSToPD( Supertype base ) throws IOException
@@ -112,7 +127,7 @@ public class Cast {
         //     return a;
         // }
     }
-    //static class Sub1 extends Subtype{}
-    //static class Sub3 extends Subtype{}
+    static class Sub1 extends Subtype{}
+    static class Sub3 extends Subtype{}
 
     }

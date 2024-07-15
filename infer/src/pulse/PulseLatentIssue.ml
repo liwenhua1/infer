@@ -99,7 +99,7 @@ let add_call call_and_loc call_subst astate latent_issue =
   in
   add_call_to_calling_context call_and_loc latent_issue
 
-
+let reported_casting : (Location.t,bool) Caml.Hashtbl.t = Caml.Hashtbl.create 1000 
 (* require a summary because we don't want to stop reporting because some non-abducible condition is
    not true as calling context cannot possibly influence such conditions *)
 let should_report ?(current_path = -1) ?(instra_hash = Caml.Hashtbl.create 1000) ?(inst = None) (astate : AbductiveDomain.Summary.t) (diagnostic : Diagnostic.t) =
@@ -119,14 +119,18 @@ let should_report ?(current_path = -1) ?(instra_hash = Caml.Hashtbl.create 1000)
          decision yet *)
       `ReportNow
   | JavaCastError latent -> 
+    (match (Caml.Hashtbl.find_opt reported_casting latent.location) with 
+    | None -> 
     (* `ReportNow *)
     (* print_endline (IR.Typ.Name.to_string latent.class_name); *)
-    if String.equal (IR.Typ.Name.to_string latent.class_name) "class java.lang.Object" then `DelayReport (JavaCastError latent) else
-    if latent.apply_before then `ReportNow else `DelayReport (JavaCastError latent)
+      if String.equal (IR.Typ.Name.to_string latent.class_name) "class java.lang.Object" then `DelayReport (JavaCastError latent) else
+      if latent.apply_before then ((Caml.Hashtbl.add reported_casting latent.location true); `ReportNow ) else `DelayReport (JavaCastError latent)
     (* if PulseArithmetic.is_manifest ~current_path:current_path ~instra_hash:instra_hash ~key:inst astate then `ReportNow
                                 (* else if  not (Typ.Name.equal (latent.class_name) Typ.make_object) then `ReportNow.*)
                                 else if (Int.(>) latent.num_instance 1) then `ReportNow
                                 else `DelayReport (JavaCastError latent) *)
+     | Some _ -> `DelayReport (JavaCastError latent))
+
   | AccessToInvalidAddress latent -> 
       if PulseArithmetic.is_manifest ~current_path:current_path ~instra_hash:instra_hash ~key:inst astate then 
         (* let () = print_endline "ssssssssssssss" in *)
