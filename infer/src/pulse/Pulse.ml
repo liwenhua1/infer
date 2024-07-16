@@ -1999,7 +1999,7 @@ let analyze specialization
     (* let procname_java_class = Procname.get_class_name proc_name in *)
      
     
-    (* let () =
+    let () =
     (* match procname_java_class with | None -> () 
     | Some aa -> let test_name = "PDDestinationNameTreeNode" in 
     
@@ -2012,7 +2012,7 @@ let analyze specialization
     | None  -> ()
     | Some a -> DisjunctiveAnalyzer.TransferFunctions.Domain.pp F.std_formatter a in
     res;print_endline "process analysis end" in ppp
-    in *)
+    in
   (* in *)
     (*print_endline "------------------------------------------";
           Utils.print_int !current_path; 

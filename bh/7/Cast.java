@@ -4,12 +4,12 @@ import java.util.*;
 public class Cast {
     static class Supertype {
 
-        public Supertype test(Map<Supertype,Supertype> a) {
+        public Object test(Map<Object,Object> a) {
         //  // Class b =  a.getClass();
         //  Subtype c = (Subtype) a;
         // // Supertype d = get();
         // Class b = c.getClass();
-        Supertype b = a.get(new Supertype());
+        Object b = a.get(new Object());
         return b;
         }
             // public boolean foo1(Object obj){

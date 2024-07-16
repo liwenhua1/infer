@@ -858,6 +858,7 @@ module Collection = struct
         >>|| PulseOperations.write_id ret_id (found_val, Hist.single_event path event)
       in
       get_elem_coll_not_known_empty elem found_val fst_val snd_val astate2
+      (* (AbductiveDomain.AddressAttributes.add_dynamic_type ((Typ.mk_struct Typ.make_object)) found_val astate2) *)
     in
     SatUnsat.to_list astate1 @ astates2
 end
