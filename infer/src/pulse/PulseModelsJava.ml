@@ -277,9 +277,9 @@ let java_cast (argv, hist) typeexpr : model =
 
                
                   (* let javaname = JavaClassName.from_string (Typ.to_string t) in *)
-                  if not (res) then ( match AbductiveDomain.AddressAttributes.get_static_type argv astate with |None ->
+                  if not (res) then ( match AbductiveDomain.AddressAttributes.get_static_type argv astate with |None when not (Tenv.is_java_abstract_cls tenv name1 || Tenv.is_java_interface_cls tenv name1)->
                          
-                          add_instance_of_info_fail num_instance false argv typ astate name1 name2 access_trace location ret_id path event true
+                             add_instance_of_info_fail num_instance false argv typ astate name1 name2 access_trace location ret_id path event true
                         (* let () = (print_endline ("cast error detected at "^ (Location.to_string location))) in *)
                             (* astate |> Basic.err_cast_abort name1 name2 access_trace location *)
                             (* Basic.ok_continue *)
@@ -301,6 +301,19 @@ let java_cast (argv, hist) typeexpr : model =
                                   astate |> Basic.ok_continue)
 
                 |Some a -> let name1 = a in
+
+                (* (List.is_empty (fst (Formula.get_all_instance_constrains argv astate.path_condition)))
+                (* && (List.is_empty (snd (Formula.get_all_instance_constrains argv astate.path_condition)))) *) (*todo*)
+      let (instance,not_instance) = Formula.get_all_instance_constrains argv astate.path_condition in 
+     
+      let name1 =  (match get_st_type with |Some a -> a |_ -> (match (List.hd instance) with
+                                                                | Some a -> (match Typ.name a with
+                                                                              |Some b -> b
+                                                                              |_ -> raise (UnsupportCast)
+                                                                 )
+                                                                | _ -> raise (Foo "impossible")
+                                                                 ))
+      in *)
                 
                 let exist_super = 
                   let is_interface = match Tenv.lookup tenv name1 with 
@@ -340,22 +353,39 @@ let java_cast (argv, hist) typeexpr : model =
             
             if b then let ninstance = Formula.check_not_instance tenv yinstance not_instance in 
                 if (fst ninstance) then 
-                  let res1 =  List.fold not_instance ~init:true ~f:(fun acc x -> acc && if PatternMatch.is_subtype tenv name2 x then false else true) in 
+                  let res1 =  List.fold not_instance ~init:true ~f:(fun acc x -> acc && if PatternMatch.is_subtype tenv name2 x then false else true) in (*cast to not instanceof *)
                   let res2 = PatternMatch.is_subtype tenv yinstance name2 in
                 
                 if not (res1) then
                   add_instance_of_info_fail num_instance false argv typ astate name1 name2 access_trace location ret_id path event app_before
                             (* astate |> Basic.err_cast_abort yinstance name2 access_trace location *)
-                         else if not (res2) then 
+                         else if not (res2) then (*yinstance is not instance of target type*)
                               
-                              if not ( PatternMatch.is_subtype tenv name2 yinstance) then 
+                              if not ( PatternMatch.is_subtype tenv name2 yinstance) then (*yinstance is not instance of target type /\ target type is not intance of yinstance*)
                                 add_instance_of_info_fail num_instance false argv typ astate name1 name2 access_trace location ret_id path event app_before
                                 (* astate |> Basic.err_cast_abort yinstance name2 access_trace location *)
                               else
                                 
                               let exe1 = add_instance_of_info_succ true argv typ astate ret_id path event in 
-                              let exe2 = add_instance_of_info_fail num_instance false argv typ astate yinstance name2 access_trace location ret_id path event app_before in 
-                             
+                              
+
+                              let check_non_interface_abstract_class top_class target_class = 
+                                let rec helper t_list target_class = match t_list with
+                                    | [] -> None
+                                    | x::xs -> if not (PatternMatch.is_subtype tenv x target_class) then Some x else helper xs target_class in 
+                                let all_possible_subtypes = Tenv.find_limited_sub top_class tenv in
+                                let possible_subclass = List.filter all_possible_subtypes ~f:(fun x -> not (Tenv.is_java_abstract_cls tenv x || Tenv.is_java_interface_cls tenv x)) in
+                                helper possible_subclass target_class
+                              
+
+                              in
+                              let exe2 = if (Tenv.is_java_abstract_cls tenv yinstance || Tenv.is_java_interface_cls tenv yinstance) then 
+                              
+                                            let fail_intance = check_non_interface_abstract_class yinstance name2 in
+
+                                            match fail_intance with | None -> [] |Some fail_t -> add_instance_of_info_fail num_instance false argv typ astate fail_t name2 access_trace location ret_id path event app_before
+                              
+                                          else add_instance_of_info_fail num_instance false argv typ astate yinstance name2 access_trace location ret_id path event app_before in
                               let res_list = exe1 @ exe2 in 
                               (* Utils.print_int (List.length res_list); *)
                                 (* Utils.list_printer (fun x -> match PulseResult.fetal_error x with |None -> print_endline "None11" | Some a -> AccessResult.pp a) res_list; *)

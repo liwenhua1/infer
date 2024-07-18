@@ -3,6 +3,13 @@ import java.util.*;
 
 public class Cast {
     static class Supertype {
+        Supertype a;
+
+        public void test2(){
+            if (a instanceof Supertype){
+                Sub2 b = (Sub2) this.a;
+            }
+        }
 
         public Object test(Map<Object,Object> a) {
         //  // Class b =  a.getClass();
