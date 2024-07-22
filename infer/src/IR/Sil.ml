@@ -160,15 +160,27 @@ let pp_instr ~print_types pe0 f instr =
   color_wrapper pe0 f instr ~f:(fun pe f instr ->
       match instr with
       | Load {id; e; typ; loc} ->
+          
           F.fprintf f "%a=*%a:%a [%a]" Ident.pp id (Exp.pp_diff ~print_types pe) e (pp_typ pe0) typ
             Location.pp loc
       | Store {e1; typ; e2; loc} ->
+        (* let () = match e2 with 
+                    |Const _ -> print_endline "yes"
+                    |_-> print_endline "no" in *)
+                   
+        
           F.fprintf f "*%a:%a=%a [%a]" (Exp.pp_diff ~print_types pe) e1 (pp_typ pe0) typ
             (Exp.pp_diff ~print_types pe) e2 Location.pp loc
       | Prune (cond, loc, true_branch, _) ->
           F.fprintf f "PRUNE(%a, %b); [%a]" (Exp.pp_diff ~print_types pe) cond true_branch
             Location.pp loc
       | Call ((id, _), e, arg_ts, loc, cf) ->
+        (* print_endline "csl";
+          let () = match e with 
+                    |Closure _ -> print_endline (Exp.to_string e)
+                    |_->() in
+                    F.fprintf f "%a=h" Ident.pp id ;
+                    print_endline "cslew"; *)
           F.fprintf f "%a=" Ident.pp id ;
           F.fprintf f "%a(%a)%a [%a]" (Exp.pp_diff ~print_types pe) e
             (Pp.comma_seq (pp_exp_typ ~print_types pe pp_typ))

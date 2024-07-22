@@ -25,3 +25,4 @@ val load_field :
 val matchers : matcher list
 
 val instance_apply_before_abv : (Procname.t, AbstractValue.t list) Caml.Hashtbl.t
+val should_analyse_cast : (Procname.t, bool) Caml.Hashtbl.t

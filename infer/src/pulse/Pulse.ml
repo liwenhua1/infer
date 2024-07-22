@@ -1252,6 +1252,10 @@ module PulseTransferFunctions = struct
           in
           (astates, path, non_disj)
       | Store {e1= lhs_exp; e2= rhs_exp; loc; typ} ->
+          let () = match rhs_exp with
+                  | Const Cclass _ -> Caml.Hashtbl.replace PulseModelsJava.should_analyse_cast (Procdesc.get_proc_name proc_desc) false
+                  | _ -> ()
+          in 
           (* print_endline ("Load at"^ (Location.to_string loc)); *)
           (* [*lhs_exp := rhs_exp] *)
           let event =
@@ -1960,7 +1964,9 @@ let analyze specialization
     (* Procdesc.pp_with_instrs ~print_types:true F.std_formatter proc_desc; *)
     (* Tenv.pp F.std_formatter tenv; print_endline "=========================="; *)
   if should_analyze proc_desc then
+    
     let proc_name = Procdesc.get_proc_name proc_desc in
+    Caml.Hashtbl.add PulseModelsJava.should_analyse_cast proc_name true;
     let () = match Caml.Hashtbl.find_opt current_path_table proc_name with 
     | None -> Caml.Hashtbl.add current_path_table proc_name 1 
     | _ -> ()
@@ -1998,10 +2004,10 @@ let analyze specialization
     
     (* let procname_java_class = Procname.get_class_name proc_name in *)
      
-    
-    (* let () =
+(*     
+    let () =
     (* match procname_java_class with | None -> () 
-    | Some aa -> let test_name = "PDDestinationNameTreeNode" in 
+    | Some aa -> let test_name = "LeftTupleSource" in 
     
   
     if (String.is_suffix ~suffix:test_name aa) then  *)
@@ -2012,8 +2018,8 @@ let analyze specialization
     | None  -> ()
     | Some a -> DisjunctiveAnalyzer.TransferFunctions.Domain.pp F.std_formatter a in
     res;print_endline "process analysis end" in ppp
-    in *)
-  (* in *)
+    in
+   *)
     (*print_endline "------------------------------------------";
           Utils.print_int !current_path; 
           print_endline "=========================================="; *)

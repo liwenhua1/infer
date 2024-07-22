@@ -19,6 +19,8 @@ exception UnsupportCast
 
 let instance_apply_before_abv : (Procname.t, AbstractValue.t list) Caml.Hashtbl.t = Caml.Hashtbl.create 1000
 
+let should_analyse_cast : (Procname.t, bool) Caml.Hashtbl.t = Caml.Hashtbl.create 1000
+
 let mk_java_field pkg clazz field =
   Fieldname.make (Typ.JavaClass (JavaClassName.make ~package:(Some pkg) ~classname:clazz)) field
 
@@ -226,7 +228,7 @@ let java_cast (argv, hist) typeexpr : model =
             | None -> Tenv.create ()
           in
         let access_trace = Trace.Immediate {location; history = hist} in 
-        if (apply_get_class || is_null) then 
+        if (apply_get_class || is_null || (Caml.Hashtbl.find should_analyse_cast (Procdesc.get_proc_name analysis_data.proc_desc))) then 
           let astate = PulseOperations.write_id ret_id (argv, Hist.single_event path event) astate in 
                     astate |> Basic.ok_continue else
         (* print_endline "..............";
@@ -374,7 +376,7 @@ let java_cast (argv, hist) typeexpr : model =
                                     | [] -> None
                                     | x::xs -> if not (PatternMatch.is_subtype tenv x target_class) then Some x else helper xs target_class in 
                                 let all_possible_subtypes = Tenv.find_limited_sub top_class tenv in
-                                let possible_subclass = List.filter all_possible_subtypes ~f:(fun x -> not (Tenv.is_java_abstract_cls tenv x || Tenv.is_java_interface_cls tenv x)) in
+                                let possible_subclass = List.filter all_possible_subtypes ~f:(fun x -> (not (Tenv.is_java_abstract_cls tenv x || Tenv.is_java_interface_cls tenv x)) && (fst (Formula.check_not_instance tenv x not_instance) ) ) in
                                 helper possible_subclass target_class
                               
 
