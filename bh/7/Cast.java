@@ -19,10 +19,10 @@ public class Cast {
         //     }
         // }
         public static void helper(A a) {
-            if (a instanceof Subtype) {
+            if (a instanceof Supertype) {
 
             }
-            Supertype b = (Subtype) a;
+            Supertype b = (Supertype) a;
             
         }
         // public static void test(Subtype a, Class clazz) {

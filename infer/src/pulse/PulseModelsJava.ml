@@ -360,13 +360,24 @@ let java_cast (argv, hist) typeexpr : model =
             
             if b then let ninstance = Formula.check_not_instance tenv yinstance not_instance in 
                 if (fst ninstance) then 
+                  let check_non_interface_abstract_class_1 top_class = 
+                    let all_possible_subtypes = Tenv.find_limited_sub top_class tenv in
+                    let possible_subclass = List.filter all_possible_subtypes ~f:(fun x -> (not (Tenv.is_java_abstract_cls tenv x || Tenv.is_java_interface_cls tenv x)) && (fst (Formula.check_not_instance tenv x not_instance) ) ) in 
+                    List.hd possible_subclass 
+                  in
+
+
+
+
                   let res1 =  List.fold not_instance ~init:true ~f:(fun acc x -> acc && if PatternMatch.is_subtype tenv name2 x then false else true) in (*cast to not instanceof *)
                   let res2 = PatternMatch.is_subtype tenv yinstance name2 in
                 
                 if not (res1) then
-                 
-
-                  add_instance_of_info_fail num_instance false argv typ astate name1 name2 access_trace location ret_id path event app_before
+                 ( match check_non_interface_abstract_class_1 yinstance with 
+                  | Some outsider ->
+                  add_instance_of_info_fail num_instance false argv typ astate outsider name2 access_trace location ret_id path event app_before
+                  | _ -> let astate = PulseOperations.write_id ret_id (argv, Hist.single_event path event) astate in 
+                           astate |> Basic.ok_continue)
                             (* astate |> Basic.err_cast_abort yinstance name2 access_trace location *)
                          else if not (res2) then (*yinstance is not instance of target type*)
                               
