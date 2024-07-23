@@ -1,8 +1,16 @@
 import java.io.IOException;
 import java.util.*;
 
+/**
+ *  
+ */
+
+
 public class Cast {
-    static class Supertype {
+    interface  A<T> {
+    
+    }
+    static class Supertype implements A {
         Supertype a;
 
         // public void test2(){
@@ -10,16 +18,27 @@ public class Cast {
         //         Sub2 b = (Sub2) this.a;
         //     }
         // }
+        public static void helper(A a) {
+            if (a instanceof Subtype) {
 
-        public void test(Map<Object,Object> a) {
-        //  // Class b =  a.getClass();
-        //  Subtype c = (Subtype) a;
-        // // Supertype d = get();
-        // Class b = c.getClass();
-        Class k = Supertype.class;
-        // Object b = a.get(new Object());
-        // return k;
+            }
+            Supertype b = (Subtype) a;
+            
         }
+        // public static void test(Subtype a, Class clazz) {
+        // //  // Class b =  a.getClass();
+        // //  Subtype c = (Subtype) a;
+        // // // Supertype d = get();
+        // // Class b = c.getClass();
+       
+      
+        // // Object b = a.get(new Object());
+        // // return k;
+        // if ( Supertype.class.isAssignableFrom(clazz)) {
+        //     Subtype c = (Sub3) a;
+        // }
+        // }
+
             // public boolean foo1(Object obj){
             //     if (this == obj)
             //     {
@@ -136,7 +155,7 @@ public class Cast {
         //     return a;
         // }
     }
-    // static class Sub1 extends Subtype{}
-    // static class Sub3 extends Subtype{}
+    static class Sub1 extends Subtype{}
+    static class Sub3 extends Subtype{}
 
     }

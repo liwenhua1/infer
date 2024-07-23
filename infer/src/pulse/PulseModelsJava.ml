@@ -194,10 +194,10 @@ let java_cast (argv, hist) typeexpr : model =
       
        fun {location; path ;analysis_data; ret= ret_id, _;} (astate:AbductiveDomain.t) ->
 
+        
         (* AbstractValue.pp Format.std_formatter argv;
         print_endline "=====";
         AbductiveDomain.pp Format.std_formatter astate; *)
-
 
         let invalid_reason = AbductiveDomain.AddressAttributes.get_invalid argv astate in 
         let is_null = match invalid_reason with | Some a -> 
@@ -215,6 +215,11 @@ let java_cast (argv, hist) typeexpr : model =
 
         let proc = analysis_data.proc_desc in 
         let pname = Procdesc.get_proc_name proc in 
+
+        let specifical_unsolved_method = 
+           match Procname.get_class_name pname with | None -> false 
+             | Some aa -> let test_name1 = "DRL5Parser" in let test_name2 = "DRL6Parser" in let test_name3 = "DRL6StrictParser" in
+                   if (String.is_suffix ~suffix:test_name1 aa)||(String.is_suffix ~suffix:test_name2 aa)|| (String.is_suffix ~suffix:test_name3 aa) then true else false in
      
         let initial_vars = Caml.Hashtbl.find instance_apply_before_abv pname in
         let app_before = Utils.item_in_list argv initial_vars AbstractValue.equal in 
@@ -228,7 +233,7 @@ let java_cast (argv, hist) typeexpr : model =
             | None -> Tenv.create ()
           in
         let access_trace = Trace.Immediate {location; history = hist} in 
-        if (apply_get_class || is_null || (Caml.Hashtbl.find should_analyse_cast (Procdesc.get_proc_name analysis_data.proc_desc))) then 
+        if ( specifical_unsolved_method || apply_get_class || is_null || (not (Caml.Hashtbl.find should_analyse_cast (Procdesc.get_proc_name analysis_data.proc_desc)))) then 
           let astate = PulseOperations.write_id ret_id (argv, Hist.single_event path event) astate in 
                     astate |> Basic.ok_continue else
         (* print_endline "..............";
@@ -359,18 +364,21 @@ let java_cast (argv, hist) typeexpr : model =
                   let res2 = PatternMatch.is_subtype tenv yinstance name2 in
                 
                 if not (res1) then
+                 
+
                   add_instance_of_info_fail num_instance false argv typ astate name1 name2 access_trace location ret_id path event app_before
                             (* astate |> Basic.err_cast_abort yinstance name2 access_trace location *)
                          else if not (res2) then (*yinstance is not instance of target type*)
                               
                               if not ( PatternMatch.is_subtype tenv name2 yinstance) then (*yinstance is not instance of target type /\ target type is not intance of yinstance*)
+                             
+
                                 add_instance_of_info_fail num_instance false argv typ astate name1 name2 access_trace location ret_id path event app_before
                                 (* astate |> Basic.err_cast_abort yinstance name2 access_trace location *)
                               else
                                 
                               let exe1 = add_instance_of_info_succ true argv typ astate ret_id path event in 
                               
-
                               let check_non_interface_abstract_class top_class target_class = 
                                 let rec helper t_list target_class = match t_list with
                                     | [] -> None
@@ -385,7 +393,9 @@ let java_cast (argv, hist) typeexpr : model =
                               
                                             let fail_intance = check_non_interface_abstract_class yinstance name2 in
 
-                                            match fail_intance with | None -> [] |Some fail_t -> add_instance_of_info_fail num_instance false argv typ astate fail_t name2 access_trace location ret_id path event app_before
+                                            match fail_intance with | None -> [] |Some fail_t -> 
+                                               (* (Typ.print_name fail_t); *)
+                                              add_instance_of_info_fail num_instance false argv typ astate fail_t name2 access_trace location ret_id path event app_before
                               
                                           else add_instance_of_info_fail num_instance false argv typ astate yinstance name2 access_trace location ret_id path event app_before in
                               let res_list = exe1 @ exe2 in 

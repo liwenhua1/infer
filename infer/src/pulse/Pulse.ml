@@ -1192,6 +1192,9 @@ module PulseTransferFunctions = struct
     | ContinueProgram astate -> (
       match instr with
       | Load {id= lhs_id; e= rhs_exp; loc; typ} ->
+        let () = match rhs_exp with
+                  | Const Cclass _ -> Caml.Hashtbl.replace PulseModelsJava.should_analyse_cast (Procdesc.get_proc_name proc_desc) false
+                  | _ -> () in
         (* print_endline "=================";
           print_endline ("Load at"^ (Location.to_string loc));
           
@@ -1312,6 +1315,8 @@ module PulseTransferFunctions = struct
         
         
         ->
+          if (String.equal "isAssignableFrom" (Procname.get_method p)) then
+            Caml.Hashtbl.replace PulseModelsJava.should_analyse_cast (Procdesc.get_proc_name proc_desc) false;
           let is_known_call = ref true in 
           let is_known_call_aux = eval_function_call_args path call_exp actuals loc astate >>|| fun (astate, call_exp, callee_pname, func_args)
                 -> fun_is_known analysis_data path ret call_exp func_args loc
@@ -2002,7 +2007,7 @@ let analyze specialization
       DisjunctiveAnalyzer.compute_post_including_exceptional analysis_data ~initial proc_desc
     in
     
-    (* let procname_java_class = Procname.get_class_name proc_name in *)
+   (* let procname_java_class = Procname.get_class_name proc_name in *)
      
 (*     
     let () =
@@ -2020,6 +2025,8 @@ let analyze specialization
     res;print_endline "process analysis end" in ppp
     in
    *)
+    
+  
     (*print_endline "------------------------------------------";
           Utils.print_int !current_path; 
           print_endline "=========================================="; *)
@@ -2101,6 +2108,7 @@ let analyze specialization
 
 
 let checker ?specialization ({InterproceduralAnalysis.proc_desc} as analysis_data) =
+  
   (* Procdesc.pp_with_instrs ~print_types:true F.std_formatter proc_desc; *)
   (* Tenv.pp_per_file F.std_formatter (Tenv.FileLocal analysis_data.tenv); *)
   (* print_endline "===================="; *)
