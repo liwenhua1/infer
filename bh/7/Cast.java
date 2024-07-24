@@ -10,21 +10,32 @@ public class Cast {
     interface  A<T> {
     
     }
-    static class Supertype implements A {
-        Supertype a;
+    interface B extends A {}
+    interface C extends A {}
+    static class D implements B {}
 
-        // public void test2(){
-        //     if (a instanceof Supertype){
-        //         Sub2 b = (Sub2) this.a;
-        //     }
-        // }
-        public static void helper(A a) {
-            if (a instanceof A) {
-                Supertype b = (Supertype) a;
+    public static void helper(A a) {
+                if (a instanceof B) {
+                   
+                }
+                C b = (C) a;
             }
+
+    // static class Supertype implements A {
+    //     Supertype a;
+
+    //     // public void test2(){
+    //     //     if (a instanceof Supertype){
+    //     //         Sub2 b = (Sub2) this.a;
+    //     //     }
+    //     // }
+    //     public static void helper(A a) {
+    //         if (a instanceof A) {
+    //             Supertype b = (Supertype) a;
+    //         }
            
             
-        }
+    //     }
         // public static void test(Subtype a, Class clazz) {
         // //  // Class b =  a.getClass();
         // //  Subtype c = (Subtype) a;
@@ -118,7 +129,7 @@ public class Cast {
     //     return (Sub3)Subtype.create( destination );
     // }
    }
-    static class Subtype extends Supertype { 
+    // static class Subtype extends Supertype { 
         
     // public static Subtype create( Supertype base ) throws IOException
     //     {
@@ -144,18 +155,18 @@ public class Cast {
     //         }
     //         return retval;
     //     }
-    }
-    static class Sub2 extends Subtype{
-        // public Supertype test(Subtype a) {
-        //     if (a == null) {return null;} return a;
-        // }
+    // }
+    // static class Sub2 extends Subtype{
+    //     // public Supertype test(Subtype a) {
+    //     //     if (a == null) {return null;} return a;
+    //     // }
 
-        // public Object test2() {
-        //     Object a = test(null);
-        //     return a;
-        // }
-    }
-    static class Sub1 extends Subtype{}
-    static class Sub3 extends Subtype{}
+    //     // public Object test2() {
+    //     //     Object a = test(null);
+    //     //     return a;
+    //     // }
+    // }
+    // static class Sub1 extends Subtype{}
+    // static class Sub3 extends Subtype{}
 
-    }
+    

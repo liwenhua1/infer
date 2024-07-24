@@ -382,9 +382,17 @@ let java_cast (argv, hist) typeexpr : model =
                          else if not (res2) then (*yinstance is not instance of target type*)
                               
                               if not ( PatternMatch.is_subtype tenv name2 yinstance) then (*yinstance is not instance of target type /\ target type is not intance of yinstance*)
-                             
-
-                                add_instance_of_info_fail num_instance false argv typ astate name1 name2 access_trace location ret_id path event app_before
+                                
+                                let check_non_interface_abstract_class_2 top_class = 
+                                  let all_possible_subtypes = Tenv.find_limited_sub top_class tenv in
+                                  let possible_subclass = List.filter all_possible_subtypes ~f:(fun x -> (not (Tenv.is_java_abstract_cls tenv x || Tenv.is_java_interface_cls tenv x)) && (fst (Formula.check_not_instance tenv x not_instance) ) ) in 
+                                  List.hd possible_subclass 
+                                in
+                                 
+                                (match check_non_interface_abstract_class_2 yinstance with 
+                                |Some head -> add_instance_of_info_fail num_instance false argv typ astate head name2 access_trace location ret_id path event app_before
+                                |_ -> []
+                                )
                                 (* astate |> Basic.err_cast_abort yinstance name2 access_trace location *)
                               else
                                 
@@ -420,13 +428,13 @@ let java_cast (argv, hist) typeexpr : model =
                           let astate = PulseOperations.write_id ret_id (argv, Hist.single_event path event) astate in 
                           astate |> Basic.ok_continue
                 else 
-                  let () =print_endline ("infeasible path so cast is safe at "^ (Location.to_string location)) in
-                  let astate = PulseOperations.write_id ret_id (argv, Hist.single_event path event) astate in 
-                  astate |> Basic.ok_continue
+                  let () =print_endline ("infeasible path so cast is safe at "^ (Location.to_string location)) in []
+                  (* let astate = PulseOperations.write_id ret_id (argv, Hist.single_event path event) astate in 
+                  astate |> Basic.ok_continue *)
             else
-            let () =print_endline ("infeasible path so cast is safe at "^ (Location.to_string location)) in
-            let astate = PulseOperations.write_id ret_id (argv, Hist.single_event path event) astate in 
-            astate |> Basic.ok_continue
+            let () =print_endline ("infeasible path so cast is safe at "^ (Location.to_string location)) in []
+            (* let astate = PulseOperations.write_id ret_id (argv, Hist.single_event path event) astate in 
+            astate |> Basic.ok_continue *)
            
             
         (* The type expr is sometimes a Var expr but this is not expected.

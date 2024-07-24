@@ -1315,7 +1315,7 @@ module PulseTransferFunctions = struct
         
         
         ->
-          if (String.equal "isAssignableFrom" (Procname.get_method p)) then
+          if (String.equal "isAssignableFrom" (Procname.get_method p)) || (String.equal "getType" (Procname.get_method p)) then
             Caml.Hashtbl.replace PulseModelsJava.should_analyse_cast (Procdesc.get_proc_name proc_desc) false;
           let is_known_call = ref true in 
           let is_known_call_aux = eval_function_call_args path call_exp actuals loc astate >>|| fun (astate, call_exp, callee_pname, func_args)
@@ -2009,8 +2009,8 @@ let analyze specialization
     
    (* let procname_java_class = Procname.get_class_name proc_name in *)
      
-(*     
-    let () =
+    
+    (* let () =
     (* match procname_java_class with | None -> () 
     | Some aa -> let test_name = "LeftTupleSource" in 
     
@@ -2024,8 +2024,8 @@ let analyze specialization
     | Some a -> DisjunctiveAnalyzer.TransferFunctions.Domain.pp F.std_formatter a in
     res;print_endline "process analysis end" in ppp
     in
-   *)
-    
+  
+     *)
   
     (*print_endline "------------------------------------------";
           Utils.print_int !current_path; 
