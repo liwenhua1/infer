@@ -1,5 +1,5 @@
-import java.io.IOException;
-import java.util.*;
+// import java.io.IOException;
+// import java.util.*;
 
 /**
  *  
@@ -7,18 +7,25 @@ import java.util.*;
 
 
 public class Cast {
-    interface  A<T> {
-    
-    }
-    interface B extends A {}
-    interface C extends A {}
-    static class D implements B {}
+    // interface  A<T> {
+        static class Subtype{}
+    // }
+    // interface B extends A {}
+    // interface C extends A {}
+    // static class D implements B {}
 
-    public static void helper(A a) {
-                if (a instanceof B) {
-                   
-                }
-                C b = (C) a;
+    public void helper1(Subtype a) {
+                
+        Sub3 b = (Sub3) a;
+    }
+
+    public void helper(Subtype a) {
+                
+                helper1(a);
+            }
+
+    public void test(Subtype a) {
+                helper(a);
             }
 
     // static class Supertype implements A {
@@ -128,7 +135,7 @@ public class Cast {
     //     }
     //     return (Sub3)Subtype.create( destination );
     // }
-   }
+   
     // static class Subtype extends Supertype { 
         
     // public static Subtype create( Supertype base ) throws IOException
@@ -166,7 +173,7 @@ public class Cast {
     //     //     return a;
     //     // }
     // }
-    // static class Sub1 extends Subtype{}
-    // static class Sub3 extends Subtype{}
+    static class Sub1 extends Subtype{}
+    static class Sub3 extends Subtype{}
 
-    
+}

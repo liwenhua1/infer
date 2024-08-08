@@ -2010,7 +2010,7 @@ let analyze specialization
    (* let procname_java_class = Procname.get_class_name proc_name in *)
      
     
-    (* let () =
+    let () =
     (* match procname_java_class with | None -> () 
     | Some aa -> let test_name = "LeftTupleSource" in 
     
@@ -2025,7 +2025,7 @@ let analyze specialization
     res;print_endline "process analysis end" in ppp
     in
   
-     *)
+    
   
     (*print_endline "------------------------------------------";
           Utils.print_int !current_path; 

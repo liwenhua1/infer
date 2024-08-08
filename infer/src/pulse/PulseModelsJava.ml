@@ -383,6 +383,14 @@ let java_cast (argv, hist) typeexpr : model =
                               
                               if not ( PatternMatch.is_subtype tenv name2 yinstance) then (*yinstance is not instance of target type /\ target type is not intance of yinstance*)
                                 
+                                if Tenv.is_java_interface_cls tenv name2 
+                                (* || Tenv.is_java_interface_cls tenv yinstance ?, should  *)
+                                then let astate = PulseOperations.write_id ret_id (argv, Hist.single_event path event) astate in 
+                                astate |> Basic.ok_continue
+                                else 
+
+
+
                                 let check_non_interface_abstract_class_2 top_class = 
                                   let all_possible_subtypes = Tenv.find_limited_sub top_class tenv in
                                   let possible_subclass = List.filter all_possible_subtypes ~f:(fun x -> (not (Tenv.is_java_abstract_cls tenv x || Tenv.is_java_interface_cls tenv x)) && (fst (Formula.check_not_instance tenv x not_instance) ) ) in 
