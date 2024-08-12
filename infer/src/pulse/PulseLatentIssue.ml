@@ -119,6 +119,9 @@ let should_report ?(current_path = -1) ?(instra_hash = Caml.Hashtbl.create 1000)
          decision yet *)
       `ReportNow
   | JavaCastError latent -> 
+    (match latent.private_or_report with | true -> `DelayReport (JavaCastError latent) 
+    |_ ->
+
     (match (Caml.Hashtbl.find_opt reported_casting latent.location) with 
     | None -> 
     (* `ReportNow *)
@@ -129,7 +132,7 @@ let should_report ?(current_path = -1) ?(instra_hash = Caml.Hashtbl.create 1000)
                                 (* else if  not (Typ.Name.equal (latent.class_name) Typ.make_object) then `ReportNow.*)
                                 else if (Int.(>) latent.num_instance 1) then `ReportNow
                                 else `DelayReport (JavaCastError latent) *)
-     | Some _ -> `DelayReport (JavaCastError latent))
+     | Some _ -> `DelayReport (JavaCastError latent)))
 
   | AccessToInvalidAddress latent -> 
       if PulseArithmetic.is_manifest ~current_path:current_path ~instra_hash:instra_hash ~key:inst astate then 

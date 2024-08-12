@@ -125,7 +125,7 @@ let add_instance_of_info_succ is_instance argv typ astate ret_id path event=
     
     (* (PulseResult.map ~f) sat_result *)
     
-    let add_instance_of_info_fail num is_instance argv typ astate1 class_name javaname access_trace location ret_id path event applied_before:  (AbductiveDomain.t execution_domain_base_t, base_error) pulse_result list= 
+    let add_instance_of_info_fail num is_instance argv typ astate1 class_name javaname access_trace location ret_id path event applied_before access:  (AbductiveDomain.t execution_domain_base_t, base_error) pulse_result list= 
       let astate = astate1 in
       
       let res_addr = AbstractValue.mk_fresh () in 
@@ -150,7 +150,7 @@ let add_instance_of_info_succ is_instance argv typ astate ret_id path event=
                     let x = PulseOperations.write_id ret_id (argv, Hist.single_event path event) x in 
                     
                     (* AbductiveDomain.pp Format.std_formatter x; *)
-                    (match (List.hd (Basic.err_cast_abort class_name javaname (num+1) access_trace location x applied_before)) with 
+                    (match (List.hd (Basic.err_cast_abort class_name javaname (num+1) access_trace location x applied_before access)) with 
                                            |None -> raise (Foo "impossible") 
                                            |Some a -> a  ) in
                     
@@ -214,6 +214,11 @@ let java_cast (argv, hist) typeexpr : model =
 
 
         let proc = analysis_data.proc_desc in 
+        let access = match Procdesc.get_access proc with
+                      |ProcAttributes.Private -> true
+                      |_ -> false 
+            in 
+        
         let pname = Procdesc.get_proc_name proc in 
 
         let specifical_unsolved_method = 
@@ -286,11 +291,11 @@ let java_cast (argv, hist) typeexpr : model =
                   (* let javaname = JavaClassName.from_string (Typ.to_string t) in *)
                   if not (res) then ( match AbductiveDomain.AddressAttributes.get_static_type argv astate with |None when not (Tenv.is_java_abstract_cls tenv name1 || Tenv.is_java_interface_cls tenv name1)->
                          
-                             add_instance_of_info_fail num_instance false argv typ astate name1 name2 access_trace location ret_id path event true
+                             add_instance_of_info_fail num_instance false argv typ astate name1 name2 access_trace location ret_id path event true false
                         (* let () = (print_endline ("cast error detected at "^ (Location.to_string location))) in *)
                             (* astate |> Basic.err_cast_abort name1 name2 access_trace location *)
                             (* Basic.ok_continue *)
-                            | _ ->   add_instance_of_info_fail num_instance false argv typ astate name1 name2 access_trace location ret_id path event app_before
+                            | _ ->   add_instance_of_info_fail num_instance false argv typ astate name1 name2 access_trace location ret_id path event app_before access
                             )
                   else
                   (* let () = print_endline ("no cast error at "^ (Location.to_string location)) in *)
@@ -375,7 +380,7 @@ let java_cast (argv, hist) typeexpr : model =
                 if not (res1) then
                  ( match check_non_interface_abstract_class_1 yinstance with 
                   | Some outsider ->
-                  add_instance_of_info_fail num_instance false argv typ astate outsider name2 access_trace location ret_id path event app_before
+                  add_instance_of_info_fail num_instance false argv typ astate outsider name2 access_trace location ret_id path event app_before access
                   | _ -> let astate = PulseOperations.write_id ret_id (argv, Hist.single_event path event) astate in 
                            astate |> Basic.ok_continue)
                             (* astate |> Basic.err_cast_abort yinstance name2 access_trace location *)
@@ -398,7 +403,7 @@ let java_cast (argv, hist) typeexpr : model =
                                 in
                                  
                                 (match check_non_interface_abstract_class_2 yinstance with 
-                                |Some head -> add_instance_of_info_fail num_instance false argv typ astate head name2 access_trace location ret_id path event app_before
+                                |Some head -> add_instance_of_info_fail num_instance false argv typ astate head name2 access_trace location ret_id path event app_before access
                                 |_ -> []
                                 )
                                 (* astate |> Basic.err_cast_abort yinstance name2 access_trace location *)
@@ -422,9 +427,9 @@ let java_cast (argv, hist) typeexpr : model =
 
                                             match fail_intance with | None -> [] |Some fail_t -> 
                                                (* (Typ.print_name fail_t); *)
-                                              add_instance_of_info_fail num_instance false argv typ astate fail_t name2 access_trace location ret_id path event app_before
+                                              add_instance_of_info_fail num_instance false argv typ astate fail_t name2 access_trace location ret_id path event app_before access
                               
-                                          else add_instance_of_info_fail num_instance false argv typ astate yinstance name2 access_trace location ret_id path event app_before in
+                                          else add_instance_of_info_fail num_instance false argv typ astate yinstance name2 access_trace location ret_id path event app_before access in
                               let res_list = exe1 @ exe2 in 
                               (* Utils.print_int (List.length res_list); *)
                                 (* Utils.list_printer (fun x -> match PulseResult.fetal_error x with |None -> print_endline "None11" | Some a -> AccessResult.pp a) res_list; *)

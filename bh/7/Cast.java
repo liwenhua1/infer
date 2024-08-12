@@ -14,8 +14,8 @@ public class Cast {
     // interface C extends A {}
     // static class D implements B {}
 
-    public void helper1(Subtype a) {
-                
+    private void helper1(Subtype a) {
+        if (a instanceof Sub1) {}
         Sub3 b = (Sub3) a;
     }
 
@@ -24,9 +24,9 @@ public class Cast {
                 helper1(a);
             }
 
-    public void test(Subtype a) {
-                helper(a);
-            }
+    // public void test(Subtype a) {
+    //             helper(a);
+    //         }
 
     // static class Supertype implements A {
     //     Supertype a;

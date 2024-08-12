@@ -34,7 +34,7 @@ type access_to_invalid_address =
   ; must_be_valid_reason: Invalidation.must_be_valid_reason option }
 [@@deriving compare, equal, yojson_of]
 
-type cast_err = {calling_context: calling_context; class_name: Typ.Name.t; target_class:Typ.Name.t; allocation_trace: Trace.t; location: Location.t;num_instance:int;apply_before:bool}
+type cast_err = {calling_context: calling_context; class_name: Typ.Name.t; target_class:Typ.Name.t; allocation_trace: Trace.t; location: Location.t;num_instance:int;apply_before:bool;private_or_report:bool}
     [@@deriving compare, equal, yojson_of]
 
 module ErlangError : sig
