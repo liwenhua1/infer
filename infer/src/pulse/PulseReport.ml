@@ -215,6 +215,7 @@ let summary_error_of_error tenv proc_desc location (error : AccessResult.error) 
 let report_summary_error tenv proc_desc err_log ?(current_path = -1) ?(instra_hash = Caml.Hashtbl.create 1000) ?(ins = None)
   ((access_error : AccessResult.error), summary) :
     _ ExecutionDomain.base_t option =
+  
   match access_error with
   | PotentialInvalidAccess {address; must_be_valid} ->
       let invalidation = Invalidation.ConstantDereference IntLit.zero in
@@ -239,7 +240,7 @@ let report_summary_error tenv proc_desc err_log ?(current_path = -1) ?(instra_ha
              ; must_be_valid_reason= snd must_be_valid } ) ;
       Some (LatentInvalidAccess {astate= summary; address; must_be_valid; calling_context= []})
   | ReportableError {diagnostic} -> 
-    
+    (* Diagnostic.pp F.std_formatter diagnostic; *)
     (
       let is_nullptr_dereference =
         match diagnostic with AccessToInvalidAddress _ -> true | _ -> false
@@ -251,13 +252,17 @@ let report_summary_error tenv proc_desc err_log ?(current_path = -1) ?(instra_ha
         is_suppressed tenv proc_desc ~is_nullptr_dereference ~is_constant_deref_without_invalidation
           summary
       in
+      (* Diagnostic.pp F.std_formatter diagnostic; *)
       match LatentIssue.should_report ~current_path:current_path ~instra_hash:instra_hash ~inst:ins summary diagnostic with
+      
       | `ReportNow ->
+         
           if is_suppressed then L.d_printfln "ReportNow suppressed error" ;
           report ~latent:false ~is_suppressed proc_desc err_log diagnostic ;
           (* Utils.print_bool (Diagnostic.aborts_execution diagnostic); *)
           if Diagnostic.aborts_execution diagnostic then Some (AbortProgram summary) else None
       | `DelayReport latent_issue ->
+       
           if is_suppressed then L.d_printfln "DelayReport suppressed error" ;
           if Config.pulse_report_latent_issues then
             report_latent_issue ~is_suppressed proc_desc err_log latent_issue ;

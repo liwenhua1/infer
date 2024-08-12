@@ -85,6 +85,7 @@ module Basic : sig
       AbductiveDomain.t ->
       bool ->
       bool ->
+      AbstractValue.t ->
       (AbductiveDomain.t execution_domain_base_t, base_error) pulse_result list
 
   val map_continue : ('a, 'b) pulse_result -> ('a execution_domain_base_t, 'b) pulse_result

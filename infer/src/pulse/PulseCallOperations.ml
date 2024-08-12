@@ -282,18 +282,28 @@ let apply_callee tenv ({PathContext.timestamp} as path) ~caller_proc_desc callee
           | ExitProgram _ ->
               Sat (Ok (ExitProgram astate_summary))
           | LatentAbortProgram {latent_issue} -> (
+            (* LatentIssue.pp F.std_formatter latent_issue; *)
+           
+              (* Procdesc.pp_signature F.std_formatter caller_proc_desc; *)
+              let access = match Procdesc.get_access caller_proc_desc with |ProcAttributes.Private ->  true | _ ->  false in
+              
               let open SatUnsat.Import in
               let latent_issue =
                 LatentIssue.add_call (Call callee_pname, call_loc) subst astate_post_call
-                  latent_issue
+                  latent_issue subst access
               in
+              (* LatentIssue.pp F.std_formatter latent_issue; *)
               let diagnostic = LatentIssue.to_diagnostic latent_issue in
+              (* Diagnostic.pp F.std_formatter diagnostic; *)
               match LatentIssue.should_report astate_summary diagnostic with
               | `DelayReport latent_issue ->
+                  (* print_endline "1"; *)
                   L.d_printfln ~color:Orange "issue is still latent, recording a LatentAbortProgram" ;
                   Sat (Ok (LatentAbortProgram {astate= astate_summary; latent_issue}))
               | `ReportNow ->
+                (* print_endline "2"; *)
                   L.d_printfln ~color:Red "issue is now manifest, emitting an error" ;
+                  (* Diagnostic.pp F.std_formatter diagnostic; *)
                   Sat
                     (AccessResult.of_error_f
                        (WithSummary

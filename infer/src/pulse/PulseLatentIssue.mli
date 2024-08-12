@@ -38,6 +38,9 @@ val add_call :
   -> (AbstractValue.t * ValueHistory.t) AbstractValue.Map.t
   -> AbductiveDomain.t
   -> t
+  -> (AbstractValue.t * ValueHistory.t) AbstractValue.Map.t
+  -> bool
   -> t
+  
 
 val reported_casting : (Location.t,bool) Caml.Hashtbl.t

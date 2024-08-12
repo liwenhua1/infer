@@ -86,7 +86,7 @@ let add_call_to_calling_context call_and_loc = function
       JavaCastError {cast_e with calling_context= call_and_loc :: cast_e.calling_context}
 
 
-let add_call call_and_loc call_subst astate latent_issue =
+let add_call call_and_loc call_subst astate latent_issue (_subs:(AbstractValue.t * ValueHistory.t) AbstractValue.Map.t) access=
   let latent_issue =
     match latent_issue with
     | AccessToInvalidAddress invalid_access ->
@@ -94,6 +94,10 @@ let add_call call_and_loc call_subst astate latent_issue =
           add_call_to_access_to_invalid_address call_subst astate invalid_access
         in
         AccessToInvalidAddress invalid_access
+
+    | JavaCastError err ->
+      (* Utils.print_bool access; *)
+      JavaCastError {calling_context=err.calling_context; class_name =  err.class_name; target_class= err.target_class; allocation_trace = err.allocation_trace; location=err.location;num_instance = err.num_instance;apply_before = err.apply_before;private_or_report = access;abs_var = err.abs_var}
     | _ ->
         latent_issue
   in
@@ -103,6 +107,8 @@ let reported_casting : (Location.t,bool) Caml.Hashtbl.t = Caml.Hashtbl.create 10
 (* require a summary because we don't want to stop reporting because some non-abducible condition is
    not true as calling context cannot possibly influence such conditions *)
 let should_report ?(current_path = -1) ?(instra_hash = Caml.Hashtbl.create 1000) ?(inst = None) (astate : AbductiveDomain.Summary.t) (diagnostic : Diagnostic.t) =
+  
+  let res =
   match diagnostic with
   | ConfigUsage _
   | ConstRefableParameter _
@@ -119,6 +125,7 @@ let should_report ?(current_path = -1) ?(instra_hash = Caml.Hashtbl.create 1000)
          decision yet *)
       `ReportNow
   | JavaCastError latent -> 
+    
     (match latent.private_or_report with | true -> `DelayReport (JavaCastError latent) 
     |_ ->
 
@@ -127,12 +134,12 @@ let should_report ?(current_path = -1) ?(instra_hash = Caml.Hashtbl.create 1000)
     (* `ReportNow *)
     (* print_endline (IR.Typ.Name.to_string latent.class_name); *)
       if String.equal (IR.Typ.Name.to_string latent.class_name) "class java.lang.Object" then `DelayReport (JavaCastError latent) else
-      if latent.apply_before then ((Caml.Hashtbl.add reported_casting latent.location true); `ReportNow ) else `DelayReport (JavaCastError latent)
+      if latent.apply_before then ( ((Caml.Hashtbl.add reported_casting latent.location true); `ReportNow )) else `DelayReport (JavaCastError latent)
     (* if PulseArithmetic.is_manifest ~current_path:current_path ~instra_hash:instra_hash ~key:inst astate then `ReportNow
                                 (* else if  not (Typ.Name.equal (latent.class_name) Typ.make_object) then `ReportNow.*)
                                 else if (Int.(>) latent.num_instance 1) then `ReportNow
                                 else `DelayReport (JavaCastError latent) *)
-     | Some _ -> `DelayReport (JavaCastError latent)))
+     | Some _ -> `ReportNow))
 
   | AccessToInvalidAddress latent -> 
       if PulseArithmetic.is_manifest ~current_path:current_path ~instra_hash:instra_hash ~key:inst astate then 
@@ -145,3 +152,8 @@ let should_report ?(current_path = -1) ?(instra_hash = Caml.Hashtbl.create 1000)
   | ReadUninitializedValue latent ->
       if PulseArithmetic.is_manifest ~current_path:current_path ~instra_hash:instra_hash ~key:inst astate then `ReportNow
       else `DelayReport (ReadUninitializedValue latent)
+
+    in 
+    (* let () = 
+    match res with |`ReportNow -> print_endline "report now" |_ -> print_endline "delay" in *)
+    res

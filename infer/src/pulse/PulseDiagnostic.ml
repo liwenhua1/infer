@@ -56,7 +56,7 @@ let pp_access_to_invalid_address fmt
     Invalidation.pp invalidation (Trace.pp ~pp_immediate) invalidation_trace
     (Trace.pp ~pp_immediate) access_trace Invalidation.pp_must_be_valid_reason must_be_valid_reason
 
-type cast_err = {calling_context: calling_context; class_name: Typ.Name.t; target_class:Typ.Name.t; allocation_trace: Trace.t; location: Location.t;num_instance:int;apply_before:bool;private_or_report:bool}
+type cast_err = {calling_context: calling_context; class_name: Typ.Name.t; target_class:Typ.Name.t; allocation_trace: Trace.t; location: Location.t;num_instance:int;apply_before:bool;private_or_report:bool; abs_var:PulseAbstractValue.t}
     [@@deriving compare, equal]
     
 let yojson_of_cast_err= [%yojson_of: _]
@@ -187,9 +187,10 @@ let pp fmt diagnostic =
   | JavaResourceLeak {class_name; allocation_trace; location} ->
       F.fprintf fmt "ResourceLeak {@[class_name=%a;@;allocation_trace:%a;@;location:%a@]}"
         JavaClassName.pp class_name (Trace.pp ~pp_immediate) allocation_trace Location.pp location
-  | JavaCastError {calling_context; class_name; allocation_trace; location;_} ->
+  | JavaCastError {calling_context; class_name; allocation_trace; location;private_or_report;_} ->
+      Utils.print_bool private_or_report;
       F.fprintf fmt "JavaCastError {@[calling_context=%a;@;class_name=%a;@;allocation_trace:%a;@;location:%a@]}"
-       pp_calling_context calling_context (Typ.Name.pp) class_name (Trace.pp ~pp_immediate) allocation_trace Location.pp location
+       pp_calling_context calling_context (Typ.Name.pp) class_name (Trace.pp ~pp_immediate) allocation_trace Location.pp location 
   | HackUnawaitedAwaitable {allocation_trace; location} ->
       F.fprintf fmt "UnawaitedAwaitable {@[allocation_trace:%a;@;location:%a@]}"
         (Trace.pp ~pp_immediate) allocation_trace Location.pp location
