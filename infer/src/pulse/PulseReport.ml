@@ -256,7 +256,7 @@ let report_summary_error tenv proc_desc err_log ?(current_path = -1) ?(instra_ha
       match LatentIssue.should_report ~current_path:current_path ~instra_hash:instra_hash ~inst:ins summary diagnostic with
       
       | `ReportNow ->
-         
+          
           if is_suppressed then L.d_printfln "ReportNow suppressed error" ;
           report ~latent:false ~is_suppressed proc_desc err_log diagnostic ;
           (* Utils.print_bool (Diagnostic.aborts_execution diagnostic); *)
@@ -325,6 +325,7 @@ let report_exec_results tenv proc_desc err_log ?(current_path = -1) ?(instra_has
 
 
 let report_results tenv proc_desc err_log location ?(current_disj = -1) ?(instra_latent_hash = Caml.Hashtbl.create 1000) ?(ins = None) results =
+  
   let open PulseResult.Let_syntax in
   List.map results ~f:(fun result ->
       let+ astate = result in

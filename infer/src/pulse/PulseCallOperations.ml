@@ -295,7 +295,8 @@ let apply_callee tenv ({PathContext.timestamp} as path) ~caller_proc_desc callee
               (* LatentIssue.pp F.std_formatter latent_issue; *)
               let diagnostic = LatentIssue.to_diagnostic latent_issue in
               (* Diagnostic.pp F.std_formatter diagnostic; *)
-              match LatentIssue.should_report astate_summary diagnostic with
+              (* AbductiveDomain.Summary.pp F.std_formatter astate_summary; *)
+              match LatentIssue.should_report astate_summary diagnostic ~tag:false with
               | `DelayReport latent_issue ->
                   (* print_endline "1"; *)
                   L.d_printfln ~color:Orange "issue is still latent, recording a LatentAbortProgram" ;

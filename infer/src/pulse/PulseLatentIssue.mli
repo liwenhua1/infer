@@ -30,8 +30,10 @@ val to_diagnostic : t -> Diagnostic.t
 val should_report : ?current_path:int ->
   ?instra_hash:(Sil.instr, int) Caml.Hashtbl.t ->
   ?inst:Sil.instr option ->
+    ?tag:bool ->
   AbductiveDomain.Summary.summary ->
-  Diagnostic.t -> [> `DelayReport of t | `ReportNow ]
+  Diagnostic.t ->
+    [> `DelayReport of t | `ReportNow ]
 
 val add_call :
      CallEvent.t * Location.t
