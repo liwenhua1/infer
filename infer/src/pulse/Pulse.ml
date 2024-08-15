@@ -2012,7 +2012,7 @@ let analyze specialization
     
     (* let () =
     (* match procname_java_class with | None -> () 
-    | Some aa -> let test_name = "LeftTupleSource" in 
+    | Some aa -> let test_name = "PanoseFlag" in 
     
   
     if (String.is_suffix ~suffix:test_name aa) then  *)

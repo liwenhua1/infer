@@ -179,11 +179,12 @@ let stack_instance_check (summary:AbductiveDomain.Summary.summary) tenv=
                                       |None -> true 
                                       |Some dty -> 
                                         let dty = Formula.ty_name dty in 
-                                        let possible_subtype = Tenv.find_limited_sub dty tenv in 
+                                        (* let possible_subtype = Tenv.find_limited_sub dty tenv in  *)
                                         (* print_endline "";
                                         print_endline "xxxxxxxxxxxxxxxxxxxxx";
                                         print_endline ""; *)
-                                        if (List.is_empty possible_subtype) && PatternMatch.is_subtype tenv dty sty && PatternMatch.is_subtype tenv sty dty then true else false 
+                                        (* if (List.is_empty possible_subtype) &&  *)
+                                        if  PatternMatch.is_subtype tenv dty sty && PatternMatch.is_subtype tenv sty dty then true else false 
                         )
   )
   in
