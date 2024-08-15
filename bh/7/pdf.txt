@@ -1,0 +1,454 @@
+#0
+examples/src/main/java/org/apache/pdfbox/examples/interactive/form/CreateCheckBox.java:126: error: Null Dereference
+  `rect` could be null (from the call to `PDAnnotation.getRectangle()` on line 123) and is dereferenced. 
+  124.           PDAppearanceCharacteristicsDictionary appearanceCharacteristics;
+  125.           PDAppearanceStream yesAP = new PDAppearanceStream(document);
+  126. >         yesAP.setBBox(new PDRectangle(rect.getWidth(), rect.getHeight()));
+  127.           yesAP.setResources(new PDResources());
+  128.           try (PDAppearanceContentStream yesAPCS = new PDAppearanceContentStream(yesAP))
+
+#1
+examples/src/main/java/org/apache/pdfbox/examples/interactive/form/CreateRadioButtons.java:133: error: Null Dereference
+  `rect` could be null (from the call to `PDAnnotation.getRectangle()` on line 131) and is dereferenced. 
+  131.           PDRectangle rect = widget.getRectangle();
+  132.           PDAppearanceStream onAP = new PDAppearanceStream(document);
+  133. >         onAP.setBBox(new PDRectangle(rect.getWidth(), rect.getHeight()));
+  134.           try (PDAppearanceContentStream onAPCS = new PDAppearanceContentStream(onAP))
+  135.           {
+
+#2
+examples/src/main/java/org/apache/pdfbox/examples/signature/ShowSignature.java:120: error: Null Dereference
+  The call to `void ShowSignature.showSignature(String[])` ends up calling `void PDFParser.initialParse()` (after 1 more call) and may trigger the following issue: null (from the call to `ShowSignature.showSignature(...)` on line 107) is dereferenced in the call to `ShowSignature.showSignature(...)`. 
+  118.   
+  119.           ShowSignature show = new ShowSignature();
+  120. >         show.showSignature( args );
+  121.       }
+  122.   
+
+#3
+examples/src/main/java/org/apache/pdfbox/examples/signature/SigUtils.java:377: error: Null Dereference
+  The call to `TimeStampToken TSAClient.getTimeStampToken(InputStream)` in turn calls `byte[] TSAClient.getTSAResponse(byte[])` and may trigger the following issue: `tsaClient->username` could be null (from the call to `TSAClient.getTimeStampToken(...)` on line 375) and is dereferenced in the call to `TSAClient.getTimeStampToken(...)`. 
+  375.           TSAClient tsaClient = new TSAClient(new URI(tsaUrl).toURL(), null, null, digest);
+  376.           InputStream emptyStream = new ByteArrayInputStream(new byte[0]);
+  377. >         TimeStampToken timeStampToken = tsaClient.getTimeStampToken(emptyStream);
+  378.           return getCertificateFromTimeStampToken(timeStampToken);
+  379.       }
+
+#4
+fontbox/src/main/java/org/apache/fontbox/cff/CFFFont.java:106: error: Null Dereference
+  `numbers` could be null (null value originating from line 105) and is dereferenced. 
+  104.       {
+  105.           List<Number> numbers = (List<Number>) topDict.get("FontBBox");
+  106. >         if (numbers.size() < 4)
+  107.           {
+  108.               throw new IOException("FontBBox must have 4 numbers, but is " + numbers);
+
+#5
+fontbox/src/main/java/org/apache/fontbox/ttf/TTFSubsetter.java:222: error: Null Dereference
+  `h` could be null (from the call to `TrueTypeFont.getHeader()` on line 221) and is dereferenced. 
+  220.   
+  221.           HeaderTable h = ttf.getHeader();
+  222. >         writeFixed(out, h.getVersion());
+  223.           writeFixed(out, h.getFontRevision());
+  224.           writeUint32(out, 0); // h.getCheckSumAdjustment()
+
+#6
+fontbox/src/main/java/org/apache/fontbox/ttf/TTFSubsetter.java:251: error: Null Dereference
+  `h` could be null (from the call to `TrueTypeFont.getHorizontalHeader()` on line 250) and is dereferenced. 
+  249.   
+  250.           HorizontalHeaderTable h = ttf.getHorizontalHeader();
+  251. >         writeFixed(out, h.getVersion());
+  252.           writeSInt16(out, h.getAscender());
+  253.           writeSInt16(out, h.getDescender());
+
+#7
+fontbox/src/main/java/org/apache/fontbox/ttf/TTFSubsetter.java:295: error: Pulse Resource Leak
+  Resource dynamically allocated by constructor java.io.DataOutputStream() on line 292 is not closed after the last access at line 295. 
+  293.   
+  294.           NamingTable name = ttf.getNaming();
+  295. >         if (name == null || keepTables != null && !keepTables.contains(NamingTable.TAG))
+  296.           {
+  297.               return null;
+
+#8
+fontbox/src/main/java/org/apache/fontbox/ttf/TrueTypeFont.java:748: error: Null Dereference
+  `headerTable` could be null (from the call to `TrueTypeFont.getHeader()` on line 747) and is dereferenced. 
+  746.       {
+  747.           HeaderTable headerTable = getHeader();
+  748. >         short xMin = headerTable.getXMin();
+  749.           short xMax = headerTable.getXMax();
+  750.           short yMin = headerTable.getYMin();
+
+#9
+pdfbox/src/main/java/org/apache/pdfbox/cos/COSDocument.java:219: error: Null Dereference
+  `objectFromPool` could be null (from the call to `COSDocument.getObjectFromPool(...)` on line 218) and is dereferenced. 
+  217.           {
+  218.               COSObject objectFromPool = getObjectFromPool(objectKey);
+  219. >             COSBase realObject = objectFromPool.getObject();
+  220.               if (realObject instanceof COSDictionary)
+  221.               {
+
+#10
+pdfbox/src/main/java/org/apache/pdfbox/cos/COSDocument.java:273: error: Null Dereference
+  `objectFromPool` could be null (from the call to `COSDocument.getObjectFromPool(...)` on line 272) and is dereferenced. 
+  271.           {
+  272.               COSObject objectFromPool = getObjectFromPool(objectKey);
+  273. >             COSBase realObject = objectFromPool.getObject();
+  274.               if (realObject instanceof COSDictionary)
+  275.               {
+
+#11
+pdfbox/src/main/java/org/apache/pdfbox/cos/COSStream.java:237: error: Pulse Resource Leak
+  Resource dynamically allocated by constructor org.apache.pdfbox.cos.COSOutputStream() on line 235 is not closed after the last access at line 237. 
+  235.                   getStreamCache());
+  236.           isWriting = true;
+  237. >         return new FilterOutputStream(cosOut)
+  238.           {
+  239.               @Override
+
+#12
+pdfbox/src/main/java/org/apache/pdfbox/filter/CCITTFaxFilter.java:109: error: Pulse Resource Leak
+  Resource dynamically allocated by constructor org.apache.pdfbox.filter.CCITTFaxDecoderStream() on line 108 is not closed after the last access at line 109. 
+  107.           }
+  108.           s = new CCITTFaxDecoderStream(encoded, cols, type, tiffOptions, encodedByteAlign);
+  109. >         readFromDecoderStream(s, decompressed);
+  110.   
+  111.           // invert bitmap
+
+#13
+pdfbox/src/main/java/org/apache/pdfbox/filter/CCITTFaxFilter.java:123: error: Pulse Resource Leak
+  Resource dynamically allocated by constructor org.apache.pdfbox.filter.CCITTFaxDecoderStream() on line 108 is not closed after the last access at line 123. 
+  121.   
+  122.           decoded.write(decompressed);
+  123. >         return new DecodeResult(parameters);
+  124.       }
+  125.   
+
+#14
+pdfbox/src/main/java/org/apache/pdfbox/filter/LZWFilter.java:71: error: Pulse Resource Leak
+  Resource dynamically allocated by constructor org.apache.pdfbox.filter.Predictor$PredictorOutputStream(), indirectly via call to `Predictor.wrapPredictor(...)` on line 70 is not closed after the last access at line 71. 
+  69.           boolean earlyChange = decodeParams.getInt(COSName.EARLY_CHANGE, 1) != 0;
+  70.           doLZWDecode(encoded, Predictor.wrapPredictor(decoded, decodeParams), earlyChange);
+  71. >         return new DecodeResult(parameters);
+  72.       }
+  73.   
+
+#15
+pdfbox/src/main/java/org/apache/pdfbox/pdfwriter/ContentStreamWriter.java:111: error: Null Dereference
+  The call to `void ContentStreamWriter.writeObject(Object)` in turn calls `void ContentStreamWriter.writeObject(Operator)` and may trigger the following issue: `value` could be null (from the call to `ContentStreamWriter.writeObject(...)` on line 140) and is dereferenced in the call to `ContentStreamWriter.writeObject(...)`. 
+  109.           for (Object token : tokens)
+  110.           {
+  111. >             writeObject(token);
+  112.           }
+  113.       }
+
+#16
+pdfbox/src/main/java/org/apache/pdfbox/pdmodel/PDDocument.java:1043: error: Pulse Resource Leak
+  Resource dynamically allocated by constructor org.apache.pdfbox.pdfwriter.COSStandardOutputStream(), indirectly via call to `COSWriter(...)` on line 1041 is not closed after the last access at line 1043. 
+  1041.           COSWriter writer = new COSWriter(output, compressParameters);
+  1042.           writer.write(this);
+  1043. >     }
+  1044.   
+  1045.       private void subsetDesignatedFonts() throws IOException
+
+#17
+pdfbox/src/main/java/org/apache/pdfbox/pdmodel/documentinterchange/logicalstructure/PDUserAttributeObject.java:67: error: Null Dereference
+  `p` could be null (from the call to `COSDictionary.getCOSArray(...)` on line 66) and is dereferenced. 
+  65.       {
+  66.           COSArray p = getCOSObject().getCOSArray(COSName.P);
+  67. >         List<PDUserProperty> properties = new ArrayList<>(p.size());
+  68.           for (int i = 0; i < p.size(); i++)
+  69.           {
+
+#18
+pdfbox/src/main/java/org/apache/pdfbox/pdmodel/documentinterchange/logicalstructure/PDUserAttributeObject.java:95: error: Null Dereference
+  `p` could be null (from the call to `COSDictionary.getCOSArray(...)` on line 94) and is dereferenced. 
+  93.       {
+  94.           COSArray p = getCOSObject().getCOSArray(COSName.P);
+  95. >         p.add(userProperty);
+  96.           this.notifyChanged();
+  97.       }
+
+#19
+pdfbox/src/main/java/org/apache/pdfbox/pdmodel/documentinterchange/logicalstructure/PDUserAttributeObject.java:111: error: Null Dereference
+  `p` could be null (from the call to `COSDictionary.getCOSArray(...)` on line 110) and is dereferenced. 
+  109.           }
+  110.           COSArray p = getCOSObject().getCOSArray(COSName.P);
+  111. >         if (p.remove(userProperty.getCOSObject()))
+  112.           {
+  113.               this.notifyChanged();
+
+#20
+pdfbox/src/main/java/org/apache/pdfbox/pdmodel/documentinterchange/taggedpdf/PDExportFormatAttributeObject.java:168: error: Null Dereference
+  The call to `String[] PDStandardAttributeObject.getArrayOfString(String)` may trigger the following issue: `COSBase COSArray.getObject(int)` could be null (from the call to `PDStandardAttributeObject.getArrayOfString(...)` on line 112) and is dereferenced in the call to `PDStandardAttributeObject.getArrayOfString(...)`. 
+  166.       public String[] getHeaders()
+  167.       {
+  168. >         return this.getArrayOfString(PDTableAttributeObject.HEADERS);
+  169.       }
+  170.   
+
+#21
+pdfbox/src/main/java/org/apache/pdfbox/pdmodel/documentinterchange/taggedpdf/PDTableAttributeObject.java:127: error: Null Dereference
+  The call to `String[] PDStandardAttributeObject.getArrayOfString(String)` may trigger the following issue: `COSBase COSArray.getObject(int)` could be null (from the call to `PDStandardAttributeObject.getArrayOfString(...)` on line 112) and is dereferenced in the call to `PDStandardAttributeObject.getArrayOfString(...)`. 
+  125.       public String[] getHeaders()
+  126.       {
+  127. >         return this.getArrayOfString(HEADERS);
+  128.       }
+  129.   
+
+#22
+pdfbox/src/main/java/org/apache/pdfbox/pdmodel/encryption/PDEncryption.java:430: error: Null Dereference
+  `array` could be null (from the call to `COSDictionary.getItem(...)` on line 429) and is dereferenced. 
+  428.       {
+  429.           COSArray array = (COSArray) dictionary.getItem(COSName.RECIPIENTS);
+  430. >         return array.size();
+  431.       }
+  432.   
+
+#23
+pdfbox/src/main/java/org/apache/pdfbox/pdmodel/encryption/PDEncryption.java:443: error: Null Dereference
+  `array` could be null (from the call to `COSDictionary.getItem(...)` on line 442) and is dereferenced. 
+  441.       {
+  442.           COSArray array = (COSArray) dictionary.getItem(COSName.RECIPIENTS);
+  443. >         return (COSString)array.get(i);
+  444.       }
+  445.       
+
+#24
+pdfbox/src/main/java/org/apache/pdfbox/pdmodel/font/PDCIDFontType2.java:339: error: Null Dereference
+  `HorizontalHeaderTable TrueTypeFont.getHorizontalHeader()` could be null (from the call to `TrueTypeFont.getHorizontalHeader()` on line 339) and is dereferenced. 
+  337.       {
+  338.           // todo: really we want the BBox, (for text extraction:)
+  339. >         return (ttf.getHorizontalHeader().getAscender() + -ttf.getHorizontalHeader().getDescender())
+  340.                   / ttf.getUnitsPerEm(); // todo: shouldn't this be the yMax/yMin?
+  341.       }
+
+#25
+pdfbox/src/main/java/org/apache/pdfbox/pdmodel/font/PDCIDFontType2Embedder.java:163: error: Null Dereference
+  The call to `void ToUnicodeWriter.writeTo(OutputStream)` may trigger the following issue: `toUniWriter->wMode` could be null (from the call to `ToUnicodeWriter.writeTo(...)` on line 126) and is dereferenced in the call to `ToUnicodeWriter.writeTo(...)`. 
+  161.   
+  162.           ByteArrayOutputStream out = new ByteArrayOutputStream();
+  163. >         toUniWriter.writeTo(out);
+  164.           InputStream cMapStream = new ByteArrayInputStream(out.toByteArray());
+  165.   
+
+#26
+pdfbox/src/main/java/org/apache/pdfbox/pdmodel/font/PDCIDFontType2Embedder.java:281: error: Null Dereference
+  `HeaderTable TrueTypeFont.getHeader()` could be null (from the call to `TrueTypeFont.getHeader()` on line 281) and is dereferenced. 
+  279.       private void buildWidths(TreeMap<Integer, Integer> cidToGid) throws IOException
+  280.       {
+  281. >         float scaling = 1000f / ttf.getHeader().getUnitsPerEm();
+  282.   
+  283.           COSArray widths = new COSArray();
+
+#27
+pdfbox/src/main/java/org/apache/pdfbox/pdmodel/font/PDCIDFontType2Embedder.java:424: error: Null Dereference
+  `HeaderTable TrueTypeFont.getHeader()` could be null (from the call to `TrueTypeFont.getHeader()` on line 424) and is dereferenced. 
+  422.           }
+  423.   
+  424. >         float scaling = 1000f / ttf.getHeader().getUnitsPerEm();
+  425.   
+  426.           long lastCid = widths[0];
+
+#28
+pdfbox/src/main/java/org/apache/pdfbox/pdmodel/font/PDCIDFontType2Embedder.java:554: error: Null Dereference
+  `HeaderTable TrueTypeFont.getHeader()` could be null (from the call to `TrueTypeFont.getHeader()` on line 554) and is dereferenced. 
+  552.           }
+  553.   
+  554. >         float scaling = 1000f / ttf.getHeader().getUnitsPerEm();
+  555.   
+  556.           long lastCid = values[0];
+
+#29
+pdfbox/src/main/java/org/apache/pdfbox/pdmodel/font/PDTrueTypeFontEmbedder.java:78: error: Null Dereference
+  `HeaderTable TrueTypeFont.getHeader()` could be null (from the call to `TrueTypeFont.getHeader()` on line 78) and is dereferenced. 
+  76.       private void setWidths(COSDictionary font, GlyphList glyphList) throws IOException
+  77.       {
+  78. >         float scaling = 1000f / ttf.getHeader().getUnitsPerEm();
+  79.           HorizontalMetricsTable hmtx = ttf.getHorizontalMetrics();
+  80.   
+
+#30
+pdfbox/src/main/java/org/apache/pdfbox/pdmodel/interactive/form/PDAcroForm.java:838: error: Null Dereference
+  `array` could be null (from the call to `COSDictionary.getCOSArray(...)` on line 831) and is dereferenced. 
+  836.                   array = field.getParent().getCOSObject().getCOSArray(COSName.KIDS);
+  837.               }
+  838. >             array.removeObject(field.getCOSObject());
+  839.           }
+  840.       }
+
+#31
+pdfbox/src/main/java/org/apache/pdfbox/pdmodel/interactive/form/PDAcroForm.java:838: error: Null Dereference
+  `array` could be null (from the call to `COSDictionary.getCOSArray(...)` on line 836) and is dereferenced. 
+  836.                   array = field.getParent().getCOSObject().getCOSArray(COSName.KIDS);
+  837.               }
+  838. >             array.removeObject(field.getCOSObject());
+  839.           }
+  840.       }
+
+#32
+pdfbox/src/main/java/org/apache/pdfbox/rendering/PageDrawer.java:689: error: Null Dereference
+  The call to `Paint PageDrawer.getPaint(PDColor)` in turn calls `String PDSeparation.getColorantName()` and may trigger the following issue: null (from the call to `PageDrawer.getPaint(...)` on line 264) is dereferenced in the call to `PageDrawer.getPaint(...)`. 
+  687.           PDGraphicsState graphicsState = getGraphicsState();
+  688.           return applySoftMaskToPaint(
+  689. >                 getPaint(graphicsState.getStrokingColor()), graphicsState.getSoftMask());
+  690.       }
+  691.   
+
+#33
+pdfbox/src/main/java/org/apache/pdfbox/rendering/PageDrawer.java:704: error: Null Dereference
+  The call to `Paint PageDrawer.getPaint(PDColor)` in turn calls `String PDSeparation.getColorantName()` and may trigger the following issue: null (from the call to `PageDrawer.getPaint(...)` on line 264) is dereferenced in the call to `PageDrawer.getPaint(...)`. 
+  702.           PDGraphicsState graphicsState = getGraphicsState();
+  703.           return applySoftMaskToPaint(
+  704. >                 getPaint(graphicsState.getNonStrokingColor()), graphicsState.getSoftMask());
+  705.       }
+  706.   
+
+#34
+pdfbox/src/main/java/org/apache/pdfbox/text/PDFTextStripperByArea.java:104: error: Null Dereference
+  `text` could be null (null value originating from line 103) and is dereferenced. 
+  102.       {
+  103.           StringWriter text = regionText.get( regionName );
+  104. >         return text.toString();
+  105.       }
+  106.   
+
+#35
+xmpbox/src/main/java/org/apache/xmpbox/schema/DublinCoreSchema.java:416: error: Null Dereference
+  The call to `List XMPSchema.getUnqualifiedBagValueList(String)` may trigger the following issue: null (from the call to `XMPSchema.getUnqualifiedBagValueList(...)` on line 713) is dereferenced in the call to `XMPSchema.getUnqualifiedBagValueList(...)`. 
+  414.       public List<String> getContributors()
+  415.       {
+  416. >         return getUnqualifiedBagValueList(CONTRIBUTOR);
+  417.   
+  418.       }
+
+#36
+xmpbox/src/main/java/org/apache/xmpbox/schema/DublinCoreSchema.java:586: error: Null Dereference
+  The call to `List XMPSchema.getUnqualifiedBagValueList(String)` may trigger the following issue: null (from the call to `XMPSchema.getUnqualifiedBagValueList(...)` on line 713) is dereferenced in the call to `XMPSchema.getUnqualifiedBagValueList(...)`. 
+  584.       public List<String> getLanguages()
+  585.       {
+  586. >         return getUnqualifiedBagValueList(LANGUAGE);
+  587.       }
+  588.   
+
+#37
+xmpbox/src/main/java/org/apache/xmpbox/schema/DublinCoreSchema.java:606: error: Null Dereference
+  The call to `List XMPSchema.getUnqualifiedBagValueList(String)` may trigger the following issue: null (from the call to `XMPSchema.getUnqualifiedBagValueList(...)` on line 713) is dereferenced in the call to `XMPSchema.getUnqualifiedBagValueList(...)`. 
+  604.       public List<String> getPublishers()
+  605.       {
+  606. >         return getUnqualifiedBagValueList(PUBLISHER);
+  607.       }
+  608.   
+
+#38
+xmpbox/src/main/java/org/apache/xmpbox/schema/DublinCoreSchema.java:626: error: Null Dereference
+  The call to `List XMPSchema.getUnqualifiedBagValueList(String)` may trigger the following issue: null (from the call to `XMPSchema.getUnqualifiedBagValueList(...)` on line 713) is dereferenced in the call to `XMPSchema.getUnqualifiedBagValueList(...)`. 
+  624.       public List<String> getRelations()
+  625.       {
+  626. >         return getUnqualifiedBagValueList(RELATION);
+  627.       }
+  628.   
+
+#39
+xmpbox/src/main/java/org/apache/xmpbox/schema/DublinCoreSchema.java:712: error: Null Dereference
+  The call to `List XMPSchema.getUnqualifiedBagValueList(String)` may trigger the following issue: null (from the call to `XMPSchema.getUnqualifiedBagValueList(...)` on line 713) is dereferenced in the call to `XMPSchema.getUnqualifiedBagValueList(...)`. 
+  710.       public List<String> getSubjects()
+  711.       {
+  712. >         return getUnqualifiedBagValueList(SUBJECT);
+  713.       }
+  714.   
+
+#40
+xmpbox/src/main/java/org/apache/xmpbox/schema/DublinCoreSchema.java:776: error: Null Dereference
+  The call to `List XMPSchema.getUnqualifiedBagValueList(String)` may trigger the following issue: null (from the call to `XMPSchema.getUnqualifiedBagValueList(...)` on line 713) is dereferenced in the call to `XMPSchema.getUnqualifiedBagValueList(...)`. 
+  774.       public List<String> getTypes()
+  775.       {
+  776. >         return getUnqualifiedBagValueList(TYPE);
+  777.       }
+  778.   
+
+#41
+xmpbox/src/main/java/org/apache/xmpbox/schema/PhotoshopSchema.java:328: error: Null Dereference
+  The call to `List XMPSchema.getUnqualifiedBagValueList(String)` may trigger the following issue: null (from the call to `XMPSchema.getUnqualifiedBagValueList(...)` on line 713) is dereferenced in the call to `XMPSchema.getUnqualifiedBagValueList(...)`. 
+  326.       public List<String> getDocumentAncestors()
+  327.       {
+  328. >         return getUnqualifiedBagValueList(DOCUMENT_ANCESTORS);
+  329.       }
+  330.   
+
+#42
+xmpbox/src/main/java/org/apache/xmpbox/schema/XMPBasicSchema.java:391: error: Null Dereference
+  The call to `List XMPSchema.getUnqualifiedBagValueList(String)` may trigger the following issue: null (from the call to `XMPSchema.getUnqualifiedBagValueList(...)` on line 713) is dereferenced in the call to `XMPSchema.getUnqualifiedBagValueList(...)`. 
+  389.       public List<String> getAdvisory()
+  390.       {
+  391. >         return getUnqualifiedBagValueList(ADVISORY);
+  392.       }
+  393.   
+
+#43
+xmpbox/src/main/java/org/apache/xmpbox/schema/XMPBasicSchema.java:478: error: Null Dereference
+  The call to `List XMPSchema.getUnqualifiedBagValueList(String)` may trigger the following issue: null (from the call to `XMPSchema.getUnqualifiedBagValueList(...)` on line 713) is dereferenced in the call to `XMPSchema.getUnqualifiedBagValueList(...)`. 
+  476.       public List<String> getIdentifiers()
+  477.       {
+  478. >         return getUnqualifiedBagValueList(IDENTIFIER);
+  479.       }
+  480.   
+
+#44
+xmpbox/src/main/java/org/apache/xmpbox/schema/XMPMediaManagementSchema.java:756: error: Null Dereference
+  The call to `List XMPSchema.getUnqualifiedBagValueList(String)` may trigger the following issue: null (from the call to `XMPSchema.getUnqualifiedBagValueList(...)` on line 713) is dereferenced in the call to `XMPSchema.getUnqualifiedBagValueList(...)`. 
+  754.       public List<String> getVersions()
+  755.       {
+  756. >         return getUnqualifiedBagValueList(VERSIONS);
+  757.       }
+  758.   
+
+#45
+xmpbox/src/main/java/org/apache/xmpbox/schema/XMPMediaManagementSchema.java:830: error: Null Dereference
+  The call to `List XMPSchema.getUnqualifiedBagValueList(String)` may trigger the following issue: null (from the call to `XMPSchema.getUnqualifiedBagValueList(...)` on line 713) is dereferenced in the call to `XMPSchema.getUnqualifiedBagValueList(...)`. 
+  828.       public List<String> getIngredients()
+  829.       {
+  830. >         return getUnqualifiedBagValueList(INGREDIENTS);
+  831.       }
+  832.   
+
+#46
+xmpbox/src/main/java/org/apache/xmpbox/schema/XMPRightsManagementSchema.java:119: error: Null Dereference
+  The call to `List XMPSchema.getUnqualifiedBagValueList(String)` may trigger the following issue: null (from the call to `XMPSchema.getUnqualifiedBagValueList(...)` on line 713) is dereferenced in the call to `XMPSchema.getUnqualifiedBagValueList(...)`. 
+  117.       public List<String> getOwners()
+  118.       {
+  119. >         return getUnqualifiedBagValueList(OWNER);
+  120.       }
+  121.   
+
+#47
+xmpbox/src/main/java/org/apache/xmpbox/schema/XMPSchema.java:960: error: Null Dereference
+  `Attribute AbstractField.getAttribute(String)` could be null (from the call to `AbstractField.getAttribute(...)` on line 960) and is dereferenced. 
+  958.           boolean xdefaultFound = false;
+  959.           // If alternatives contains x-default in first value
+  960. >         if (it.hasNext() && it.next().getAttribute(XmpConstants.LANG_NAME).getValue().equals(XmpConstants.X_DEFAULT))
+  961.           {
+  962.               return;
+
+#48
+xmpbox/src/main/java/org/apache/xmpbox/schema/XMPSchema.java:968: error: Null Dereference
+  `Attribute AbstractField.getAttribute(String)` could be null (from the call to `AbstractField.getAttribute(...)` on line 968) and is dereferenced. 
+  966.           {
+  967.               xdefault = it.next();
+  968. >             if (xdefault.getAttribute(XmpConstants.LANG_NAME).getValue().equals(XmpConstants.X_DEFAULT))
+  969.               {
+  970.                   alt.removeProperty(xdefault);
+
+#49
+xmpbox/src/main/java/org/apache/xmpbox/xml/PdfaExtensionHelper.java:116: error: Null Dereference
+  `sp` could be null (from the call to `PDFAExtensionSchema.getSchemasProperty()` on line 115) and is dereferenced. 
+  114.                   PDFAExtensionSchema pes = (PDFAExtensionSchema) xmpSchema;
+  115.                   ArrayProperty sp = pes.getSchemasProperty();
+  116. >                 for (AbstractField af : sp.getAllProperties())
+  117.                   {
+  118.                       if (af instanceof PDFASchemaType)
+
+Found 50 issues
+                Issue Type(ISSUED_TYPE_ID): #
+     Null Dereference(NULLPTR_DEREFERENCE): 44
+  Pulse Resource Leak(PULSE_RESOURCE_LEAK): 6
