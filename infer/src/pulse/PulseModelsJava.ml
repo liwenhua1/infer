@@ -182,7 +182,7 @@ let add_instance_of_info_succ is_instance argv typ astate ret_id path event=
 
 
 
-let java_cast (argv, hist) typeexpr : model =
+let _java_cast (argv, hist) typeexpr : model =
         
         (* print_endline "====";
         
@@ -1200,7 +1200,7 @@ let matchers : matcher list =
     &:: "next" <>$ capt_arg_payload
     $!--> Iterator.next ~desc:"Iterator.next()"
   ; +BuiltinDecl.(match_builtin __instanceof) <>$ capt_arg_payload $+ capt_exp $--> instance_of
-  ; +BuiltinDecl.(match_builtin __cast) <>$ capt_arg_payload $+ capt_exp $--> java_cast
+  (* ; +BuiltinDecl.(match_builtin __cast) <>$ capt_arg_payload $+ capt_exp $--> java_cast *)
   ; ( +map_context_tenv PatternMatch.Java.implements_enumeration
     &:: "nextElement" <>$ capt_arg_payload
     $!--> fun x ->
