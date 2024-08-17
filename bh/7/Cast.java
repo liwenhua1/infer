@@ -11,24 +11,23 @@ public class Cast {
     public Subtype data;
     // interface  A<T> {
         static class Subtype{
-            public void aux() {}
-            public void read(Cast x, Subtype y) {}
+            // public void aux() {}
+            // public void read(Cast x, Subtype y) {}
         }
     // }
     // interface B extends A {}
     // interface C extends A {}
     // static class D implements B {}
 
-    private void helper1(String a) {
-        Subtype x = obj.get(a);
-        if (x != null){
-        helper(x);}
+    private Subtype helper1(Subtype a) {
+        if (a != null){
+        return new Subtype();}
+        return null;
     }
 
-    public void helper(Subtype a) {
-                
-               data.aux();
-               a.read(this, data);
+    public void helper() {
+             Subtype x = helper1(data);   
+               
             }
     
     
