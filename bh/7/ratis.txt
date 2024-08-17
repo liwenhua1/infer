@@ -17,6 +17,15 @@ ratis-common/src/main/java/org/apache/ratis/util/LifeCycle.java:111: error: Null
   113.   
 
 #2
+ratis-common/src/test/java/org/apache/ratis/util/Slf4jUtils.java:100: error: Null Dereference
+  `clazz` could be null (from the call to `ReflectionUtils.getClassByNameOrNull(...)` on line 99) and is dereferenced. 
+   98.           try {
+   99.             final Class<?> clazz = ReflectionUtils.getClassByNameOrNull(CLASS_NAME);
+  100. >           return clazz.getDeclaredField(level);
+  101.           } catch (Exception e) {
+  102.             return null;
+
+#3
 ratis-examples/src/main/java/org/apache/ratis/examples/arithmetic/ArithmeticStateMachine.java:140: error: Pulse Resource Leak
   Resource dynamically allocated by constructor java.io.BufferedInputStream() on line 133 is not closed after the last access at line 140. 
   138.         throw new IllegalStateException("Failed to load " + snapshot, e);
@@ -24,15 +33,6 @@ ratis-examples/src/main/java/org/apache/ratis/examples/arithmetic/ArithmeticStat
   140. >     return last.getIndex();
   141.     }
   142.   
-
-#3
-ratis-examples/src/main/java/org/apache/ratis/examples/counter/client/CounterClient.java:182: error: Null Dereference
-  The call to `CounterClient.<init>()` ends up calling `RpcType RaftConfigKeys$Rpc.type(RaftProperties,Consumer)` (after 2 more calls) and may trigger the following issue: null (from the call to `CounterClient()` on line 43) is dereferenced in the call to `CounterClient()`. 
-  180.   
-  181.     public static void main(String[] args) {
-  182. >     try(CounterClient client = new CounterClient()) {
-  183.         //the number of INCREMENT commands, default is 10
-  184.         final int increment = args.length > 0 ? Integer.parseInt(args[0]) : 10;
 
 #4
 ratis-examples/src/main/java/org/apache/ratis/examples/counter/server/CounterStateMachine.java:211: error: Pulse Resource Leak
@@ -98,6 +98,33 @@ ratis-server/src/main/java/org/apache/ratis/server/metrics/RaftServerMetricsImpl
   265.   
 
 #11
+ratis-server/src/test/java/org/apache/ratis/server/impl/MiniRaftCluster.java:540: error: Null Dereference
+  null (null value originating from line 540) is dereferenced. 
+  538.     public void killServer(RaftPeerId id) {
+  539.       LOG.info("killServer " + id);
+  540. >     servers.get(id).close();
+  541.     }
+  542.   
+
+#12
+ratis-server/src/test/java/org/apache/ratis/server/impl/MiniRaftCluster.java:716: error: Null Dereference
+  null (null value originating from line 716) is dereferenced. 
+  714.   
+  715.     public ServerFactory getServerFactory(RaftPeerId id) {
+  716. >     return servers.get(id).getFactory();
+  717.     }
+  718.   
+
+#13
+ratis-server/src/test/java/org/apache/ratis/server/simulation/MiniRaftClusterWithSimulatedRpc.java:117: error: Null Dereference
+  `SimulatedRequestReply$EventQueue SimulatedRequestReply.getQueue(String)` could be null (from the call to `SimulatedRequestReply.getQueue(...)` on line 117) and is dereferenced. 
+  115.     @Override
+  116.     public void setBlockRequestsFrom(String src, boolean block) {
+  117. >     serverRequestReply.getQueue(src).blockTakeRequestFrom.set(block);
+  118.     }
+  119.   }
+
+#14
 ratis-shell/src/main/java/org/apache/ratis/shell/cli/AbstractShell.java:147: error: Null Dereference
   null (null value originating from line 147) is dereferenced. 
   145.       SortedSet<String> sortedCmds = new TreeSet<>(mCommands.keySet());
@@ -106,7 +133,52 @@ ratis-shell/src/main/java/org/apache/ratis/shell/cli/AbstractShell.java:147: err
   148.       }
   149.     }
 
-Found 12 issues
+#15
+ratis-test/src/test/java/org/apache/ratis/conf/TestRaftProperties.java:51: error: Null Dereference
+  `Boolean RaftProperties.getBoolean(String,Boolean)` could be null (null value originating from line 51) and is dereferenced. 
+  49.         Assertions.assertNull(p.getBoolean(KEY, null));
+  50.         setNonUnderscoreValue(p, "true");
+  51. >       Assertions.assertTrue(p.getBoolean(KEY, null));
+  52.         setNonUnderscoreValue(p, "false");
+  53.         Assertions.assertFalse(p.getBoolean(KEY, null));
+
+#16
+ratis-test/src/test/java/org/apache/ratis/conf/TestRaftProperties.java:53: error: Null Dereference
+  `Boolean RaftProperties.getBoolean(String,Boolean)` could be null (null value originating from line 53) and is dereferenced. 
+  51.         Assertions.assertTrue(p.getBoolean(KEY, null));
+  52.         setNonUnderscoreValue(p, "false");
+  53. >       Assertions.assertFalse(p.getBoolean(KEY, null));
+  54.         setUnderscoreValue(p, "fa_lse");
+  55.         Assertions.assertNull(p.getBoolean(KEY, null));
+
+#17
+ratis-test/src/test/java/org/apache/ratis/retry/TestMultipleLinearRandomRetry.java:57: error: Null Dereference
+  `computed` could be null (from the call to `MultipleLinearRandomRetry.parseCommaSeparated(...)` on line 55) and is dereferenced. 
+  55.       final MultipleLinearRandomRetry computed = MultipleLinearRandomRetry.parseCommaSeparated(input);
+  56.       Assertions.assertNotNull(computed);
+  57. >     Assertions.assertTrue(computed.toString().endsWith(expected));
+  58.       return computed;
+  59.     }
+
+#18
+ratis-test/src/test/java/org/apache/ratis/server/raftlog/TestRaftLogMetrics.java:160: error: Null Dereference
+  `tm` could be null (from the call to `RatisMetricRegistryImpl.get(...)` on line 156) and is dereferenced. 
+  158.       final MetricsStateMachine stateMachine = MetricsStateMachine.get(server);
+  159.       final int expectedFlush = stateMachine.getFlushCount();
+  160. >     Assertions.assertEquals(expectedFlush, tm.getCount()); // Ideally, flushCount should be same as syncCount.
+  161.       Assertions.assertTrue(tm.getMeanRate() > 0);
+  162.   
+
+#19
+ratis-test/src/test/java/org/apache/ratis/util/TestLifeCycle.java:54: error: Null Dereference
+  null (null value originating from line 54) is dereferenced. 
+  52.       states.forEach(
+  53.           from -> states.forEach(
+  54. >             to -> assertEquals(successors.get(from).contains(to),
+  55.                   isValid(from, to), from + " -> " + to)));
+  56.     }
+
+Found 20 issues
                 Issue Type(ISSUED_TYPE_ID): #
-     Null Dereference(NULLPTR_DEREFERENCE): 10
+     Null Dereference(NULLPTR_DEREFERENCE): 18
   Pulse Resource Leak(PULSE_RESOURCE_LEAK): 2

@@ -25,10 +25,18 @@ public class Cast {
         return null;
     }
 
-    public void helper() {
-             Subtype x = helper1(data);   
+    public static void main(String[] args) {
+        helper();
+    }
+
+    public static void helper() {
+             tt(null);
                
             }
+
+    public static void tt(Boolean x){
+        if (!x) {}
+    }
     
     
 
