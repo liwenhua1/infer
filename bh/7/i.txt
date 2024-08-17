@@ -1,0 +1,1218 @@
+process analysis
+Cast$Subtype.read1 disjuncts:
+                 #0: (conditions: (empty) phi: (empty)
+                      { roots={ &this=v1, &y=v3, &x=v2 };
+                        mem  ={ v1 -> { * -> v4 },
+                                v2 -> { * -> v5 },
+                                v3 -> { * -> v6 },
+                                v4 -> { * -> v7 } };
+                        attrs={ v1 -> { MustBeValid(, None, t=0) },
+                                v2 -> { MustBeValid(, None, t=0) },
+                                v3 -> { MustBeValid(, None, t=0) },
+                                v4 -> { DynamicType Cast$Subtype, SourceFile [None],
+                                        MustBeValid(, None, t=0) },
+                                v5 -> { StaticType class Cast },
+                                v6 -> { StaticType class Cast$Subtype } };}
+                      PRE=[{ roots={ &this=v1, &y=v3, &x=v2 };
+                             mem  ={ v1 -> { * -> v4 },
+                                     v2 -> { * -> v5 },
+                                     v3 -> { * -> v6 },
+                                     v4 -> { * -> v7 },
+                                     v5 -> { },
+                                     v6 -> { },
+                                     v7 -> { } };
+                             attrs={ v1 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                                     v2 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                                     v3 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                                     v4 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) } };}]
+                      need_closure_specialization=false
+                      need_dynamic_type_specialization={ }
+                      skipped_calls={ }
+                      Topl={len=0;content=
+                             [  ]},
+                     conditions= [] timestamp= 3)
+                 
+                 Non-disj state:
+                   copy map: { }, parameter map: { }, destructor checked: { }, 
+                   captured: { }, locked: false, loads: ({ },{ }),process analysis end
+process analysis
+ passed to: { }Cast.<init>
+1 disjuncts:
+#0: (conditions: (empty) phi: term_eqs: Object.<init>()([v2])=v5
+     { roots={ &this=v1 };
+       mem  ={ v1 -> { * -> v2 }, v2 -> { * -> v3 } };
+       attrs={ v1 -> { MustBeValid(, None, t=0) },
+               v2 -> { DynamicType Cast, SourceFile [None],
+                       MustBeValid(, None, t=0),
+                       UnknownEffect(function `Object.<init>()` with no summary,
+                                     in call to function `Object.<init>()` with no summary at line 9 :t2
+                                     [] ) } };}
+     PRE=[{ roots={ &this=v1 };
+            mem  ={ v1 -> { * -> v2 }, v2 -> { * -> v3 }, v3 -> { } };
+            attrs={ v1 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                    v2 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) } };}]
+     need_closure_specialization=false
+     need_dynamic_type_specialization={ }
+     skipped_calls={ Object.<init>() -> call to skipped function occurs here }
+     Topl={len=0;content=
+            [  ]},
+    conditions= [] timestamp= 7)
+
+Non-disj state:
+  copy map: { }, parameter map: { }, destructor checked: { }, captured: { }, 
+  locked: false, loads: ({ n$0 -> { this } },{ this -> { line 9 -> { 1 } } }),
+  process analysis end
+process analysis
+passed to: { this -> { Object.<init>() -> { line 9 -> { 2 } } } }Cast2.<init>
+1 disjuncts:
+#0: (conditions: (empty) phi: term_eqs: Cast2.<init>()([v2])=v5
+     { roots={ &this=v1 };
+       mem  ={ v1 -> { * -> v2 }, v2 -> { * -> v3 } };
+       attrs={ v1 -> { MustBeValid(, None, t=0) },
+               v2 -> { DynamicType Cast2, SourceFile [None],
+                       MustBeValid(, None, t=0),
+                       UnknownEffect(function `Cast2.<init>()` with no summary,
+                                     in call to function `Cast2.<init>()` with no summary at line 190 :t2
+                                     [] ) } };}
+     PRE=[{ roots={ &this=v1 };
+            mem  ={ v1 -> { * -> v2 }, v2 -> { * -> v3 }, v3 -> { } };
+            attrs={ v1 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                    v2 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) } };}]
+     need_closure_specialization=false
+     need_dynamic_type_specialization={ }
+     skipped_calls={ Cast2.<init>() -> call to skipped function occurs here }
+     Topl={len=0;content=
+            [  ]},
+    conditions= [] timestamp= 7)
+
+Non-disj state:
+  copy map: { }, parameter map: { }, destructor checked: { }, captured: { }, 
+  locked: false, loads: ({ n$0 -> { this } },{ this -> { line 190 -> { 1 } } }),
+  process analysis end
+process analysis
+passed to: { this -> { Cast2.<init>() -> { line 190 -> { 2 } } } }Cast$Subtype.aux
+1 disjuncts:
+#0: (conditions: (empty) phi: (empty)
+     { roots={ &this=v1 };
+       mem  ={ v1 -> { * -> v2 }, v2 -> { * -> v3 } };
+       attrs={ v1 -> { MustBeValid(, None, t=0) },
+               v2 -> { DynamicType Cast$Subtype, SourceFile [None], MustBeValid(, None, t=0) } };}
+     PRE=[{ roots={ &this=v1 };
+            mem  ={ v1 -> { * -> v2 }, v2 -> { * -> v3 }, v3 -> { } };
+            attrs={ v1 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                    v2 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) } };}]
+     need_closure_specialization=false
+     need_dynamic_type_specialization={ }
+     skipped_calls={ }
+     Topl={len=0;content=
+            [  ]},
+    conditions= [] timestamp= 3)
+
+Non-disj state:
+  copy map: { }, parameter map: { }, destructor checked: { }, captured: { }, 
+  locked: false, loads: ({ },{ }),process analysis end
+process analysis
+ passed to: { }Cast.helper3 disjuncts:
+                                                            #0: (conditions: (empty) phi: (empty)
+                                                                 { roots=
+                                                                   { &a=v2, &this=v1 };
+                                                                   mem  =
+                                                                   { v1 -> { * -> v3 },
+                                                                    v2 -> { * -> v4 },
+                                                                    v3 -> { data -> v6, * -> v5 },
+                                                                    v4 -> { * -> v9 },
+                                                                    v6 -> { * -> v7 },
+                                                                    v7 -> { * -> v8 } };
+                                                                   attrs=
+                                                                   { v1 -> { MustBeValid(, None, t=0) },
+                                                                    v2 -> { MustBeValid(, None, t=0) },
+                                                                    v3 -> { DynamicType Cast, SourceFile [None],
+                                                                    MustBeValid(, None, t=0),
+                                                                    StaticType class Cast },
+                                                                    v4 -> { DynamicType Cast$Subtype, SourceFile [None],
+                                                                    MustBeValid(, None, t=7),
+                                                                    StaticType class Cast$Subtype },
+                                                                    v6 -> { MustBeValid(, None, t=2) },
+                                                                    v7 -> { MustBeValid(, None, t=3),
+                                                                    StaticType class Cast$Subtype } };}
+                                                                 PRE=[{
+                                                                  roots=
+                                                                  { &a=v2, &this=v1 };
+                                                                  mem  =
+                                                                  { v1 -> { * -> v3 },
+                                                                    v2 -> { * -> v4 },
+                                                                    v3 -> { data -> v6, * -> v5 },
+                                                                    v4 -> { * -> v9 },
+                                                                    v5 -> { },
+                                                                    v6 -> { * -> v7 },
+                                                                    v7 -> { * -> v8 },
+                                                                    v8 -> { },
+                                                                    v9 -> { } };
+                                                                  attrs=
+                                                                  { v1 -> { MustBeInitialized(, t=0),
+                                                                    MustBeValid(, None, t=0) },
+                                                                    v2 -> { MustBeInitialized(, t=0),
+                                                                    MustBeValid(, None, t=0) },
+                                                                    v3 -> { MustBeInitialized(, t=0),
+                                                                    MustBeValid(, None, t=0) },
+                                                                    v4 -> { MustBeInitialized(, t=7),
+                                                                    MustBeValid(, None, t=7) },
+                                                                    v6 -> { MustBeInitialized(, t=2),
+                                                                    MustBeValid(, None, t=2) },
+                                                                    v7 -> { MustBeInitialized(, t=3),
+                                                                    MustBeValid(, None, t=3) } };}]
+                                                                 need_closure_specialization=false
+                                                                 need_dynamic_type_specialization=
+                                                                 { v7 }
+                                                                 skipped_calls=
+                                                                 { }
+                                                                 Topl=
+                                                                 {len=0;content=
+                                                                   [  ]},
+                                                                conditions= [] timestamp= 17)
+                                                            #1: (conditions: (empty) phi: (empty)
+                                                                 { roots=
+                                                                   { &a=v2, &this=v1 };
+                                                                   mem  =
+                                                                   { v1 -> { * -> v3 },
+                                                                    v2 -> { * -> v4 },
+                                                                    v3 -> { data -> v6, * -> v5 },
+                                                                    v4 -> { * -> v9 },
+                                                                    v6 -> { * -> v7 },
+                                                                    v7 -> { * -> v8 } };
+                                                                   attrs=
+                                                                   { v1 -> { MustBeValid(, None, t=0) },
+                                                                    v2 -> { MustBeValid(, None, t=0) },
+                                                                    v3 -> { DynamicType Cast, SourceFile [None],
+                                                                    MustBeValid(, None, t=0),
+                                                                    StaticType class Cast },
+                                                                    v4 -> { DynamicType Cast$Sub3, SourceFile [None],
+                                                                    MustBeValid(, None, t=7),
+                                                                    StaticType class Cast$Subtype },
+                                                                    v6 -> { MustBeValid(, None, t=2) },
+                                                                    v7 -> { MustBeValid(, None, t=3),
+                                                                    StaticType class Cast$Subtype } };}
+                                                                 PRE=[{
+                                                                  roots=
+                                                                  { &a=v2, &this=v1 };
+                                                                  mem  =
+                                                                  { v1 -> { * -> v3 },
+                                                                    v2 -> { * -> v4 },
+                                                                    v3 -> { data -> v6, * -> v5 },
+                                                                    v4 -> { * -> v9 },
+                                                                    v5 -> { },
+                                                                    v6 -> { * -> v7 },
+                                                                    v7 -> { * -> v8 },
+                                                                    v8 -> { },
+                                                                    v9 -> { } };
+                                                                  attrs=
+                                                                  { v1 -> { MustBeInitialized(, t=0),
+                                                                    MustBeValid(, None, t=0) },
+                                                                    v2 -> { MustBeInitialized(, t=0),
+                                                                    MustBeValid(, None, t=0) },
+                                                                    v3 -> { MustBeInitialized(, t=0),
+                                                                    MustBeValid(, None, t=0) },
+                                                                    v4 -> { MustBeInitialized(, t=7),
+                                                                    MustBeValid(, None, t=7) },
+                                                                    v6 -> { MustBeInitialized(, t=2),
+                                                                    MustBeValid(, None, t=2) },
+                                                                    v7 -> { MustBeInitialized(, t=3),
+                                                                    MustBeValid(, None, t=3) } };}]
+                                                                 need_closure_specialization=false
+                                                                 need_dynamic_type_specialization=
+                                                                 { v7 }
+                                                                 skipped_calls=
+                                                                 { }
+                                                                 Topl=
+                                                                 {len=0;content=
+                                                                   [  ]},
+                                                                conditions= [] timestamp= 17)
+                                                            #2: (conditions: (empty) phi: (empty)
+                                                                 { roots=
+                                                                   { &a=v2, &this=v1 };
+                                                                   mem  =
+                                                                   { v1 -> { * -> v3 },
+                                                                    v2 -> { * -> v4 },
+                                                                    v3 -> { data -> v6, * -> v5 },
+                                                                    v4 -> { * -> v9 },
+                                                                    v6 -> { * -> v7 },
+                                                                    v7 -> { * -> v8 } };
+                                                                   attrs=
+                                                                   { v1 -> { MustBeValid(, None, t=0) },
+                                                                    v2 -> { MustBeValid(, None, t=0) },
+                                                                    v3 -> { DynamicType Cast, SourceFile [None],
+                                                                    MustBeValid(, None, t=0),
+                                                                    StaticType class Cast },
+                                                                    v4 -> { DynamicType Cast$Sub1, SourceFile [None],
+                                                                    MustBeValid(, None, t=7),
+                                                                    StaticType class Cast$Subtype },
+                                                                    v6 -> { MustBeValid(, None, t=2) },
+                                                                    v7 -> { MustBeValid(, None, t=3),
+                                                                    StaticType class Cast$Subtype } };}
+                                                                 PRE=[{
+                                                                  roots=
+                                                                  { &a=v2, &this=v1 };
+                                                                  mem  =
+                                                                  { v1 -> { * -> v3 },
+                                                                    v2 -> { * -> v4 },
+                                                                    v3 -> { data -> v6, * -> v5 },
+                                                                    v4 -> { * -> v9 },
+                                                                    v5 -> { },
+                                                                    v6 -> { * -> v7 },
+                                                                    v7 -> { * -> v8 },
+                                                                    v8 -> { },
+                                                                    v9 -> { } };
+                                                                  attrs=
+                                                                  { v1 -> { MustBeInitialized(, t=0),
+                                                                    MustBeValid(, None, t=0) },
+                                                                    v2 -> { MustBeInitialized(, t=0),
+                                                                    MustBeValid(, None, t=0) },
+                                                                    v3 -> { MustBeInitialized(, t=0),
+                                                                    MustBeValid(, None, t=0) },
+                                                                    v4 -> { MustBeInitialized(, t=7),
+                                                                    MustBeValid(, None, t=7) },
+                                                                    v6 -> { MustBeInitialized(, t=2),
+                                                                    MustBeValid(, None, t=2) },
+                                                                    v7 -> { MustBeInitialized(, t=3),
+                                                                    MustBeValid(, None, t=3) } };}]
+                                                                 need_closure_specialization=false
+                                                                 need_dynamic_type_specialization=
+                                                                 { v7 }
+                                                                 skipped_calls=
+                                                                 { }
+                                                                 Topl=
+                                                                 {len=0;content=
+                                                                   [  ]},
+                                                                conditions= [] timestamp= 17)
+                                                            
+                                                            Non-disj state:
+                                                              copy map: { }, 
+                                                              parameter map: { },
+                                                              destructor checked: { },
+                                                              captured: { }, 
+                                                              locked: false,
+                                                              loads: (
+                                                              { n$0 -> { this },
+                                                                n$4 -> { a },
+                                                                n$6 -> { this },
+                                                                n$7 -> { this } },
+                                                              { a -> { line 31 -> { 6 } },
+                                                                this -> { line 30 -> { 1 },
+                                                                    line 31 -> { 8, 9 } } }),
+                                                              passed to: 
+                                                              { a -> { void Cast$Subtype.read(Cast,Cast$Subtype) -> { line 31 -> { 11 } } },
+                                                                this -> { void Cast$Subtype.read(Cast,Cast$Subtype) -> { line 31 -> { 11 } } } }process analysis end
+process analysis
+Cast.helper1
+11 disjuncts:
+#0: (conditions: {[v23] = 0}∧{[v5 + -v25] ≠ 0}∧{[v5 + -v27] ≠ 0}∧{[v20 + -v21] ≠ 0}
+     phi: linear_eqs: v21 = 1 ∧ v23 = 0
+          && term_eqs: 0=v23∧1=v21
+          && intervals: v21=1 ∧ v23=null
+          && atoms: {[v5 + -v25] ≠ 0}∧{[v5 + -v27] ≠ 0}∧{[v20 + -v21] ≠ 0}
+     { roots={ &a=v2, &this=v1 };
+       mem  ={ v1 -> { * -> v4 },
+               v2 -> { * -> v5 },
+               v3 -> { * -> v23 },
+               v4 -> { obj -> v7, * -> v6 },
+               v7 -> { * -> v8 },
+               v8 -> { * -> v9 },
+               v9 -> { __infer_model_backing_collection_snd -> v26,
+                       __infer_model_backing_collection_fst -> v24,
+                       __infer_model_backing_collection_empty -> v19 },
+               v19 -> { * -> v20 },
+               v24 -> { * -> v25 },
+               v26 -> { * -> v27 },
+               v30 -> { * -> v23 } };
+       attrs={ v1 -> { MustBeValid(, None, t=0) },
+               v2 -> { MustBeValid(, None, t=0) },
+               v3 -> { s&x (variable `x` declared here at line 22 :t0 ) at line 24,
+                       MustBeValid(, None, t=11),
+                       WrittenTo (11, ) },
+               v4 -> { DynamicType Cast, SourceFile [None], MustBeValid(, None, t=0) },
+               v5 -> { StaticType class java.lang.String },
+               v7 -> { MustBeValid(, None, t=2) },
+               v8 -> { MustBeValid(, None, t=3) },
+               v9 -> { MustBeValid(, None, t=5) },
+               v19 -> { MustBeValid(, None, t=5) },
+               v24 -> { MustBeValid(, None, t=5) },
+               v26 -> { MustBeValid(, None, t=5) },
+               v30 -> { MustBeValid(, None, t=6), WrittenTo (6, ) } };}
+     PRE=[{ roots={ &a=v2, &this=v1 };
+            mem  ={ v1 -> { * -> v4 },
+                    v2 -> { * -> v5 },
+                    v4 -> { obj -> v7, * -> v6 },
+                    v5 -> { },
+                    v6 -> { },
+                    v7 -> { * -> v8 },
+                    v8 -> { * -> v9 },
+                    v9 -> { __infer_model_backing_collection_snd -> v26,
+                            __infer_model_backing_collection_fst -> v24,
+                            __infer_model_backing_collection_empty -> v19 },
+                    v19 -> { * -> v20 },
+                    v20 -> { },
+                    v24 -> { * -> v25 },
+                    v25 -> { },
+                    v26 -> { * -> v27 },
+                    v27 -> { } };
+            attrs={ v1 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                    v2 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                    v4 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                    v7 -> { MustBeInitialized(, t=2), MustBeValid(, None, t=2) },
+                    v8 -> { MustBeInitialized(, t=3), MustBeValid(, None, t=3) },
+                    v9 -> { MustBeInitialized(, t=5), MustBeValid(, None, t=5) },
+                    v19 -> { MustBeInitialized(, t=5), MustBeValid(, None, t=5) },
+                    v24 -> { MustBeInitialized(, t=5), MustBeValid(, None, t=5) },
+                    v26 -> { MustBeInitialized(, t=5), MustBeValid(, None, t=5) } };}]
+     need_closure_specialization=false
+     need_dynamic_type_specialization={ v8 }
+     skipped_calls={ }
+     Topl={len=0;content=
+            [  ]},
+    conditions= [] timestamp= 21)
+#1: (conditions: {[v5 + -v27] = 0}∧{[v20 + -v21] ≠ 0}∧{[v23] ≠ 0}
+     phi: var_eqs: v5=v27
+          && linear_eqs: v21 = 1 ∧ v23 = a4 +1
+          && term_eqs: 1=v21∧[a4 +1]=v23
+          && intervals: v21=1 ∧ v23≥1
+          && atoms: {[v20 + -v21] ≠ 0}∧{[v23] ≠ 0}
+     { roots={ &a=v2, &this=v1 };
+       mem  ={ v1 -> { * -> v4 },
+               v2 -> { * -> v5 },
+               v3 -> { * -> v23 },
+               v4 -> { data -> v48, obj -> v7, * -> v6 },
+               v7 -> { * -> v8 },
+               v8 -> { * -> v9 },
+               v9 -> { __infer_model_backing_collection_snd -> v26,
+                       __infer_model_backing_collection_fst -> v24,
+                       __infer_model_backing_collection_empty -> v19 },
+               v19 -> { * -> v20 },
+               v23 -> { * -> v51 },
+               v24 -> { * -> v25 },
+               v26 -> { * -> v27 },
+               v28 -> { * -> v23 },
+               v48 -> { * -> v49 },
+               v49 -> { * -> v50 } };
+       attrs={ v1 -> { MustBeValid(, None, t=0) },
+               v2 -> { MustBeValid(, None, t=0) },
+               v3 -> { s&x (variable `x` declared here at line 22 :t0 ) at line 25,
+                       MustBeValid(, None, t=11),
+                       WrittenTo (11, ) },
+               v4 -> { DynamicType Cast, SourceFile [None], MustBeValid(, None, t=0) },
+               v5 -> { StaticType class java.lang.String },
+               v7 -> { MustBeValid(, None, t=2) },
+               v8 -> { MustBeValid(, None, t=3) },
+               v9 -> { MustBeValid(, None, t=5) },
+               v19 -> { MustBeValid(, None, t=5) },
+               v23 -> { MustBeValid(, None, t=20) },
+               v24 -> { MustBeValid(, None, t=5) },
+               v26 -> { MustBeValid(, None, t=5) },
+               v28 -> { MustBeValid(, None, t=6), WrittenTo (6, ) },
+               v48 -> { MustBeValid(, None, t=20) },
+               v49 -> { MustBeValid(, None, t=20) } };}
+     PRE=[{ roots={ &a=v2, &this=v1 };
+            mem  ={ v1 -> { * -> v4 },
+                    v2 -> { * -> v5 },
+                    v4 -> { data -> v48, obj -> v7, * -> v6 },
+                    v5 -> { },
+                    v6 -> { },
+                    v7 -> { * -> v8 },
+                    v8 -> { * -> v9 },
+                    v9 -> { __infer_model_backing_collection_snd -> v26,
+                            __infer_model_backing_collection_fst -> v24,
+                            __infer_model_backing_collection_empty -> v19 },
+                    v19 -> { * -> v20 },
+                    v20 -> { },
+                    v24 -> { * -> v25 },
+                    v25 -> { },
+                    v26 -> { * -> v27 },
+                    v27 -> { },
+                    v48 -> { * -> v49 },
+                    v49 -> { * -> v50 },
+                    v50 -> { } };
+            attrs={ v1 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                    v2 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                    v4 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                    v7 -> { MustBeInitialized(, t=2), MustBeValid(, None, t=2) },
+                    v8 -> { MustBeInitialized(, t=3), MustBeValid(, None, t=3) },
+                    v9 -> { MustBeInitialized(, t=5), MustBeValid(, None, t=5) },
+                    v19 -> { MustBeInitialized(, t=5), MustBeValid(, None, t=5) },
+                    v24 -> { MustBeInitialized(, t=5), MustBeValid(, None, t=5) },
+                    v26 -> { MustBeInitialized(, t=5), MustBeValid(, None, t=5) },
+                    v48 -> { MustBeInitialized(, t=20), MustBeValid(, None, t=20) },
+                    v49 -> { MustBeInitialized(, t=20), MustBeValid(, None, t=20) } };}]
+     need_closure_specialization=false
+     need_dynamic_type_specialization={ v8, v49 }
+     skipped_calls={ }
+     Topl={len=0;content=
+            [  ]},
+    conditions= [] timestamp= 27)
+#2: (conditions: {[v20 + -v21] = 0}
+     phi: var_eqs: v20=v21
+          && linear_eqs: v20 = 1 ∧ v22 = 0
+          && term_eqs: 0=v22∧1=v20
+          && intervals: v21=1 ∧ v22=null
+     { roots={ &a=v2, &this=v1 };
+       mem  ={ v1 -> { * -> v4 },
+               v2 -> { * -> v5 },
+               v3 -> { * -> v22 },
+               v4 -> { obj -> v7, * -> v6 },
+               v7 -> { * -> v8 },
+               v8 -> { * -> v9 },
+               v9 -> { __infer_model_backing_collection_empty -> v19 },
+               v19 -> { * -> v20 },
+               v31 -> { * -> v22 } };
+       attrs={ v1 -> { MustBeValid(, None, t=0) },
+               v2 -> { MustBeValid(, None, t=0) },
+               v3 -> { s&x (variable `x` declared here at line 22 :t0 ) at line 24,
+                       MustBeValid(, None, t=11),
+                       WrittenTo (11, ) },
+               v4 -> { DynamicType Cast, SourceFile [None], MustBeValid(, None, t=0) },
+               v5 -> { StaticType class java.lang.String },
+               v7 -> { MustBeValid(, None, t=2) },
+               v8 -> { MustBeValid(, None, t=3) },
+               v9 -> { MustBeValid(, None, t=5) },
+               v19 -> { MustBeValid(, None, t=5) },
+               v22 -> { Invalid ConstantDereference(is assigned to the null pointer) },
+               v31 -> { MustBeValid(, None, t=6), WrittenTo (6, ) } };}
+     PRE=[{ roots={ &a=v2, &this=v1 };
+            mem  ={ v1 -> { * -> v4 },
+                    v2 -> { * -> v5 },
+                    v4 -> { obj -> v7, * -> v6 },
+                    v5 -> { },
+                    v6 -> { },
+                    v7 -> { * -> v8 },
+                    v8 -> { * -> v9 },
+                    v9 -> { __infer_model_backing_collection_empty -> v19 },
+                    v19 -> { * -> v20 },
+                    v20 -> { } };
+            attrs={ v1 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                    v2 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                    v4 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                    v7 -> { MustBeInitialized(, t=2), MustBeValid(, None, t=2) },
+                    v8 -> { MustBeInitialized(, t=3), MustBeValid(, None, t=3) },
+                    v9 -> { MustBeInitialized(, t=5), MustBeValid(, None, t=5) },
+                    v19 -> { MustBeInitialized(, t=5), MustBeValid(, None, t=5) } };}]
+     need_closure_specialization=false
+     need_dynamic_type_specialization={ v8 }
+     skipped_calls={ }
+     Topl={len=0;content=
+            [  ]},
+    conditions= [] timestamp= 21)
+#3: (conditions: {[v5 + -v27] = 0}∧{[v20 + -v21] ≠ 0}∧{[v23] ≠ 0}
+     phi: var_eqs: v5=v27
+          && linear_eqs: v21 = 1 ∧ v23 = a4 +1
+          && term_eqs: 1=v21∧[a4 +1]=v23
+          && intervals: v21=1 ∧ v23≥1
+          && atoms: {[v20 + -v21] ≠ 0}∧{[v23] ≠ 0}
+     { roots={ &a=v2, &this=v1 };
+       mem  ={ v1 -> { * -> v4 },
+               v2 -> { * -> v5 },
+               v3 -> { * -> v23 },
+               v4 -> { data -> v52, obj -> v7, * -> v6 },
+               v7 -> { * -> v8 },
+               v8 -> { * -> v9 },
+               v9 -> { __infer_model_backing_collection_snd -> v26,
+                       __infer_model_backing_collection_fst -> v24,
+                       __infer_model_backing_collection_empty -> v19 },
+               v19 -> { * -> v20 },
+               v23 -> { * -> v55 },
+               v24 -> { * -> v25 },
+               v26 -> { * -> v27 },
+               v28 -> { * -> v23 },
+               v52 -> { * -> v53 },
+               v53 -> { * -> v54 } };
+       attrs={ v1 -> { MustBeValid(, None, t=0) },
+               v2 -> { MustBeValid(, None, t=0) },
+               v3 -> { s&x (variable `x` declared here at line 22 :t0 ) at line 25,
+                       MustBeValid(, None, t=11),
+                       WrittenTo (11, ) },
+               v4 -> { DynamicType Cast, SourceFile [None], MustBeValid(, None, t=0) },
+               v5 -> { StaticType class java.lang.String },
+               v7 -> { MustBeValid(, None, t=2) },
+               v8 -> { MustBeValid(, None, t=3) },
+               v9 -> { MustBeValid(, None, t=5) },
+               v19 -> { MustBeValid(, None, t=5) },
+               v23 -> { MustBeValid(, None, t=20) },
+               v24 -> { MustBeValid(, None, t=5) },
+               v26 -> { MustBeValid(, None, t=5) },
+               v28 -> { MustBeValid(, None, t=6), WrittenTo (6, ) },
+               v52 -> { MustBeValid(, None, t=20) },
+               v53 -> { MustBeValid(, None, t=20) } };}
+     PRE=[{ roots={ &a=v2, &this=v1 };
+            mem  ={ v1 -> { * -> v4 },
+                    v2 -> { * -> v5 },
+                    v4 -> { data -> v52, obj -> v7, * -> v6 },
+                    v5 -> { },
+                    v6 -> { },
+                    v7 -> { * -> v8 },
+                    v8 -> { * -> v9 },
+                    v9 -> { __infer_model_backing_collection_snd -> v26,
+                            __infer_model_backing_collection_fst -> v24,
+                            __infer_model_backing_collection_empty -> v19 },
+                    v19 -> { * -> v20 },
+                    v20 -> { },
+                    v24 -> { * -> v25 },
+                    v25 -> { },
+                    v26 -> { * -> v27 },
+                    v27 -> { },
+                    v52 -> { * -> v53 },
+                    v53 -> { * -> v54 },
+                    v54 -> { } };
+            attrs={ v1 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                    v2 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                    v4 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                    v7 -> { MustBeInitialized(, t=2), MustBeValid(, None, t=2) },
+                    v8 -> { MustBeInitialized(, t=3), MustBeValid(, None, t=3) },
+                    v9 -> { MustBeInitialized(, t=5), MustBeValid(, None, t=5) },
+                    v19 -> { MustBeInitialized(, t=5), MustBeValid(, None, t=5) },
+                    v24 -> { MustBeInitialized(, t=5), MustBeValid(, None, t=5) },
+                    v26 -> { MustBeInitialized(, t=5), MustBeValid(, None, t=5) },
+                    v52 -> { MustBeInitialized(, t=20), MustBeValid(, None, t=20) },
+                    v53 -> { MustBeInitialized(, t=20), MustBeValid(, None, t=20) } };}]
+     need_closure_specialization=false
+     need_dynamic_type_specialization={ v8, v49 }
+     skipped_calls={ }
+     Topl={len=0;content=
+            [  ]},
+    conditions= [] timestamp= 27)
+#4: (conditions: {[v5 + -v27] = 0}∧{[v20 + -v21] ≠ 0}∧{[v23] ≠ 0}
+     phi: var_eqs: v5=v27
+          && linear_eqs: v21 = 1 ∧ v23 = a4 +1
+          && term_eqs: 1=v21∧[a4 +1]=v23
+          && intervals: v21=1 ∧ v23≥1
+          && atoms: {[v20 + -v21] ≠ 0}∧{[v23] ≠ 0}
+     { roots={ &a=v2, &this=v1 };
+       mem  ={ v1 -> { * -> v4 },
+               v2 -> { * -> v5 },
+               v3 -> { * -> v23 },
+               v4 -> { data -> v56, obj -> v7, * -> v6 },
+               v7 -> { * -> v8 },
+               v8 -> { * -> v9 },
+               v9 -> { __infer_model_backing_collection_snd -> v26,
+                       __infer_model_backing_collection_fst -> v24,
+                       __infer_model_backing_collection_empty -> v19 },
+               v19 -> { * -> v20 },
+               v23 -> { * -> v59 },
+               v24 -> { * -> v25 },
+               v26 -> { * -> v27 },
+               v28 -> { * -> v23 },
+               v56 -> { * -> v57 },
+               v57 -> { * -> v58 } };
+       attrs={ v1 -> { MustBeValid(, None, t=0) },
+               v2 -> { MustBeValid(, None, t=0) },
+               v3 -> { s&x (variable `x` declared here at line 22 :t0 ) at line 25,
+                       MustBeValid(, None, t=11),
+                       WrittenTo (11, ) },
+               v4 -> { DynamicType Cast, SourceFile [None], MustBeValid(, None, t=0) },
+               v5 -> { StaticType class java.lang.String },
+               v7 -> { MustBeValid(, None, t=2) },
+               v8 -> { MustBeValid(, None, t=3) },
+               v9 -> { MustBeValid(, None, t=5) },
+               v19 -> { MustBeValid(, None, t=5) },
+               v23 -> { MustBeValid(, None, t=20) },
+               v24 -> { MustBeValid(, None, t=5) },
+               v26 -> { MustBeValid(, None, t=5) },
+               v28 -> { MustBeValid(, None, t=6), WrittenTo (6, ) },
+               v56 -> { MustBeValid(, None, t=20) },
+               v57 -> { MustBeValid(, None, t=20) } };}
+     PRE=[{ roots={ &a=v2, &this=v1 };
+            mem  ={ v1 -> { * -> v4 },
+                    v2 -> { * -> v5 },
+                    v4 -> { data -> v56, obj -> v7, * -> v6 },
+                    v5 -> { },
+                    v6 -> { },
+                    v7 -> { * -> v8 },
+                    v8 -> { * -> v9 },
+                    v9 -> { __infer_model_backing_collection_snd -> v26,
+                            __infer_model_backing_collection_fst -> v24,
+                            __infer_model_backing_collection_empty -> v19 },
+                    v19 -> { * -> v20 },
+                    v20 -> { },
+                    v24 -> { * -> v25 },
+                    v25 -> { },
+                    v26 -> { * -> v27 },
+                    v27 -> { },
+                    v56 -> { * -> v57 },
+                    v57 -> { * -> v58 },
+                    v58 -> { } };
+            attrs={ v1 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                    v2 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                    v4 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                    v7 -> { MustBeInitialized(, t=2), MustBeValid(, None, t=2) },
+                    v8 -> { MustBeInitialized(, t=3), MustBeValid(, None, t=3) },
+                    v9 -> { MustBeInitialized(, t=5), MustBeValid(, None, t=5) },
+                    v19 -> { MustBeInitialized(, t=5), MustBeValid(, None, t=5) },
+                    v24 -> { MustBeInitialized(, t=5), MustBeValid(, None, t=5) },
+                    v26 -> { MustBeInitialized(, t=5), MustBeValid(, None, t=5) },
+                    v56 -> { MustBeInitialized(, t=20), MustBeValid(, None, t=20) },
+                    v57 -> { MustBeInitialized(, t=20), MustBeValid(, None, t=20) } };}]
+     need_closure_specialization=false
+     need_dynamic_type_specialization={ v8, v49 }
+     skipped_calls={ }
+     Topl={len=0;content=
+            [  ]},
+    conditions= [] timestamp= 27)
+#5: (conditions: {[v5 + -v25] = 0}∧{[v20 + -v21] ≠ 0}∧{[v23] ≠ 0}
+     phi: var_eqs: v5=v25
+          && linear_eqs: v21 = 1 ∧ v23 = a3 +1
+          && term_eqs: 1=v21∧[a3 +1]=v23
+          && intervals: v21=1 ∧ v23≥1
+          && atoms: {[v20 + -v21] ≠ 0}∧{[v23] ≠ 0}
+     { roots={ &a=v2, &this=v1 };
+       mem  ={ v1 -> { * -> v4 },
+               v2 -> { * -> v5 },
+               v3 -> { * -> v23 },
+               v4 -> { data -> v72, obj -> v7, * -> v6 },
+               v7 -> { * -> v8 },
+               v8 -> { * -> v9 },
+               v9 -> { __infer_model_backing_collection_snd -> v26,
+                       __infer_model_backing_collection_fst -> v24,
+                       __infer_model_backing_collection_empty -> v19 },
+               v19 -> { * -> v20 },
+               v23 -> { * -> v75 },
+               v24 -> { * -> v25 },
+               v26 -> { * -> v27 },
+               v29 -> { * -> v23 },
+               v72 -> { * -> v73 },
+               v73 -> { * -> v74 } };
+       attrs={ v1 -> { MustBeValid(, None, t=0) },
+               v2 -> { MustBeValid(, None, t=0) },
+               v3 -> { s&x (variable `x` declared here at line 22 :t0 ) at line 25,
+                       MustBeValid(, None, t=11),
+                       WrittenTo (11, ) },
+               v4 -> { DynamicType Cast, SourceFile [None], MustBeValid(, None, t=0) },
+               v5 -> { StaticType class java.lang.String },
+               v7 -> { MustBeValid(, None, t=2) },
+               v8 -> { MustBeValid(, None, t=3) },
+               v9 -> { MustBeValid(, None, t=5) },
+               v19 -> { MustBeValid(, None, t=5) },
+               v23 -> { MustBeValid(, None, t=20) },
+               v24 -> { MustBeValid(, None, t=5) },
+               v26 -> { MustBeValid(, None, t=5) },
+               v29 -> { MustBeValid(, None, t=6), WrittenTo (6, ) },
+               v72 -> { MustBeValid(, None, t=20) },
+               v73 -> { MustBeValid(, None, t=20) } };}
+     PRE=[{ roots={ &a=v2, &this=v1 };
+            mem  ={ v1 -> { * -> v4 },
+                    v2 -> { * -> v5 },
+                    v4 -> { data -> v72, obj -> v7, * -> v6 },
+                    v5 -> { },
+                    v6 -> { },
+                    v7 -> { * -> v8 },
+                    v8 -> { * -> v9 },
+                    v9 -> { __infer_model_backing_collection_snd -> v26,
+                            __infer_model_backing_collection_fst -> v24,
+                            __infer_model_backing_collection_empty -> v19 },
+                    v19 -> { * -> v20 },
+                    v20 -> { },
+                    v24 -> { * -> v25 },
+                    v25 -> { },
+                    v26 -> { * -> v27 },
+                    v27 -> { },
+                    v72 -> { * -> v73 },
+                    v73 -> { * -> v74 },
+                    v74 -> { } };
+            attrs={ v1 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                    v2 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                    v4 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                    v7 -> { MustBeInitialized(, t=2), MustBeValid(, None, t=2) },
+                    v8 -> { MustBeInitialized(, t=3), MustBeValid(, None, t=3) },
+                    v9 -> { MustBeInitialized(, t=5), MustBeValid(, None, t=5) },
+                    v19 -> { MustBeInitialized(, t=5), MustBeValid(, None, t=5) },
+                    v24 -> { MustBeInitialized(, t=5), MustBeValid(, None, t=5) },
+                    v26 -> { MustBeInitialized(, t=5), MustBeValid(, None, t=5) },
+                    v72 -> { MustBeInitialized(, t=20), MustBeValid(, None, t=20) },
+                    v73 -> { MustBeInitialized(, t=20), MustBeValid(, None, t=20) } };}]
+     need_closure_specialization=false
+     need_dynamic_type_specialization={ v8, v73 }
+     skipped_calls={ }
+     Topl={len=0;content=
+            [  ]},
+    conditions= [] timestamp= 27)
+#6: (conditions: {[v5 + -v25] = 0}∧{[v20 + -v21] ≠ 0}∧{[v23] ≠ 0}
+     phi: var_eqs: v5=v25
+          && linear_eqs: v21 = 1 ∧ v23 = a3 +1
+          && term_eqs: 1=v21∧[a3 +1]=v23
+          && intervals: v21=1 ∧ v23≥1
+          && atoms: {[v20 + -v21] ≠ 0}∧{[v23] ≠ 0}
+     { roots={ &a=v2, &this=v1 };
+       mem  ={ v1 -> { * -> v4 },
+               v2 -> { * -> v5 },
+               v3 -> { * -> v23 },
+               v4 -> { data -> v76, obj -> v7, * -> v6 },
+               v7 -> { * -> v8 },
+               v8 -> { * -> v9 },
+               v9 -> { __infer_model_backing_collection_snd -> v26,
+                       __infer_model_backing_collection_fst -> v24,
+                       __infer_model_backing_collection_empty -> v19 },
+               v19 -> { * -> v20 },
+               v23 -> { * -> v79 },
+               v24 -> { * -> v25 },
+               v26 -> { * -> v27 },
+               v29 -> { * -> v23 },
+               v76 -> { * -> v77 },
+               v77 -> { * -> v78 } };
+       attrs={ v1 -> { MustBeValid(, None, t=0) },
+               v2 -> { MustBeValid(, None, t=0) },
+               v3 -> { s&x (variable `x` declared here at line 22 :t0 ) at line 25,
+                       MustBeValid(, None, t=11),
+                       WrittenTo (11, ) },
+               v4 -> { DynamicType Cast, SourceFile [None], MustBeValid(, None, t=0) },
+               v5 -> { StaticType class java.lang.String },
+               v7 -> { MustBeValid(, None, t=2) },
+               v8 -> { MustBeValid(, None, t=3) },
+               v9 -> { MustBeValid(, None, t=5) },
+               v19 -> { MustBeValid(, None, t=5) },
+               v23 -> { MustBeValid(, None, t=20) },
+               v24 -> { MustBeValid(, None, t=5) },
+               v26 -> { MustBeValid(, None, t=5) },
+               v29 -> { MustBeValid(, None, t=6), WrittenTo (6, ) },
+               v76 -> { MustBeValid(, None, t=20) },
+               v77 -> { MustBeValid(, None, t=20) } };}
+     PRE=[{ roots={ &a=v2, &this=v1 };
+            mem  ={ v1 -> { * -> v4 },
+                    v2 -> { * -> v5 },
+                    v4 -> { data -> v76, obj -> v7, * -> v6 },
+                    v5 -> { },
+                    v6 -> { },
+                    v7 -> { * -> v8 },
+                    v8 -> { * -> v9 },
+                    v9 -> { __infer_model_backing_collection_snd -> v26,
+                            __infer_model_backing_collection_fst -> v24,
+                            __infer_model_backing_collection_empty -> v19 },
+                    v19 -> { * -> v20 },
+                    v20 -> { },
+                    v24 -> { * -> v25 },
+                    v25 -> { },
+                    v26 -> { * -> v27 },
+                    v27 -> { },
+                    v76 -> { * -> v77 },
+                    v77 -> { * -> v78 },
+                    v78 -> { } };
+            attrs={ v1 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                    v2 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                    v4 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                    v7 -> { MustBeInitialized(, t=2), MustBeValid(, None, t=2) },
+                    v8 -> { MustBeInitialized(, t=3), MustBeValid(, None, t=3) },
+                    v9 -> { MustBeInitialized(, t=5), MustBeValid(, None, t=5) },
+                    v19 -> { MustBeInitialized(, t=5), MustBeValid(, None, t=5) },
+                    v24 -> { MustBeInitialized(, t=5), MustBeValid(, None, t=5) },
+                    v26 -> { MustBeInitialized(, t=5), MustBeValid(, None, t=5) },
+                    v76 -> { MustBeInitialized(, t=20), MustBeValid(, None, t=20) },
+                    v77 -> { MustBeInitialized(, t=20), MustBeValid(, None, t=20) } };}]
+     need_closure_specialization=false
+     need_dynamic_type_specialization={ v8, v73 }
+     skipped_calls={ }
+     Topl={len=0;content=
+            [  ]},
+    conditions= [] timestamp= 27)
+#7: (conditions: {[v5 + -v25] = 0}∧{[v20 + -v21] ≠ 0}∧{[v23] ≠ 0}
+     phi: var_eqs: v5=v25
+          && linear_eqs: v21 = 1 ∧ v23 = a3 +1
+          && term_eqs: 1=v21∧[a3 +1]=v23
+          && intervals: v21=1 ∧ v23≥1
+          && atoms: {[v20 + -v21] ≠ 0}∧{[v23] ≠ 0}
+     { roots={ &a=v2, &this=v1 };
+       mem  ={ v1 -> { * -> v4 },
+               v2 -> { * -> v5 },
+               v3 -> { * -> v23 },
+               v4 -> { data -> v80, obj -> v7, * -> v6 },
+               v7 -> { * -> v8 },
+               v8 -> { * -> v9 },
+               v9 -> { __infer_model_backing_collection_snd -> v26,
+                       __infer_model_backing_collection_fst -> v24,
+                       __infer_model_backing_collection_empty -> v19 },
+               v19 -> { * -> v20 },
+               v23 -> { * -> v83 },
+               v24 -> { * -> v25 },
+               v26 -> { * -> v27 },
+               v29 -> { * -> v23 },
+               v80 -> { * -> v81 },
+               v81 -> { * -> v82 } };
+       attrs={ v1 -> { MustBeValid(, None, t=0) },
+               v2 -> { MustBeValid(, None, t=0) },
+               v3 -> { s&x (variable `x` declared here at line 22 :t0 ) at line 25,
+                       MustBeValid(, None, t=11),
+                       WrittenTo (11, ) },
+               v4 -> { DynamicType Cast, SourceFile [None], MustBeValid(, None, t=0) },
+               v5 -> { StaticType class java.lang.String },
+               v7 -> { MustBeValid(, None, t=2) },
+               v8 -> { MustBeValid(, None, t=3) },
+               v9 -> { MustBeValid(, None, t=5) },
+               v19 -> { MustBeValid(, None, t=5) },
+               v23 -> { MustBeValid(, None, t=20) },
+               v24 -> { MustBeValid(, None, t=5) },
+               v26 -> { MustBeValid(, None, t=5) },
+               v29 -> { MustBeValid(, None, t=6), WrittenTo (6, ) },
+               v80 -> { MustBeValid(, None, t=20) },
+               v81 -> { MustBeValid(, None, t=20) } };}
+     PRE=[{ roots={ &a=v2, &this=v1 };
+            mem  ={ v1 -> { * -> v4 },
+                    v2 -> { * -> v5 },
+                    v4 -> { data -> v80, obj -> v7, * -> v6 },
+                    v5 -> { },
+                    v6 -> { },
+                    v7 -> { * -> v8 },
+                    v8 -> { * -> v9 },
+                    v9 -> { __infer_model_backing_collection_snd -> v26,
+                            __infer_model_backing_collection_fst -> v24,
+                            __infer_model_backing_collection_empty -> v19 },
+                    v19 -> { * -> v20 },
+                    v20 -> { },
+                    v24 -> { * -> v25 },
+                    v25 -> { },
+                    v26 -> { * -> v27 },
+                    v27 -> { },
+                    v80 -> { * -> v81 },
+                    v81 -> { * -> v82 },
+                    v82 -> { } };
+            attrs={ v1 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                    v2 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                    v4 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                    v7 -> { MustBeInitialized(, t=2), MustBeValid(, None, t=2) },
+                    v8 -> { MustBeInitialized(, t=3), MustBeValid(, None, t=3) },
+                    v9 -> { MustBeInitialized(, t=5), MustBeValid(, None, t=5) },
+                    v19 -> { MustBeInitialized(, t=5), MustBeValid(, None, t=5) },
+                    v24 -> { MustBeInitialized(, t=5), MustBeValid(, None, t=5) },
+                    v26 -> { MustBeInitialized(, t=5), MustBeValid(, None, t=5) },
+                    v80 -> { MustBeInitialized(, t=20), MustBeValid(, None, t=20) },
+                    v81 -> { MustBeInitialized(, t=20), MustBeValid(, None, t=20) } };}]
+     need_closure_specialization=false
+     need_dynamic_type_specialization={ v8, v73 }
+     skipped_calls={ }
+     Topl={len=0;content=
+            [  ]},
+    conditions= [] timestamp= 27)
+#8: (conditions: {[v5 + -v25] ≠ 0}∧{[v5 + -v27] ≠ 0}∧{[v20 + -v21] ≠ 0}∧{[v23] ≠ 0}
+     phi: linear_eqs: v21 = 1
+          && term_eqs: 1=v21
+          && intervals: v21=1 ∧ v23≠null
+          && atoms: {[v5 + -v25] ≠ 0}∧{[v5 + -v27] ≠ 0}∧{[v20 + -v21] ≠ 0}
+                    ∧{[v23] ≠ 0}
+     { roots={ &a=v2, &this=v1 };
+       mem  ={ v1 -> { * -> v4 },
+               v2 -> { * -> v5 },
+               v3 -> { * -> v23 },
+               v4 -> { data -> v96, obj -> v7, * -> v6 },
+               v7 -> { * -> v8 },
+               v8 -> { * -> v9 },
+               v9 -> { __infer_model_backing_collection_snd -> v26,
+                       __infer_model_backing_collection_fst -> v24,
+                       __infer_model_backing_collection_empty -> v19 },
+               v19 -> { * -> v20 },
+               v23 -> { * -> v99 },
+               v24 -> { * -> v25 },
+               v26 -> { * -> v27 },
+               v30 -> { * -> v23 },
+               v96 -> { * -> v97 },
+               v97 -> { * -> v98 } };
+       attrs={ v1 -> { MustBeValid(, None, t=0) },
+               v2 -> { MustBeValid(, None, t=0) },
+               v3 -> { s&x (variable `x` declared here at line 22 :t0 ) at line 25,
+                       MustBeValid(, None, t=11),
+                       WrittenTo (11, ) },
+               v4 -> { DynamicType Cast, SourceFile [None], MustBeValid(, None, t=0) },
+               v5 -> { StaticType class java.lang.String },
+               v7 -> { MustBeValid(, None, t=2) },
+               v8 -> { MustBeValid(, None, t=3) },
+               v9 -> { MustBeValid(, None, t=5) },
+               v19 -> { MustBeValid(, None, t=5) },
+               v23 -> { MustBeValid(, None, t=20) },
+               v24 -> { MustBeValid(, None, t=5) },
+               v26 -> { MustBeValid(, None, t=5) },
+               v30 -> { MustBeValid(, None, t=6), WrittenTo (6, ) },
+               v96 -> { MustBeValid(, None, t=20) },
+               v97 -> { MustBeValid(, None, t=20) } };}
+     PRE=[{ roots={ &a=v2, &this=v1 };
+            mem  ={ v1 -> { * -> v4 },
+                    v2 -> { * -> v5 },
+                    v4 -> { data -> v96, obj -> v7, * -> v6 },
+                    v5 -> { },
+                    v6 -> { },
+                    v7 -> { * -> v8 },
+                    v8 -> { * -> v9 },
+                    v9 -> { __infer_model_backing_collection_snd -> v26,
+                            __infer_model_backing_collection_fst -> v24,
+                            __infer_model_backing_collection_empty -> v19 },
+                    v19 -> { * -> v20 },
+                    v20 -> { },
+                    v24 -> { * -> v25 },
+                    v25 -> { },
+                    v26 -> { * -> v27 },
+                    v27 -> { },
+                    v96 -> { * -> v97 },
+                    v97 -> { * -> v98 },
+                    v98 -> { } };
+            attrs={ v1 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                    v2 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                    v4 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                    v7 -> { MustBeInitialized(, t=2), MustBeValid(, None, t=2) },
+                    v8 -> { MustBeInitialized(, t=3), MustBeValid(, None, t=3) },
+                    v9 -> { MustBeInitialized(, t=5), MustBeValid(, None, t=5) },
+                    v19 -> { MustBeInitialized(, t=5), MustBeValid(, None, t=5) },
+                    v24 -> { MustBeInitialized(, t=5), MustBeValid(, None, t=5) },
+                    v26 -> { MustBeInitialized(, t=5), MustBeValid(, None, t=5) },
+                    v96 -> { MustBeInitialized(, t=20), MustBeValid(, None, t=20) },
+                    v97 -> { MustBeInitialized(, t=20), MustBeValid(, None, t=20) } };}]
+     need_closure_specialization=false
+     need_dynamic_type_specialization={ v8, v97 }
+     skipped_calls={ }
+     Topl={len=0;content=
+            [  ]},
+    conditions= [] timestamp= 27)
+#9: (conditions: {[v5 + -v25] ≠ 0}∧{[v5 + -v27] ≠ 0}∧{[v20 + -v21] ≠ 0}∧{[v23] ≠ 0}
+     phi: linear_eqs: v21 = 1
+          && term_eqs: 1=v21
+          && intervals: v21=1 ∧ v23≠null
+          && atoms: {[v5 + -v25] ≠ 0}∧{[v5 + -v27] ≠ 0}∧{[v20 + -v21] ≠ 0}
+                    ∧{[v23] ≠ 0}
+     { roots={ &a=v2, &this=v1 };
+       mem  ={ v1 -> { * -> v4 },
+               v2 -> { * -> v5 },
+               v3 -> { * -> v23 },
+               v4 -> { data -> v100, obj -> v7, * -> v6 },
+               v7 -> { * -> v8 },
+               v8 -> { * -> v9 },
+               v9 -> { __infer_model_backing_collection_snd -> v26,
+                       __infer_model_backing_collection_fst -> v24,
+                       __infer_model_backing_collection_empty -> v19 },
+               v19 -> { * -> v20 },
+               v23 -> { * -> v103 },
+               v24 -> { * -> v25 },
+               v26 -> { * -> v27 },
+               v30 -> { * -> v23 },
+               v100 -> { * -> v101 },
+               v101 -> { * -> v102 } };
+       attrs={ v1 -> { MustBeValid(, None, t=0) },
+               v2 -> { MustBeValid(, None, t=0) },
+               v3 -> { s&x (variable `x` declared here at line 22 :t0 ) at line 25,
+                       MustBeValid(, None, t=11),
+                       WrittenTo (11, ) },
+               v4 -> { DynamicType Cast, SourceFile [None], MustBeValid(, None, t=0) },
+               v5 -> { StaticType class java.lang.String },
+               v7 -> { MustBeValid(, None, t=2) },
+               v8 -> { MustBeValid(, None, t=3) },
+               v9 -> { MustBeValid(, None, t=5) },
+               v19 -> { MustBeValid(, None, t=5) },
+               v23 -> { MustBeValid(, None, t=20) },
+               v24 -> { MustBeValid(, None, t=5) },
+               v26 -> { MustBeValid(, None, t=5) },
+               v30 -> { MustBeValid(, None, t=6), WrittenTo (6, ) },
+               v100 -> { MustBeValid(, None, t=20) },
+               v101 -> { MustBeValid(, None, t=20) } };}
+     PRE=[{ roots={ &a=v2, &this=v1 };
+            mem  ={ v1 -> { * -> v4 },
+                    v2 -> { * -> v5 },
+                    v4 -> { data -> v100, obj -> v7, * -> v6 },
+                    v5 -> { },
+                    v6 -> { },
+                    v7 -> { * -> v8 },
+                    v8 -> { * -> v9 },
+                    v9 -> { __infer_model_backing_collection_snd -> v26,
+                            __infer_model_backing_collection_fst -> v24,
+                            __infer_model_backing_collection_empty -> v19 },
+                    v19 -> { * -> v20 },
+                    v20 -> { },
+                    v24 -> { * -> v25 },
+                    v25 -> { },
+                    v26 -> { * -> v27 },
+                    v27 -> { },
+                    v100 -> { * -> v101 },
+                    v101 -> { * -> v102 },
+                    v102 -> { } };
+            attrs={ v1 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                    v2 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                    v4 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                    v7 -> { MustBeInitialized(, t=2), MustBeValid(, None, t=2) },
+                    v8 -> { MustBeInitialized(, t=3), MustBeValid(, None, t=3) },
+                    v9 -> { MustBeInitialized(, t=5), MustBeValid(, None, t=5) },
+                    v19 -> { MustBeInitialized(, t=5), MustBeValid(, None, t=5) },
+                    v24 -> { MustBeInitialized(, t=5), MustBeValid(, None, t=5) },
+                    v26 -> { MustBeInitialized(, t=5), MustBeValid(, None, t=5) },
+                    v100 -> { MustBeInitialized(, t=20), MustBeValid(, None, t=20) },
+                    v101 -> { MustBeInitialized(, t=20), MustBeValid(, None, t=20) } };}]
+     need_closure_specialization=false
+     need_dynamic_type_specialization={ v8, v97 }
+     skipped_calls={ }
+     Topl={len=0;content=
+            [  ]},
+    conditions= [] timestamp= 27)
+#10: (conditions: {[v5 + -v25] ≠ 0}∧{[v5 + -v27] ≠ 0}∧{[v20 + -v21] ≠ 0}∧{[v23] ≠ 0}
+      phi: linear_eqs: v21 = 1
+           && term_eqs: 1=v21
+           && intervals: v21=1 ∧ v23≠null
+           && atoms: {[v5 + -v25] ≠ 0}∧{[v5 + -v27] ≠ 0}∧{[v20 + -v21] ≠ 0}
+                     ∧{[v23] ≠ 0}
+      { roots={ &a=v2, &this=v1 };
+        mem  ={ v1 -> { * -> v4 },
+                v2 -> { * -> v5 },
+                v3 -> { * -> v23 },
+                v4 -> { data -> v104, obj -> v7, * -> v6 },
+                v7 -> { * -> v8 },
+                v8 -> { * -> v9 },
+                v9 -> { __infer_model_backing_collection_snd -> v26,
+                        __infer_model_backing_collection_fst -> v24,
+                        __infer_model_backing_collection_empty -> v19 },
+                v19 -> { * -> v20 },
+                v23 -> { * -> v107 },
+                v24 -> { * -> v25 },
+                v26 -> { * -> v27 },
+                v30 -> { * -> v23 },
+                v104 -> { * -> v105 },
+                v105 -> { * -> v106 } };
+        attrs={ v1 -> { MustBeValid(, None, t=0) },
+                v2 -> { MustBeValid(, None, t=0) },
+                v3 -> { s&x (variable `x` declared here at line 22 :t0 ) at line 25,
+                        MustBeValid(, None, t=11),
+                        WrittenTo (11, ) },
+                v4 -> { DynamicType Cast, SourceFile [None], MustBeValid(, None, t=0) },
+                v5 -> { StaticType class java.lang.String },
+                v7 -> { MustBeValid(, None, t=2) },
+                v8 -> { MustBeValid(, None, t=3) },
+                v9 -> { MustBeValid(, None, t=5) },
+                v19 -> { MustBeValid(, None, t=5) },
+                v23 -> { MustBeValid(, None, t=20) },
+                v24 -> { MustBeValid(, None, t=5) },
+                v26 -> { MustBeValid(, None, t=5) },
+                v30 -> { MustBeValid(, None, t=6), WrittenTo (6, ) },
+                v104 -> { MustBeValid(, None, t=20) },
+                v105 -> { MustBeValid(, None, t=20) } };}
+      PRE=[{ roots={ &a=v2, &this=v1 };
+             mem  ={ v1 -> { * -> v4 },
+                     v2 -> { * -> v5 },
+                     v4 -> { data -> v104, obj -> v7, * -> v6 },
+                     v5 -> { },
+                     v6 -> { },
+                     v7 -> { * -> v8 },
+                     v8 -> { * -> v9 },
+                     v9 -> { __infer_model_backing_collection_snd -> v26,
+                             __infer_model_backing_collection_fst -> v24,
+                             __infer_model_backing_collection_empty -> v19 },
+                     v19 -> { * -> v20 },
+                     v20 -> { },
+                     v24 -> { * -> v25 },
+                     v25 -> { },
+                     v26 -> { * -> v27 },
+                     v27 -> { },
+                     v104 -> { * -> v105 },
+                     v105 -> { * -> v106 },
+                     v106 -> { } };
+             attrs={ v1 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                     v2 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                     v4 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                     v7 -> { MustBeInitialized(, t=2), MustBeValid(, None, t=2) },
+                     v8 -> { MustBeInitialized(, t=3), MustBeValid(, None, t=3) },
+                     v9 -> { MustBeInitialized(, t=5), MustBeValid(, None, t=5) },
+                     v19 -> { MustBeInitialized(, t=5), MustBeValid(, None, t=5) },
+                     v24 -> { MustBeInitialized(, t=5), MustBeValid(, None, t=5) },
+                     v26 -> { MustBeInitialized(, t=5), MustBeValid(, None, t=5) },
+                     v104 -> { MustBeInitialized(, t=20), MustBeValid(, None, t=20) },
+                     v105 -> { MustBeInitialized(, t=20), MustBeValid(, None, t=20) } };}]
+      need_closure_specialization=false
+      need_dynamic_type_specialization={ v8, v97 }
+      skipped_calls={ }
+      Topl={len=0;content=
+             [  ]},
+     conditions= [] timestamp= 27)
+
+Non-disj state:
+  copy map: { }, parameter map: { }, destructor checked: { }, captured: { }, 
+  locked: false,
+  loads: ({ n$0 -> { this },
+            n$3 -> { a },
+            n$5 -> { $irvar0 },
+            n$7 -> { x },
+            n$8 -> { this },
+            n$10 -> { x } },
+  { a -> { line 23 -> { 4 } },
+    this -> { line 23 -> { 1 }, line 25 -> { 17 } },
+    $irvar0 -> { line 23 -> { 9 } },
+    x -> { line 24 -> { 14 }, line 25 -> { 19 } } }),
+  passed to: { a -> { Object Map.get(Object) -> { line 23 -> { 5 } } },
+               this -> { void Cast.helper(Cast$Subtype) -> { line 25 -> { 20 } } },
+               $irvar0 -> { __cast -> { line 23 -> { 10 } } },
+               x -> { void Cast.helper(Cast$Subtype) -> { line 25 -> { 20 } } } }process analysis end
+process analysis
+Cast$Subtype.<init>
+1 disjuncts:
+#0: (conditions: (empty) phi: term_eqs: Object.<init>()([v2])=v5
+     { roots={ &this=v1 };
+       mem  ={ v1 -> { * -> v2 }, v2 -> { * -> v3 } };
+       attrs={ v1 -> { MustBeValid(, None, t=0) },
+               v2 -> { DynamicType Cast$Subtype, SourceFile [None],
+                       MustBeValid(, None, t=0),
+                       UnknownEffect(function `Object.<init>()` with no summary,
+                                     in call to function `Object.<init>()` with no summary at line 13 :t2
+                                     [] ) } };}
+     PRE=[{ roots={ &this=v1 };
+            mem  ={ v1 -> { * -> v2 }, v2 -> { * -> v3 }, v3 -> { } };
+            attrs={ v1 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                    v2 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) } };}]
+     need_closure_specialization=false
+     need_dynamic_type_specialization={ }
+     skipped_calls={ Object.<init>() -> call to skipped function occurs here }
+     Topl={len=0;content=
+            [  ]},
+    conditions= [] timestamp= 7)
+
+Non-disj state:
+  copy map: { }, parameter map: { }, destructor checked: { }, captured: { }, 
+  locked: false, loads: ({ n$0 -> { this } },{ this -> { line 13 -> { 1 } } }),
+  process analysis end
+process analysis
+passed to: { this -> { Object.<init>() -> { line 13 -> { 2 } } } }Cast$Sub1.<init>
+1 disjuncts:
+#0: (conditions: (empty) phi: term_eqs: Cast$Sub1.<init>()([v2])=v5
+     { roots={ &this=v1 };
+       mem  ={ v1 -> { * -> v2 }, v2 -> { * -> v3 } };
+       attrs={ v1 -> { MustBeValid(, None, t=0) },
+               v2 -> { DynamicType Cast$Sub1, SourceFile [None],
+                       MustBeValid(, None, t=0),
+                       UnknownEffect(function `Cast$Sub1.<init>()` with no summary,
+                                     in call to function `Cast$Sub1.<init>()` with no summary at line 185 :t2
+                                     [] ) } };}
+     PRE=[{ roots={ &this=v1 };
+            mem  ={ v1 -> { * -> v2 }, v2 -> { * -> v3 }, v3 -> { } };
+            attrs={ v1 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                    v2 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) } };}]
+     need_closure_specialization=false
+     need_dynamic_type_specialization={ }
+     skipped_calls={ Cast$Sub1.<init>() -> call to skipped function occurs here }
+     Topl={len=0;content=
+            [  ]},
+    conditions= [] timestamp= 7)
+
+Non-disj state:
+  copy map: { }, parameter map: { }, destructor checked: { }, captured: { }, 
+  locked: false, loads: ({ n$0 -> { this } },{ this -> { line 185 -> { 1 } } }),
+  process analysis end
+process analysis
+passed to: { this -> { Cast$Sub1.<init>() -> { line 185 -> { 2 } } } }Cast$Sub3.<init>
+1 disjuncts:
+#0: (conditions: (empty) phi: term_eqs: Cast$Sub3.<init>()([v2])=v5
+     { roots={ &this=v1 };
+       mem  ={ v1 -> { * -> v2 }, v2 -> { * -> v3 } };
+       attrs={ v1 -> { MustBeValid(, None, t=0) },
+               v2 -> { DynamicType Cast$Sub3, SourceFile [None],
+                       MustBeValid(, None, t=0),
+                       UnknownEffect(function `Cast$Sub3.<init>()` with no summary,
+                                     in call to function `Cast$Sub3.<init>()` with no summary at line 186 :t2
+                                     [] ) } };}
+     PRE=[{ roots={ &this=v1 };
+            mem  ={ v1 -> { * -> v2 }, v2 -> { * -> v3 }, v3 -> { } };
+            attrs={ v1 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) },
+                    v2 -> { MustBeInitialized(, t=0), MustBeValid(, None, t=0) } };}]
+     need_closure_specialization=false
+     need_dynamic_type_specialization={ }
+     skipped_calls={ Cast$Sub3.<init>() -> call to skipped function occurs here }
+     Topl={len=0;content=
+            [  ]},
+    conditions= [] timestamp= 7)
+
+Non-disj state:
+  copy map: { }, parameter map: { }, destructor checked: { }, captured: { }, 
+  locked: false, loads: ({ n$0 -> { this } },{ this -> { line 186 -> { 1 } } }),
+  process analysis end
+passed to: { this -> { Cast$Sub3.<init>() -> { line 186 -> { 2 } } } }
+  No issues found  

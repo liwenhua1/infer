@@ -1,5 +1,5 @@
 // import java.io.IOException;
-// import java.util.*;
+ import java.util.*;
 
 /**
  *  
@@ -7,22 +7,31 @@
 
 
 public class Cast {
+    public Map<String,Subtype> obj;
+    public Subtype data;
     // interface  A<T> {
-        static class Subtype{}
+        static class Subtype{
+            public void aux() {}
+            public void read(Cast x, Subtype y) {}
+        }
     // }
     // interface B extends A {}
     // interface C extends A {}
     // static class D implements B {}
 
-    private void helper1(Subtype a) {
-        if (a instanceof Sub1) {}
-        Sub3 b = (Sub3) a;
+    private void helper1(String a) {
+        Subtype x = obj.get(a);
+        if (x != null){
+        helper(x);}
     }
 
     public void helper(Subtype a) {
                 
-                helper1(a);
+               data.aux();
+               a.read(this, data);
             }
+    
+    
 
     // public void test(Subtype a) {
     //             helper(a);
@@ -177,3 +186,6 @@ public class Cast {
     static class Sub3 extends Subtype{}
 
 }
+
+class Cast2 extends Cast {}
+

@@ -489,7 +489,8 @@ let conjoin_callee_arith pre_or_post (callee_summary:AbductiveDomain.Summary.t) 
                                     | Some a -> a in
                               if fst callee_constrain then
                                   let res = check_dynamic_type_sat na1 (callee_yes_instance, callee_not_instance ) tenv in res (*TODO,CALLER AND CALLEE ARE BOTH DYNAMIC*)
-                              else true)
+                              else 
+                                true)
                 |None -> 
   (* AbstractValue.pp F.std_formatter argv_caller;
   AbductiveDomain.pp F.std_formatter astate; *)
