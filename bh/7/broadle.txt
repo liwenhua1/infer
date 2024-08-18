@@ -17,6 +17,24 @@ admin/broadleaf-admin-module/src/main/java/org/broadleafcommerce/admin/server/se
   401.               if (ProductBundlePricingModelType.BUNDLE.getType().equals(entity.getPMap().get("pricingModel").getValue())) {
 
 #2
+admin/broadleaf-contentmanagement-module/src/main/java/org/broadleafcommerce/cms/admin/web/controller/AdminAssetController.java:88: error: Null Dereference
+  `mainActions` could be null (null value originating from line 87) and is dereferenced. 
+  86.           // Remove the default add button and replace it with an upload asset button
+  87.           List<EntityFormAction> mainActions = (List<EntityFormAction>) model.asMap().get("mainActions");
+  88. >         Iterator<EntityFormAction> actions = mainActions.iterator();
+  89.           while (actions.hasNext()) {
+  90.               EntityFormAction action = actions.next();
+
+#3
+admin/broadleaf-contentmanagement-module/src/main/java/org/broadleafcommerce/cms/admin/web/controller/AdminAssetUploadController.java:87: error: Null Dereference
+  `listGrid` could be null (null value originating from line 86) and is dereferenced. 
+  85.           
+  86.           ListGrid listGrid = (ListGrid) model.asMap().get("listGrid");
+  87. >         listGrid.setPathOverride("/" + sectionKey + "/" + id + "/chooseAsset");
+  88.           listGrid.setListGridType(Type.ASSET);
+  89.           listGrid.setSelectType(ListGrid.SelectType.SINGLE_SELECT);
+
+#4
 admin/broadleaf-contentmanagement-module/src/main/java/org/broadleafcommerce/cms/structure/service/StructuredContentServiceImpl.java:500: error: Null Dereference
   null (null value originating from line 500) is dereferenced. 
   498.   
@@ -25,7 +43,7 @@ admin/broadleaf-contentmanagement-module/src/main/java/org/broadleafcommerce/cms
   501.               String originalValue = scf.getValue();
   502.   
 
-#3
+#5
 admin/broadleaf-open-admin-platform/src/main/java/org/broadleafcommerce/openadmin/dto/ClassMetadata.java:157: error: Null Dereference
   `result` could be null (null value originating from line 153) and is dereferenced. 
   155.           while(tabMetadataIterator.hasNext()) {
@@ -34,7 +52,7 @@ admin/broadleaf-open-admin-platform/src/main/java/org/broadleafcommerce/openadmi
   158.                   result = next;
   159.               } else if (next.getTabOrder() != null && next.getTabOrder() < result.getTabOrder()) {
 
-#4
+#6
 admin/broadleaf-open-admin-platform/src/main/java/org/broadleafcommerce/openadmin/dto/TabMetadata.java:77: error: Null Dereference
   `result` could be null (null value originating from line 73) and is dereferenced. 
   75.           while(groupMetadataIterator.hasNext()) {
@@ -43,7 +61,7 @@ admin/broadleaf-open-admin-platform/src/main/java/org/broadleafcommerce/openadmi
   78.                   result = next;
   79.               } else if (next.getGroupOrder() != null && next.getGroupOrder() < result.getGroupOrder()) {
 
-#5
+#7
 admin/broadleaf-open-admin-platform/src/main/java/org/broadleafcommerce/openadmin/server/dao/DynamicEntityDaoImpl.java:1490: error: Null Dereference
   `foreignKey` could be null (null value originating from line 1489) and is dereferenced. 
   1488.       protected void setOriginatingFieldForForeignKey(String propertyName, String key, FieldMetadata fieldMetadata) {
@@ -52,7 +70,7 @@ admin/broadleaf-open-admin-platform/src/main/java/org/broadleafcommerce/openadmi
   1491.       }
   1492.   
 
-#6
+#8
 admin/broadleaf-open-admin-platform/src/main/java/org/broadleafcommerce/openadmin/server/service/AdminEntityServiceImpl.java:485: error: Null Dereference
   null (null value originating from line 485) is dereferenced. 
   483.           Map<String, TabMetadata> tabMetadataMap = cmd.getTabAndGroupMetadata();
@@ -61,7 +79,7 @@ admin/broadleaf-open-admin-platform/src/main/java/org/broadleafcommerce/openadmi
   486.               for (String groupKey : groupMetadataMap.keySet()) {
   487.                   if (groupKey.equals(fmd.getGroup()) || groupMetadataMap.get(groupKey).getGroupName().equals(fmd.getGroup())) {
 
-#7
+#9
 admin/broadleaf-open-admin-platform/src/main/java/org/broadleafcommerce/openadmin/server/service/persistence/module/AdornedTargetListPersistenceModule.java:207: error: Null Dereference
   `adornedTargetList` could be null (null value originating from line 206) and is dereferenced. 
   205.           Entity entity = persistencePackage.getEntity();
@@ -70,7 +88,7 @@ admin/broadleaf-open-admin-platform/src/main/java/org/broadleafcommerce/openadmi
   208.               throw new SecurityServiceException("Field is not mutable");
   209.           }
 
-#8
+#10
 admin/broadleaf-open-admin-platform/src/main/java/org/broadleafcommerce/openadmin/server/service/persistence/module/AdornedTargetListPersistenceModule.java:321: error: Null Dereference
   `adornedTargetList` could be null (null value originating from line 320) and is dereferenced. 
   319.           Entity entity = persistencePackage.getEntity();
@@ -79,7 +97,7 @@ admin/broadleaf-open-admin-platform/src/main/java/org/broadleafcommerce/openadmi
   322.               throw new SecurityServiceException("Field is not mutable");
   323.           }
 
-#9
+#11
 admin/broadleaf-open-admin-platform/src/main/java/org/broadleafcommerce/openadmin/server/service/persistence/module/AdornedTargetListPersistenceModule.java:401: error: Null Dereference
   `adornedTargetList` could be null (null value originating from line 400) and is dereferenced. 
   399.           try {
@@ -88,7 +106,7 @@ admin/broadleaf-open-admin-platform/src/main/java/org/broadleafcommerce/openadmi
   402.                   throw new SecurityServiceException("Field is not mutable");
   403.               }
 
-#10
+#12
 admin/broadleaf-open-admin-platform/src/main/java/org/broadleafcommerce/openadmin/server/service/persistence/module/BasicPersistenceModule.java:1640: error: Null Dereference
   `field` could be null (from the call to `FieldManager.getField(...)` on line 1639) and is dereferenced. 
   1638.           Class<?> returnType = null;
@@ -97,7 +115,7 @@ admin/broadleaf-open-admin-platform/src/main/java/org/broadleafcommerce/openadmi
   1641.           if (type instanceof ParameterizedType) {
   1642.               ParameterizedType pType = (ParameterizedType) type;
 
-#11
+#13
 admin/broadleaf-open-admin-platform/src/main/java/org/broadleafcommerce/openadmin/server/service/persistence/module/FieldManager.java:232: error: Null Dereference
   The call to `Object FieldManager.setFieldValue(Object,String,Object)` may trigger the following issue: `(*persistedEntities)->__infer_model_backing_collection_empty` could be null (from the call to `FieldManager.setFieldValue(...)` on line 140) and is dereferenced in the call to `FieldManager.setFieldValue(...)`. 
   230.               Serializable s = entityManager.merge(val.entity);
@@ -106,7 +124,7 @@ admin/broadleaf-open-admin-platform/src/main/java/org/broadleafcommerce/openadmi
   233.           }
   234.   
 
-#12
+#14
 admin/broadleaf-open-admin-platform/src/main/java/org/broadleafcommerce/openadmin/server/service/persistence/module/FieldManager.java:232: error: Null Dereference
   The call to `Object FieldManager.setFieldValue(Object,String,Object)` may trigger the following issue: null (from the call to `FieldManager.setFieldValue(...)` on line 140) is dereferenced in the call to `FieldManager.setFieldValue(...)`. 
   230.               Serializable s = entityManager.merge(val.entity);
@@ -115,7 +133,7 @@ admin/broadleaf-open-admin-platform/src/main/java/org/broadleafcommerce/openadmi
   233.           }
   234.   
 
-#13
+#15
 admin/broadleaf-open-admin-platform/src/main/java/org/broadleafcommerce/openadmin/server/service/persistence/module/MapStructurePersistenceModule.java:177: error: Null Dereference
   `mapStructure` could be null (null value originating from line 176) and is dereferenced. 
   175.           Entity entity = persistencePackage.getEntity();
@@ -124,7 +142,7 @@ admin/broadleaf-open-admin-platform/src/main/java/org/broadleafcommerce/openadmi
   178.               throw new SecurityServiceException("Field not mutable");
   179.           }
 
-#14
+#16
 admin/broadleaf-open-admin-platform/src/main/java/org/broadleafcommerce/openadmin/server/service/persistence/module/MapStructurePersistenceModule.java:281: error: Null Dereference
   null (null value originating from line 281) is dereferenced. 
   279.       
@@ -133,7 +151,7 @@ admin/broadleaf-open-admin-platform/src/main/java/org/broadleafcommerce/openadmi
   282.               case BOOLEAN :
   283.                   return Boolean.parseBoolean(value);
 
-#15
+#17
 admin/broadleaf-open-admin-platform/src/main/java/org/broadleafcommerce/openadmin/server/service/persistence/module/MapStructurePersistenceModule.java:306: error: Null Dereference
   `mapStructure` could be null (null value originating from line 305) and is dereferenced. 
   304.           Entity entity = persistencePackage.getEntity();
@@ -142,7 +160,7 @@ admin/broadleaf-open-admin-platform/src/main/java/org/broadleafcommerce/openadmi
   307.               throw new SecurityServiceException("Field not mutable");
   308.           }
 
-#16
+#18
 admin/broadleaf-open-admin-platform/src/main/java/org/broadleafcommerce/openadmin/server/service/persistence/module/MapStructurePersistenceModule.java:427: error: Null Dereference
   `mapStructure` could be null (null value originating from line 426) and is dereferenced. 
   425.           Entity entity = persistencePackage.getEntity();
@@ -151,7 +169,7 @@ admin/broadleaf-open-admin-platform/src/main/java/org/broadleafcommerce/openadmi
   428.               throw new SecurityServiceException("Field not mutable");
   429.           }
 
-#17
+#19
 admin/broadleaf-open-admin-platform/src/main/java/org/broadleafcommerce/openadmin/server/service/persistence/module/criteria/RestrictionFactoryImpl.java:45: error: Null Dereference
   null (null value originating from line 45) is dereferenced. 
   43.       @Override
@@ -160,7 +178,7 @@ admin/broadleaf-open-admin-platform/src/main/java/org/broadleafcommerce/openadmi
   46.           restriction.setFieldPathBuilder(new FieldPathBuilder());
   47.   
 
-#18
+#20
 admin/broadleaf-open-admin-platform/src/main/java/org/broadleafcommerce/openadmin/server/service/persistence/module/extension/DefaultBasicPersistenceModuleExtensionHandler.java:77: error: Null Dereference
   `foreignKey` could be null (null value originating from line 75) and is dereferenced. 
   75.                       (PersistencePerspectiveItemType.FOREIGNKEY);
@@ -169,7 +187,7 @@ admin/broadleaf-open-admin-platform/src/main/java/org/broadleafcommerce/openadmi
   78.               sortCriteria.setSortAscending(foreignKey.getSortAscending());
   79.               List<FilterMapping> filterMappings = basicPersistenceModule.getFilterMappings(persistencePerspective,
 
-#19
+#21
 admin/broadleaf-open-admin-platform/src/main/java/org/broadleafcommerce/openadmin/server/service/persistence/module/extension/DefaultBasicPersistenceModuleExtensionHandler.java:110: error: Null Dereference
   `foreignKey` could be null (null value originating from line 109) and is dereferenced. 
   108.               ForeignKey foreignKey = (ForeignKey) persistencePerspective.getPersistencePerspectiveItems().get
@@ -178,7 +196,7 @@ admin/broadleaf-open-admin-platform/src/main/java/org/broadleafcommerce/openadmi
   111.               Integer previousSequence = new BigDecimal(String.valueOf(basicPersistenceModule.getFieldManager()
   112.                       .getFieldValue(instance, foreignKey.getSortField()))).intValue();
 
-#20
+#22
 admin/broadleaf-open-admin-platform/src/main/java/org/broadleafcommerce/openadmin/server/service/persistence/module/provider/AbstractFieldPersistenceProvider.java:41: error: Null Dereference
   `field` could be null (from the call to `FieldManager.getField(...)` on line 40) and is dereferenced. 
   39.           Class<?> returnType = null;
@@ -187,7 +205,7 @@ admin/broadleaf-open-admin-platform/src/main/java/org/broadleafcommerce/openadmi
   42.           if (type instanceof ParameterizedType) {
   43.               ParameterizedType pType = (ParameterizedType) type;
 
-#21
+#23
 admin/broadleaf-open-admin-platform/src/main/java/org/broadleafcommerce/openadmin/server/service/persistence/module/provider/AbstractFieldPersistenceProvider.java:56: error: Null Dereference
   `field` could be null (from the call to `FieldManager.getField(...)` on line 55) and is dereferenced. 
   54.           Class<?> returnType = null;
@@ -196,7 +214,7 @@ admin/broadleaf-open-admin-platform/src/main/java/org/broadleafcommerce/openadmi
   57.           if (type instanceof ParameterizedType) {
   58.               ParameterizedType pType = (ParameterizedType) type;
 
-#22
+#24
 admin/broadleaf-open-admin-platform/src/main/java/org/broadleafcommerce/openadmin/server/service/persistence/module/provider/RuleFieldPersistenceProvider.java:460: error: Null Dereference
   `field` could be null (from the call to `FieldManager.getField(...)` on line 459) and is dereferenced. 
   458.           String prop = populateValueRequest.getProperty().getName();
@@ -205,7 +223,7 @@ admin/broadleaf-open-admin-platform/src/main/java/org/broadleafcommerce/openadmi
   461.           if (oneToMany == null) {
   462.               throw new UnsupportedOperationException("RuleFieldPersistenceProvider is currently only compatible with collection fields when modelled using @OneToMany");
 
-#23
+#25
 admin/broadleaf-open-admin-platform/src/main/java/org/broadleafcommerce/openadmin/web/compatibility/JSCompatibilityRequestWrapper.java:106: error: Null Dereference
   `vals` could be null (null value originating from line 101) and is dereferenced. 
   104.               } else {
@@ -214,7 +232,16 @@ admin/broadleaf-open-admin-platform/src/main/java/org/broadleafcommerce/openadmi
   107.                   int j = 0;
   108.                   for (String val : vals) {
 
-#24
+#26
+admin/broadleaf-open-admin-platform/src/main/java/org/broadleafcommerce/openadmin/web/controller/AdminUserManagementController.java:64: error: Null Dereference
+  `ef` could be null (null value originating from line 62) and is dereferenced. 
+  62.           EntityForm ef = (EntityForm) model.asMap().get("entityForm");
+  63.           // Remove List Grid for Additional Fields
+  64. >         ef.removeListGrid("additionalFields");
+  65.   
+  66.           return returnPath;
+
+#27
 admin/broadleaf-open-admin-platform/src/main/java/org/broadleafcommerce/openadmin/web/controller/entity/AdminBasicEntityController.java:537: error: Null Dereference
   `TabMetadata ClassMetadata.getFirstTab()` could be null (from the call to `ClassMetadata.getFirstTab()` on line 537) and is dereferenced. 
   535.           String tabName = pathVars.get("tabName");
@@ -223,7 +250,7 @@ admin/broadleaf-open-admin-platform/src/main/java/org/broadleafcommerce/openadmi
   538.           }
   539.           return service.getRecordsForSelectedTab(cmd, entity, crumbs, tabName);
 
-#25
+#28
 admin/broadleaf-open-admin-platform/src/main/java/org/broadleafcommerce/openadmin/web/filter/BroadleafAdminTypedEntityRequestFilter.java:146: error: Null Dereference
   `response` could be null (null value originating from line 142) and is dereferenced. 
   144.                       return null;
@@ -232,7 +259,7 @@ admin/broadleaf-open-admin-platform/src/main/java/org/broadleafcommerce/openadmi
   147.                   }
   148.               }
 
-#26
+#29
 admin/broadleaf-open-admin-platform/src/main/java/org/broadleafcommerce/openadmin/web/service/FormBuilderServiceImpl.java:2026: error: Null Dereference
   `foreignKey` could be null (null value originating from line 2025) and is dereferenced. 
   2024.           ForeignKey foreignKey = (ForeignKey) mapMd.getPersistencePerspective()
@@ -241,7 +268,7 @@ admin/broadleaf-open-admin-platform/src/main/java/org/broadleafcommerce/openadmi
   2027.   
   2028.           Field keyField;
 
-#27
+#30
 common/src/main/java/org/broadleafcommerce/common/condition/OnBroadleafModuleCondition.java:49: error: Null Dereference
   `modules` could be null (null value originating from line 46) and is dereferenced. 
   47.           List<Object> moduleNames = attributes.get("moduleName");
@@ -250,7 +277,7 @@ common/src/main/java/org/broadleafcommerce/common/condition/OnBroadleafModuleCon
   50.               BroadleafModuleEnum module = (BroadleafModuleEnum) modules.get(i);
   51.               String moduleName = (BroadleafModuleEnum.IGNORED != module) ? module.getName() : (String) moduleNames.get(i);
 
-#28
+#31
 common/src/main/java/org/broadleafcommerce/common/config/PostAutoConfigurationDefferedImportSelector.java:55: error: Null Dereference
   `importAttributes` could be null (null value originating from line 53) and is dereferenced. 
   53.           Object importAttributes = attributes.get("value");
@@ -259,7 +286,7 @@ common/src/main/java/org/broadleafcommerce/common/config/PostAutoConfigurationDe
   56.               imports.addAll(Arrays.asList(classes));
   57.           }
 
-#29
+#32
 common/src/main/java/org/broadleafcommerce/common/email/service/jms/JMSEmailServiceProducerImpl.java:50: error: Null Dereference
   `info` could be null (null value originating from line 49) and is dereferenced. 
   48.                       ObjectMessage message = session.createObjectMessage(sProps);
@@ -268,7 +295,7 @@ common/src/main/java/org/broadleafcommerce/common/email/service/jms/JMSEmailServ
   51.                       return message;
   52.                   }
 
-#30
+#33
 common/src/main/java/org/broadleafcommerce/common/extensibility/jpa/QueryConfigurationClassTransformer.java:91: error: Pulse Resource Leak
   Resource dynamically allocated by constructor java.io.DataInputStream() on line 91 is not closed after the last access at line 91. 
   89.           if (managedClassNames.contains(convertedClassName)) {
@@ -277,7 +304,7 @@ common/src/main/java/org/broadleafcommerce/common/extensibility/jpa/QueryConfigu
   92.                   if (isExecuted) {
   93.                       return null;
 
-#31
+#34
 common/src/main/java/org/broadleafcommerce/common/extensibility/jpa/convert/AlterTableNameClassTransformer.java:123: error: Pulse Resource Leak
   Resource dynamically allocated by constructor java.io.DataInputStream() on line 123 is not closed after the last access at line 123. 
   121.                       LOG.debug("Altering " + convertedClassName + " table name");
@@ -286,7 +313,7 @@ common/src/main/java/org/broadleafcommerce/common/extensibility/jpa/convert/Alte
   124.                   ConstPool constantPool = classFile.getConstPool();
   125.   
 
-#32
+#35
 common/src/main/java/org/broadleafcommerce/common/extensibility/jpa/convert/EntityMarkerClassTransformer.java:80: error: Pulse Resource Leak
   Resource dynamically allocated by constructor java.io.DataInputStream() on line 80 is not closed after the last access at line 80. 
   78.   
@@ -295,7 +322,7 @@ common/src/main/java/org/broadleafcommerce/common/extensibility/jpa/convert/Enti
   81.               List<?> attributes = classFile.getAttributes();
   82.               Iterator<?> itr = attributes.iterator();
 
-#33
+#36
 common/src/main/java/org/broadleafcommerce/common/extensibility/jpa/convert/MaterializedClobTypeClassTransformer.java:92: error: Pulse Resource Leak
   Resource dynamically allocated by constructor java.io.DataInputStream() on line 92 is not closed after the last access at line 92. 
   90.           try {
@@ -304,7 +331,7 @@ common/src/main/java/org/broadleafcommerce/common/extensibility/jpa/convert/Mate
   93.               boolean containsTypeLevelAnnotation = false;
   94.               {
 
-#34
+#37
 common/src/main/java/org/broadleafcommerce/common/io/ConcurrentFileOutputStreamImpl.java:80: error: Pulse Resource Leak
   Resource dynamically allocated by constructor java.io.FileOutputStream() on line 67 is not closed after the last access at line 80. 
   78.           fos.close();
@@ -313,7 +340,7 @@ common/src/main/java/org/broadleafcommerce/common/io/ConcurrentFileOutputStreamI
   81.       }
   82.   
 
-#35
+#38
 common/src/main/java/org/broadleafcommerce/common/persistence/SequenceGeneratorCorruptionDetection.java:157: error: Null Dereference
   `tableName` could be null (null value originating from line 114) and is dereferenced. 
   155.                   sb2.append(valueColumnName);
@@ -322,7 +349,7 @@ common/src/main/java/org/broadleafcommerce/common/persistence/SequenceGeneratorC
   158.                       sb2.append(defaultSchemaSequenceGenerator);
   159.                       sb2.append(".");
 
-#36
+#39
 common/src/main/java/org/broadleafcommerce/common/persistence/transaction/CompressedItem.java:53: error: Pulse Resource Leak
   Resource dynamically allocated by constructor java.util.zip.GZIPInputStream() on line 52 is not closed after the last access at line 53. 
   51.           }
@@ -331,7 +358,7 @@ common/src/main/java/org/broadleafcommerce/common/persistence/transaction/Compre
   54.           StringBuilder sb = new StringBuilder();
   55.           String line;
 
-#37
+#40
 common/src/main/java/org/broadleafcommerce/common/service/PersistenceServiceImpl.java:116: error: Null Dereference
   `PlatformTransactionManager PersistenceServiceImpl.getTransactionManager(Map)` could be null (from the call to `PersistenceServiceImpl.getTransactionManager(...)` on line 121) and is dereferenced in the call to `StreamingTransactionCapableUtil.runTransactionalOperation(...)`. 
   114.                   final Map<String, Object> managerMap = targetModeMap.get(targetMode);
@@ -340,41 +367,14 @@ common/src/main/java/org/broadleafcommerce/common/service/PersistenceServiceImpl
   117.                       @Override
   118.                       public void execute() throws Throwable {
 
-#38
-common/src/main/java/org/broadleafcommerce/common/service/PersistenceServiceImpl.java:121: error: Null Dereference
-  `managerMap` could be null (null value originating from line 114) and is dereferenced in the call to `PersistenceServiceImpl.getTransactionManager(...)`. 
-  119.                           populateCaches(targetMode, managerMap);
-  120.                       }
-  121. >                 }, RuntimeException.class, getTransactionManager(managerMap));
-  122.               }
-  123.           }
-
-#39
-common/src/main/java/org/broadleafcommerce/common/service/PersistenceServiceImpl.java:130: error: Null Dereference
-  `em` could be null (from the call to `PersistenceServiceImpl.getEntityManager(...)` on line 127) and is dereferenced. 
-  128.           final PlatformTransactionManager txManager = getTransactionManager(managerMap);
-  129.   
-  130. >         SessionFactory sessionFactory = em.unwrap(Session.class).getSessionFactory();
-  131.           for (EntityType<?> item : sessionFactory.getMetamodel().getEntities()) {
-  132.               Class<?> mappedClass = item.getJavaType();
-
-#40
-common/src/main/java/org/broadleafcommerce/common/service/PersistenceServiceImpl.java:186: error: Null Dereference
-  `managerMap` could be null (null value originating from line 185) and is dereferenced in the call to `PersistenceServiceImpl.getEntityManager(...)`. 
-  184.       public EntityManager identifyDefaultEntityManager(TargetModeType targetModeType) {
-  185.           Map<String, Object> managerMap = defaultTargetModeMap.get(targetModeType.getType());
-  186. >         return getEntityManager(managerMap);
-  187.       }
-  188.   
-
 #41
-common/src/main/java/org/broadleafcommerce/common/service/PersistenceServiceImpl.java:197: error: Null Dereference
-  `managerMap` could be null (null value originating from line 196) and is dereferenced in the call to `PersistenceServiceImpl.getTransactionManager(...)`. 
-  195.       public PlatformTransactionManager identifyDefaultTransactionManager(TargetModeType targetModeType) {
-  196.           Map<String, Object> managerMap = defaultTargetModeMap.get(targetModeType.getType());
-  197. >         return getTransactionManager(managerMap);
-  198.       }
-  199.   
+common/src/main/java/org/broadleafcommerce/common/service/PersistenceServiceImpl.java:119: error: Null Dereference
+  The call to `void PersistenceServiceImpl.populateCaches(String,Map)` may trigger the following issue: `em` could be null (from the call to `PersistenceServiceImpl.populateCaches(...)` on line 127) and is dereferenced in the call to `PersistenceServiceImpl.populateCaches(...)`. 
+  117.                       @Override
+  118.                       public void execute() throws Throwable {
+  119. >                         populateCaches(targetMode, managerMap);
+  120.                       }
+  121.                   }, RuntimeException.class, getTransactionManager(managerMap));
 
 #42
 common/src/main/java/org/broadleafcommerce/common/sitemap/service/SiteMapServiceImpl.java:249: error: Pulse Resource Leak
@@ -503,15 +503,6 @@ core/broadleaf-framework/src/main/java/org/broadleafcommerce/core/catalog/domain
   555.               if (SkuPricingConsiderationContext.isPricingConsiderationActive()) {
 
 #56
-core/broadleaf-framework/src/main/java/org/broadleafcommerce/core/offer/service/discount/domain/PromotableOfferUtilityImpl.java:81: error: Null Dereference
-  null (null value originating from line 81) is dereferenced in the call to `PromotableOfferUtilityImpl.determineOfferUnitValue(...)`. 
-  79.           Offer offer = promotableCandidateFulfillmentGroupOffer.getOffer();
-  80.           BroadleafCurrency currency = promotableFulfillmentGroup.getFulfillmentGroup().getOrder().getCurrency();
-  81. >         BigDecimal offerUnitValue = determineOfferUnitValue(offer, null);
-  82.           OfferDiscountType discountType = offer.getDiscountType();
-  83.           return computeAdjustmentValue(currentPriceDetailValue, offerUnitValue, currency, discountType, promotableCandidateFulfillmentGroupOffer);
-
-#57
 core/broadleaf-framework/src/main/java/org/broadleafcommerce/core/offer/service/processor/FulfillmentGroupOfferProcessorImpl.java:183: error: Null Dereference
   `fgOffers` could be null (null value originating from line 179) and is dereferenced. 
   181.               Collections.sort(fgOffers, new BeanComparator("priority", new NullComparator()));
@@ -520,7 +511,7 @@ core/broadleaf-framework/src/main/java/org/broadleafcommerce/core/offer/service/
   184.                   for (int j = potential.getOffer().getMaxUsesPerOrder(); j < fgOffers.size(); j++) {
   185.                       fgOffers.remove(j);
 
-#58
+#57
 core/broadleaf-framework/src/main/java/org/broadleafcommerce/core/offer/service/processor/FulfillmentGroupOfferProcessorImpl.java:223: error: Null Dereference
   `candidates` could be null (null value originating from line 222) and is dereferenced. 
   221.               boolean alreadyContainsTotalitarianOffer = order.isTotalitarianOfferApplied();
@@ -529,7 +520,7 @@ core/broadleaf-framework/src/main/java/org/broadleafcommerce/core/offer/service/
   224.                   applyFulfillmentGroupOffer(candidate.getFulfillmentGroup(), candidate);
   225.                   fgOfferApplied = true;
 
-#59
+#58
 core/broadleaf-framework/src/main/java/org/broadleafcommerce/core/offer/service/processor/OrderOfferProcessorImpl.java:469: error: Null Dereference
   `itemAdjustment` could be null (null value originating from line 468) and is dereferenced. 
   467.           for (PromotableOrderItemPriceDetailAdjustment adjustment : promotableItemDetail.getCandidateItemAdjustments()) {
@@ -538,7 +529,7 @@ core/broadleaf-framework/src/main/java/org/broadleafcommerce/core/offer/service/
   470.                   itemAdjustment.setValue(adjustment.getAdjustmentValue());
   471.                   itemAdjustment.setAppliedToSalePrice(adjustment.isAppliedToSalePrice());
 
-#60
+#59
 core/broadleaf-framework/src/main/java/org/broadleafcommerce/core/offer/service/workflow/RecordOfferUsageRollbackHandler.java:51: error: Null Dereference
   `audits` could be null (null value originating from line 49) and is dereferenced. 
   49.           List<OfferAudit> audits = (List<OfferAudit>) stateConfiguration.get(RecordOfferUsageActivity.SAVED_AUDITS);
@@ -547,7 +538,7 @@ core/broadleaf-framework/src/main/java/org/broadleafcommerce/core/offer/service/
   52.               offerAuditService.delete(audit);
   53.           }
 
-#61
+#60
 core/broadleaf-framework/src/main/java/org/broadleafcommerce/core/order/service/OrderServiceImpl.java:1041: error: Null Dereference
   `itemTwoValue` could be null (null value originating from line 1040) and is dereferenced. 
   1039.               String itemOneValue = (item1Attributes.get(key) == null) ? null : item1Attributes.get(key).getValue();
@@ -556,7 +547,7 @@ core/broadleaf-framework/src/main/java/org/broadleafcommerce/core/order/service/
   1042.                   return false;
   1043.               }
 
-#62
+#61
 core/broadleaf-framework/src/main/java/org/broadleafcommerce/core/order/service/legacy/LegacyMergeCartServiceImpl.java:339: error: Null Dereference
   `info` could be null (null value originating from line 337) and is dereferenced. 
   337.                   OfferInfo info = anonymousCart.getAdditionalOfferInformation().get(anonymousOffer.getOffer());
@@ -565,7 +556,7 @@ core/broadleaf-framework/src/main/java/org/broadleafcommerce/core/order/service/
   340.                       offerInfo.getFieldValues().put(key, info.getFieldValues().get(key));
   341.                   }
 
-#63
+#62
 core/broadleaf-framework/src/main/java/org/broadleafcommerce/core/order/service/legacy/LegacyOrderServiceImpl.java:337: error: Null Dereference
   `orderItem` could be null (null value originating from line 330) and is dereferenced. 
   335.           }
@@ -574,7 +565,7 @@ core/broadleaf-framework/src/main/java/org/broadleafcommerce/core/order/service/
   338.           
   339.           updateItemQuantity(order, orderItem, true);
 
-#64
+#63
 core/broadleaf-framework/src/main/java/org/broadleafcommerce/core/order/service/workflow/update/ValidateUpdateRequestActivity.java:65: error: Null Dereference
   null (null value originating from line 65) is dereferenced. 
   63.   
@@ -583,7 +574,7 @@ core/broadleaf-framework/src/main/java/org/broadleafcommerce/core/order/service/
   66.           }
   67.   
 
-#65
+#64
 core/broadleaf-framework/src/main/java/org/broadleafcommerce/core/payment/domain/OrderPaymentImpl.java:333: error: Null Dereference
   `PaymentType OrderPaymentImpl.getType()` could be null (from the call to `OrderPaymentImpl.getType()` on line 333) and is dereferenced. 
   331.       @Override
@@ -592,7 +583,7 @@ core/broadleaf-framework/src/main/java/org/broadleafcommerce/core/payment/domain
   334.       }
   335.   
 
-#66
+#65
 core/broadleaf-framework/src/main/java/org/broadleafcommerce/core/pricing/service/workflow/AutoBundleActivity.java:95: error: Null Dereference
   `maxApplications` could be null (null value originating from line 86) and is dereferenced. 
   93.               processedBundleIds.add(productBundle.getId());
@@ -601,7 +592,7 @@ core/broadleaf-framework/src/main/java/org/broadleafcommerce/core/pricing/servic
   96.                   if (! itemsHaveBeenUnbundled) {
   97.                       // Store the discrete items that were part of automatic bundles
 
-#67
+#66
 core/broadleaf-framework/src/main/java/org/broadleafcommerce/core/search/domain/FieldImpl.java:124: error: Null Dereference
   `FieldEntity FieldImpl.getEntityType()` could be null (from the call to `FieldImpl.getEntityType()` on line 124) and is dereferenced. 
   122.       @Override
@@ -610,7 +601,7 @@ core/broadleaf-framework/src/main/java/org/broadleafcommerce/core/search/domain/
   125.       }
   126.   
 
-#68
+#67
 core/broadleaf-framework/src/main/java/org/broadleafcommerce/core/search/service/solr/BroadleafCloudSolrClient.java:66: error: Null Dereference
   null (null value originating from line 66) is dereferenced in the call to `BroadleafCloudSolrClient.createBuilder(...)`. 
   64.   
@@ -619,7 +610,7 @@ core/broadleaf-framework/src/main/java/org/broadleafcommerce/core/search/service
   67.       }
   68.   
 
-#69
+#68
 core/broadleaf-framework/src/main/java/org/broadleafcommerce/core/search/service/solr/SolrHelperServiceImpl.java:890: error: Null Dereference
   `FieldType FieldType.getInstance(String)` could be null (from the call to `FieldType.getInstance(...)` on line 891) and is dereferenced in the call to `SolrHelperServiceImpl.getPropertyNameForIndexField(...)`. 
   888.               @Override
@@ -628,7 +619,7 @@ core/broadleaf-framework/src/main/java/org/broadleafcommerce/core/search/service
   891.                           FieldType.getInstance(facet.getFacet().getFacetFieldType()));
   892.               }
 
-#70
+#69
 core/broadleaf-framework/src/main/java/org/broadleafcommerce/core/search/service/solr/SolrHelperServiceImpl.java:937: error: Null Dereference
   null (null value originating from line 937) is dereferenced. 
   935.   
@@ -637,7 +628,7 @@ core/broadleaf-framework/src/main/java/org/broadleafcommerce/core/search/service
   938.   
   939.                   if (ExtensionResultStatusType.NOT_HANDLED.equals(status)) {
 
-Found 71 issues
+Found 70 issues
                 Issue Type(ISSUED_TYPE_ID): #
-     Null Dereference(NULLPTR_DEREFERENCE): 61
+     Null Dereference(NULLPTR_DEREFERENCE): 60
   Pulse Resource Leak(PULSE_RESOURCE_LEAK): 10
