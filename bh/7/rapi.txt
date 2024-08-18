@@ -1,0 +1,39 @@
+#0
+rapidoid-commons/src/main/java/org/rapidoid/env/EnvProperties.java:48: error: Null Dereference
+  `String U.str(Object)` could be null (from the call to `U.str(...)` on line 48) and is dereferenced in the call to `EnvProperties.set(...)`. 
+  46.   
+  47.           for (Map.Entry<Object, Object> e : System.getProperties().entrySet()) {
+  48. >             set(U.str(e.getKey()), e.getValue());
+  49.           }
+  50.       }
+
+#1
+rapidoid-commons/src/main/java/org/rapidoid/insight/Insights.java:42: error: Null Dereference
+  null (null value originating from line 42) is dereferenced. 
+  40.   
+  41.       public static synchronized void register(Insightful resource) {
+  42. >         RESOURCES.get(resource.getKind()).add(resource);
+  43.       }
+  44.   
+
+#2
+rapidoid-commons/src/main/java/org/rapidoid/insight/Insights.java:78: error: Null Dereference
+  null (null value originating from line 78) is dereferenced. 
+  76.   
+  77.       public static synchronized void register(String name, Object info) {
+  78. >         INFOS.get(name).add(info);
+  79.       }
+  80.   
+
+#3
+rapidoid-commons/src/main/java/org/rapidoid/insight/Insights.java:83: error: Null Dereference
+  null (null value originating from line 83) is dereferenced. 
+  81.       public static synchronized StatsMeasure stats(String name) {
+  82.           StatsMeasure measure = new StatsMeasure();
+  83. >         RESETABLE_INFOS.get(name).add(measure);
+  84.           return measure;
+  85.       }
+
+Found 4 issues
+             Issue Type(ISSUED_TYPE_ID): #
+  Null Dereference(NULLPTR_DEREFERENCE): 4
