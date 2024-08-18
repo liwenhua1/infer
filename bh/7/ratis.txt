@@ -35,6 +35,15 @@ ratis-examples/src/main/java/org/apache/ratis/examples/arithmetic/ArithmeticStat
   142.   
 
 #4
+ratis-examples/src/main/java/org/apache/ratis/examples/counter/client/CounterClient.java:182: error: Null Dereference
+  The call to `CounterClient.<init>()` ends up calling `RpcType RaftConfigKeys$Rpc.type(RaftProperties,Consumer)` (after 2 more calls) and may trigger the following issue: null (from the call to `CounterClient()` on line 43) is dereferenced in the call to `CounterClient()`. 
+  180.   
+  181.     public static void main(String[] args) {
+  182. >     try(CounterClient client = new CounterClient()) {
+  183.         //the number of INCREMENT commands, default is 10
+  184.         final int increment = args.length > 0 ? Integer.parseInt(args[0]) : 10;
+
+#5
 ratis-examples/src/main/java/org/apache/ratis/examples/counter/server/CounterStateMachine.java:211: error: Pulse Resource Leak
   Resource dynamically allocated by constructor java.io.BufferedInputStream() on line 205 is not closed after the last access at line 211. 
   209.       //update state
@@ -43,7 +52,7 @@ ratis-examples/src/main/java/org/apache/ratis/examples/counter/server/CounterSta
   212.   
   213.     /**
 
-#5
+#6
 ratis-grpc/src/main/java/org/apache/ratis/grpc/metrics/MessageMetrics.java:62: error: Null Dereference
   null (null value originating from line 61) is dereferenced. 
   60.     private void inc(String metricNamePrefix, Type t) {
@@ -52,7 +61,7 @@ ratis-grpc/src/main/java/org/apache/ratis/grpc/metrics/MessageMetrics.java:62: e
   63.           .inc();
   64.       final Map<String, LongCounter> counters = types.get(t);
 
-#6
+#7
 ratis-netty/src/main/java/org/apache/ratis/netty/metrics/NettyServerStreamRpcMetrics.java:134: error: Null Dereference
   null (null value originating from line 134) is dereferenced. 
   132.   
@@ -61,7 +70,7 @@ ratis-netty/src/main/java/org/apache/ratis/netty/metrics/NettyServerStreamRpcMet
   135.     }
   136.   
 
-#7
+#8
 ratis-server/src/main/java/org/apache/ratis/server/impl/RaftServerImpl.java:1835: error: Null Dereference
   `RaftProtos$LogEntryProto$LogEntryBodyCase RaftProtos$LogEntryProto.getLogEntryBodyCase()` could be null (from the call to `RaftProtos$LogEntryProto.getLogEntryBodyCase()` on line 1835) and is dereferenced. 
   1833.       CompletableFuture<Message> messageFuture = null;
@@ -70,7 +79,7 @@ ratis-server/src/main/java/org/apache/ratis/server/impl/RaftServerImpl.java:1835
   1836.       case CONFIGURATIONENTRY:
   1837.         // the reply should have already been set. only need to record
 
-#8
+#9
 ratis-server/src/main/java/org/apache/ratis/server/impl/WatchRequests.java:216: error: Null Dereference
   `queue` could be null (null value originating from line 215) and is dereferenced. 
   214.     void update(ReplicationLevel replication, final long newIndex) {
@@ -79,7 +88,7 @@ ratis-server/src/main/java/org/apache/ratis/server/impl/WatchRequests.java:216: 
   217.         queue.updateIndex(newIndex);
   218.       }
 
-#9
+#10
 ratis-server/src/main/java/org/apache/ratis/server/metrics/RaftServerMetricsImpl.java:259: error: Null Dereference
   null (null value originating from line 259) is dereferenced. 
   257.   
@@ -88,7 +97,7 @@ ratis-server/src/main/java/org/apache/ratis/server/metrics/RaftServerMetricsImpl
   260.     }
   261.   
 
-#10
+#11
 ratis-server/src/main/java/org/apache/ratis/server/metrics/RaftServerMetricsImpl.java:263: error: Null Dereference
   null (null value originating from line 263) is dereferenced. 
   261.   
@@ -97,7 +106,232 @@ ratis-server/src/main/java/org/apache/ratis/server/metrics/RaftServerMetricsImpl
   264.     }
   265.   
 
-#11
+#12
+ratis-server/src/test/java/org/apache/ratis/InstallSnapshotFromLeaderTests.java:102: error: Null Dereference
+  `RaftServer$Division MiniRaftCluster.getLeader()` could be null (from the call to `MiniRaftCluster.getLeader()` on line 102) and is dereferenced. 
+  100.       int i = 0;
+  101.       RaftTestUtil.waitForLeader(cluster);
+  102. >     final RaftPeerId leaderId = cluster.getLeader().getId();
+  103.   
+  104.       try (final RaftClient client = cluster.createClient(leaderId)) {
+
+#13
+ratis-server/src/test/java/org/apache/ratis/InstallSnapshotFromLeaderTests.java:139: error: Null Dereference
+  `RaftServer$Division MiniRaftCluster.getLeader()` could be null (from the call to `MiniRaftCluster.getLeader()` on line 139) and is dereferenced. 
+  137.     private void testInstallSnapshotDuringLeaderSwitch(CLUSTER cluster) throws Exception {
+  138.       RaftTestUtil.waitForLeader(cluster);
+  139. >     final RaftPeerId leaderId = cluster.getLeader().getId();
+  140.   
+  141.       // perform operations and force all peers to take snapshot
+
+#14
+ratis-server/src/test/java/org/apache/ratis/InstallSnapshotNotificationTests.java:176: error: Null Dereference
+  The call to `void InstallSnapshotNotificationTests.testAddNewFollowers(MiniRaftCluster,int)` may trigger the following issue: null (from the call to `InstallSnapshotNotificationTests.testAddNewFollowers(...)` on line 192) is dereferenced in the call to `InstallSnapshotNotificationTests.testAddNewFollowers(...)`. 
+  174.     public void testAddNewFollowers() throws Exception {
+  175.       final int numRequests = SNAPSHOT_TRIGGER_THRESHOLD*2 - 1; // trigger a snapshot
+  176. >     runWithNewCluster(1, c -> testAddNewFollowers(c, numRequests));
+  177.     }
+  178.   
+
+#15
+ratis-server/src/test/java/org/apache/ratis/InstallSnapshotNotificationTests.java:330: error: Null Dereference
+  `RaftServer$Division MiniRaftCluster.getLeader()` could be null (from the call to `MiniRaftCluster.getLeader()` on line 330) and is dereferenced. 
+  328.       try {
+  329.         RaftTestUtil.waitForLeader(cluster);
+  330. >       final RaftPeerId leaderId = cluster.getLeader().getId();
+  331.   
+  332.         // Let a few heartbeats pass.
+
+#16
+ratis-server/src/test/java/org/apache/ratis/InstallSnapshotNotificationTests.java:347: error: Null Dereference
+  `RaftServer$Division MiniRaftCluster.getLeader()` could be null (from the call to `MiniRaftCluster.getLeader()` on line 347) and is dereferenced. 
+  345.         // Wait until index has been updated
+  346.         RaftTestUtil.waitFor(
+  347. >               () -> cluster.getLeader().getStateMachine().getLastAppliedTermIndex().getIndex() == 20,
+  348.                  300, 15000);
+  349.   
+
+#17
+ratis-server/src/test/java/org/apache/ratis/InstallSnapshotNotificationTests.java:434: error: Null Dereference
+  `RaftServer$Division MiniRaftCluster.getLeader()` could be null (from the call to `MiniRaftCluster.getLeader()` on line 434) and is dereferenced. 
+  432.       try {
+  433.         RaftTestUtil.waitForLeader(cluster);
+  434. >       final RaftPeerId leaderId = cluster.getLeader().getId();
+  435.   
+  436.         try(final RaftClient client = cluster.createClient(leaderId)) {
+
+#18
+ratis-server/src/test/java/org/apache/ratis/InstallSnapshotNotificationTests.java:532: error: Null Dereference
+  `RaftServer$Division MiniRaftCluster.getLeader()` could be null (from the call to `MiniRaftCluster.getLeader()` on line 532) and is dereferenced. 
+  530.       try {
+  531.         RaftTestUtil.waitForLeader(cluster);
+  532. >       final RaftPeerId leaderId = cluster.getLeader().getId();
+  533.   
+  534.         try(final RaftClient client = cluster.createClient(leaderId)) {
+
+#19
+ratis-server/src/test/java/org/apache/ratis/RaftAsyncTests.java:458: error: Null Dereference
+  `prevLeader` could be null (from the call to `MiniRaftCluster.getLeader()` on line 457) and is dereferenced. 
+  456.       waitForLeader(cluster);
+  457.       final RaftServer.Division prevLeader = cluster.getLeader();
+  458. >     final long termOfPrevLeader = prevLeader.getInfo().getCurrentTerm();
+  459.       LOG.info("Previous Leader is elected on term {}", termOfPrevLeader);
+  460.   
+
+#20
+ratis-server/src/test/java/org/apache/ratis/ReadOnlyRequestTests.java:89: error: Null Dereference
+  `RaftServer$Division MiniRaftCluster.getLeader()` could be null (from the call to `MiniRaftCluster.getLeader()` on line 89) and is dereferenced. 
+  87.       try {
+  88.         RaftTestUtil.waitForLeader(cluster);
+  89. >       final RaftPeerId leaderId = cluster.getLeader().getId();
+  90.   
+  91.         try (final RaftClient client = cluster.createClient(leaderId)) {
+
+#21
+ratis-server/src/test/java/org/apache/ratis/ReadOnlyRequestTests.java:119: error: Null Dereference
+  `RaftServer$Division MiniRaftCluster.getLeader()` could be null (from the call to `MiniRaftCluster.getLeader()` on line 119) and is dereferenced. 
+  117.       try {
+  118.         RaftTestUtil.waitForLeader(cluster);
+  119. >       final RaftPeerId leaderId = cluster.getLeader().getId();
+  120.   
+  121.         try (final RaftClient client = cluster.createClient(leaderId);
+
+#22
+ratis-server/src/test/java/org/apache/ratis/ReadOnlyRequestWithLongTimeoutTests.java:85: error: Null Dereference
+  `RaftServer$Division MiniRaftCluster.getLeader()` could be null (from the call to `MiniRaftCluster.getLeader()` on line 85) and is dereferenced. 
+  83.     private void testLinearizableReadParallelImpl(CLUSTER cluster) throws Exception {
+  84.       RaftTestUtil.waitForLeader(cluster);
+  85. >     final RaftPeerId leaderId = cluster.getLeader().getId();
+  86.   
+  87.       try (RaftClient client = cluster.createClient(leaderId, RetryPolicies.noRetry())) {
+
+#23
+ratis-server/src/test/java/org/apache/ratis/ReadOnlyRequestWithLongTimeoutTests.java:110: error: Null Dereference
+  `RaftServer$Division MiniRaftCluster.getLeader()` could be null (from the call to `MiniRaftCluster.getLeader()` on line 110) and is dereferenced. 
+  108.     private void testLinearizableReadTimeoutImpl(CLUSTER cluster) throws Exception {
+  109.       RaftTestUtil.waitForLeader(cluster);
+  110. >     final RaftPeerId leaderId = cluster.getLeader().getId();
+  111.   
+  112.       try (RaftClient client = cluster.createClient(leaderId, RetryPolicies.noRetry())) {
+
+#24
+ratis-server/src/test/java/org/apache/ratis/RetryCacheTests.java:95: error: Null Dereference
+  `RaftServer$Division MiniRaftCluster.getLeader()` could be null (from the call to `MiniRaftCluster.getLeader()` on line 95) and is dereferenced. 
+  93.     public void assertServer(MiniRaftCluster cluster, ClientId clientId, long callId, long oldLastApplied)
+  94.         throws Exception {
+  95. >     final long leaderApplied = cluster.getLeader().getInfo().getLastAppliedIndex();
+  96.       // make sure retry cache has the entry
+  97.       for (RaftServer.Division server : cluster.iterateDivisions()) {
+
+#25
+ratis-server/src/test/java/org/apache/ratis/WatchRequestTests.java:228: error: Null Dereference
+  `leader` could be null (from the call to `MiniRaftCluster.getLeader()` on line 227) and is dereferenced. 
+  226.       // blockStartTransaction of the leader so that no transaction can be committed MAJORITY
+  227.       final RaftServer.Division leader = cluster.getLeader();
+  228. >     log.info("block leader {}", leader.getId());
+  229.       SimpleStateMachine4Testing.get(leader).blockStartTransaction();
+  230.   
+
+#26
+ratis-server/src/test/java/org/apache/ratis/WatchRequestTests.java:500: error: Null Dereference
+  `RaftServer$Division MiniRaftCluster.getLeader()` could be null (from the call to `MiniRaftCluster.getLeader()` on line 500) and is dereferenced in the call to `WatchRequestTests.getRaftServerMetrics(...)`. 
+  498.       final ReplicationLevel replicationLevel = ReplicationLevel.MAJORITY;
+  499.       try {
+  500. >       long initialWatchRequestTimeoutCount = getRaftServerMetrics(cluster.getLeader())
+  501.             .getNumWatchRequestsTimeout(replicationLevel).getCount();
+  502.         long initialLimitHit = getRaftServerMetrics(cluster.getLeader())
+
+#27
+ratis-server/src/test/java/org/apache/ratis/WatchRequestTests.java:501: error: Null Dereference
+  `LongCounter RaftServerMetricsImpl.getNumWatchRequestsTimeout(RaftProtos$ReplicationLevel)` could be null (from the call to `RaftServerMetricsImpl.getNumWatchRequestsTimeout(...)` on line 501) and is dereferenced. 
+  499.       try {
+  500.         long initialWatchRequestTimeoutCount = getRaftServerMetrics(cluster.getLeader())
+  501. >           .getNumWatchRequestsTimeout(replicationLevel).getCount();
+  502.         long initialLimitHit = getRaftServerMetrics(cluster.getLeader())
+  503.             .getNumWatchRequestQueueLimitHits(replicationLevel).getCount();
+
+#28
+ratis-server/src/test/java/org/apache/ratis/WatchRequestTests.java:502: error: Null Dereference
+  `RaftServer$Division MiniRaftCluster.getLeader()` could be null (from the call to `MiniRaftCluster.getLeader()` on line 502) and is dereferenced in the call to `WatchRequestTests.getRaftServerMetrics(...)`. 
+  500.         long initialWatchRequestTimeoutCount = getRaftServerMetrics(cluster.getLeader())
+  501.             .getNumWatchRequestsTimeout(replicationLevel).getCount();
+  502. >       long initialLimitHit = getRaftServerMetrics(cluster.getLeader())
+  503.             .getNumWatchRequestQueueLimitHits(replicationLevel).getCount();
+  504.   
+
+#29
+ratis-server/src/test/java/org/apache/ratis/WatchRequestTests.java:503: error: Null Dereference
+  `LongCounter RaftServerMetricsImpl.getNumWatchRequestQueueLimitHits(RaftProtos$ReplicationLevel)` could be null (from the call to `RaftServerMetricsImpl.getNumWatchRequestQueueLimitHits(...)` on line 503) and is dereferenced. 
+  501.             .getNumWatchRequestsTimeout(replicationLevel).getCount();
+  502.         long initialLimitHit = getRaftServerMetrics(cluster.getLeader())
+  503. >           .getNumWatchRequestQueueLimitHits(replicationLevel).getCount();
+  504.   
+  505.         int uncommittedBaseIndex = 10000;
+
+#30
+ratis-server/src/test/java/org/apache/ratis/WatchRequestTests.java:508: error: Null Dereference
+  `RaftServer$Division MiniRaftCluster.getLeader()` could be null (from the call to `MiniRaftCluster.getLeader()` on line 508) and is dereferenced. 
+  506.         // Logs with indices 10001 - 10011 will never be committed, so it should fail with NotReplicatedException
+  507.         for (int i = 1; i <= 11; i++) {
+  508. >         RaftClient client = cluster.createClient(cluster.getLeader().getId(), RetryPolicies.noRetry());
+  509.           clients.add(client);
+  510.           client.async().watch(uncommittedBaseIndex + i, replicationLevel);
+
+#31
+ratis-server/src/test/java/org/apache/ratis/WatchRequestTests.java:514: error: Null Dereference
+  `RaftServer$Division MiniRaftCluster.getLeader()` could be null (from the call to `MiniRaftCluster.getLeader()` on line 514) and is dereferenced in the call to `WatchRequestTests.getRaftServerMetrics(...)`. 
+  512.   
+  513.         // All the watch timeout for each unique index should increment the metric
+  514. >       RaftTestUtil.waitFor(() -> getRaftServerMetrics(cluster.getLeader())
+  515.                 .getNumWatchRequestsTimeout(replicationLevel).getCount() == initialWatchRequestTimeoutCount + 10,
+  516.             300, 5000);
+
+#32
+ratis-server/src/test/java/org/apache/ratis/WatchRequestTests.java:515: error: Null Dereference
+  `LongCounter RaftServerMetricsImpl.getNumWatchRequestsTimeout(RaftProtos$ReplicationLevel)` could be null (from the call to `RaftServerMetricsImpl.getNumWatchRequestsTimeout(...)` on line 515) and is dereferenced. 
+  513.         // All the watch timeout for each unique index should increment the metric
+  514.         RaftTestUtil.waitFor(() -> getRaftServerMetrics(cluster.getLeader())
+  515. >               .getNumWatchRequestsTimeout(replicationLevel).getCount() == initialWatchRequestTimeoutCount + 10,
+  516.             300, 5000);
+  517.         // There are 11 pending watch request, but the pending watch request limit is 10
+
+#33
+ratis-server/src/test/java/org/apache/ratis/WatchRequestTests.java:518: error: Null Dereference
+  `RaftServer$Division MiniRaftCluster.getLeader()` could be null (from the call to `MiniRaftCluster.getLeader()` on line 518) and is dereferenced in the call to `WatchRequestTests.getRaftServerMetrics(...)`. 
+  516.             300, 5000);
+  517.         // There are 11 pending watch request, but the pending watch request limit is 10
+  518. >       RaftTestUtil.waitFor(() -> getRaftServerMetrics(cluster.getLeader())
+  519.             .getNumWatchRequestQueueLimitHits(replicationLevel).getCount() ==
+  520.             initialLimitHit + 1, 300, 5000);
+
+#34
+ratis-server/src/test/java/org/apache/ratis/WatchRequestTests.java:519: error: Null Dereference
+  `LongCounter RaftServerMetricsImpl.getNumWatchRequestQueueLimitHits(RaftProtos$ReplicationLevel)` could be null (from the call to `RaftServerMetricsImpl.getNumWatchRequestQueueLimitHits(...)` on line 519) and is dereferenced. 
+  517.         // There are 11 pending watch request, but the pending watch request limit is 10
+  518.         RaftTestUtil.waitFor(() -> getRaftServerMetrics(cluster.getLeader())
+  519. >           .getNumWatchRequestQueueLimitHits(replicationLevel).getCount() ==
+  520.             initialLimitHit + 1, 300, 5000);
+  521.       } finally {
+
+#35
+ratis-server/src/test/java/org/apache/ratis/server/impl/LeaderElectionTests.java:141: error: Null Dereference
+  `RaftServer$Division MiniRaftCluster.getLeader()` could be null (from the call to `MiniRaftCluster.getLeader()` on line 141) and is dereferenced. 
+  139.     void runTestLeaderNotCountListenerForMajority(CLUSTER cluster) throws Exception {
+  140.       final RaftServer.Division leader = waitForLeader(cluster);
+  141. >     Assertions.assertEquals(2, ((RaftConfigurationImpl)cluster.getLeader().getRaftConf()).getMajorityCount());
+  142.       try (RaftClient client = cluster.createClient(leader.getId())) {
+  143.         client.io().send(new RaftTestUtil.SimpleMessage("message"));
+
+#36
+ratis-server/src/test/java/org/apache/ratis/server/impl/LeaderElectionTests.java:629: error: Null Dereference
+  `RaftServer$Division MiniRaftCluster.getLeader()` could be null (from the call to `MiniRaftCluster.getLeader()` on line 629) and is dereferenced. 
+  627.         final RaftClientReply resumeLeaderReply = client.getLeaderElectionManagementApi(f1.getId()).resume();
+  628.         Assertions.assertTrue(resumeLeaderReply.isSuccess());
+  629. >       JavaUtils.attempt(() -> Assertions.assertEquals(f1.getId(), cluster.getLeader().getId()),
+  630.             20, HUNDRED_MILLIS, "check new leader", LOG);
+  631.       }
+
+#37
 ratis-server/src/test/java/org/apache/ratis/server/impl/MiniRaftCluster.java:540: error: Null Dereference
   null (null value originating from line 540) is dereferenced. 
   538.     public void killServer(RaftPeerId id) {
@@ -106,7 +340,16 @@ ratis-server/src/test/java/org/apache/ratis/server/impl/MiniRaftCluster.java:540
   541.     }
   542.   
 
-#12
+#38
+ratis-server/src/test/java/org/apache/ratis/server/impl/MiniRaftCluster.java:575: error: Null Dereference
+  `leader` could be null (from the call to `MiniRaftCluster.getLeader()` on line 574) and is dereferenced. 
+  573.     public RaftServer.Division getLeaderAndSendFirstMessage(boolean ignoreException) throws IOException {
+  574.       final RaftServer.Division leader = getLeader();
+  575. >     try(RaftClient client = createClient(leader.getId())) {
+  576.         client.io().send(new RaftTestUtil.SimpleMessage("first msg to make leader ready"));
+  577.       } catch (IOException e) {
+
+#39
 ratis-server/src/test/java/org/apache/ratis/server/impl/MiniRaftCluster.java:716: error: Null Dereference
   null (null value originating from line 716) is dereferenced. 
   714.   
@@ -115,7 +358,79 @@ ratis-server/src/test/java/org/apache/ratis/server/impl/MiniRaftCluster.java:716
   717.     }
   718.   
 
-#13
+#40
+ratis-server/src/test/java/org/apache/ratis/server/impl/MiniRaftCluster.java:720: error: Null Dereference
+  null (null value originating from line 720) is dereferenced in the call to `MiniRaftCluster.getDivision(...)`. 
+  718.   
+  719.     public RaftServer.Division getDivision(RaftPeerId id) {
+  720. >     return getDivision(servers.get(id));
+  721.     }
+  722.   
+
+#41
+ratis-server/src/test/java/org/apache/ratis/server/impl/MiniRaftCluster.java:724: error: Null Dereference
+  null (null value originating from line 724) is dereferenced in the call to `RaftServerTestUtil.getDivision(...)`. 
+  722.   
+  723.     public RaftServer.Division getDivision(RaftPeerId id, RaftGroupId groupId) {
+  724. >     return RaftServerTestUtil.getDivision(servers.get(id), groupId);
+  725.     }
+  726.   
+
+#42
+ratis-server/src/test/java/org/apache/ratis/server/impl/RaftReconfigurationBaseTest.java:185: error: Null Dereference
+  `RaftServer$Division MiniRaftCluster.getLeader()` could be null (from the call to `MiniRaftCluster.getLeader()` on line 185) and is dereferenced. 
+  183.       runWithNewCluster(1, cluster -> {
+  184.         RaftTestUtil.waitForLeader(cluster);
+  185. >       final RaftPeerId leaderId = cluster.getLeader().getId();
+  186.   
+  187.         try (final RaftClient client = cluster.createClient(leaderId)) {
+
+#43
+ratis-server/src/test/java/org/apache/ratis/server/impl/RaftReconfigurationBaseTest.java:438: error: Null Dereference
+  `RaftServer$Division MiniRaftCluster.getLeader()` could be null (from the call to `MiniRaftCluster.getLeader()` on line 438) and is dereferenced. 
+  436.       runWithNewCluster(1, cluster -> {
+  437.         RaftTestUtil.waitForLeader(cluster);
+  438. >       final RaftPeerId leaderId = cluster.getLeader().getId();
+  439.   
+  440.         try (final RaftClient client = cluster.createClient(leaderId)) {
+
+#44
+ratis-server/src/test/java/org/apache/ratis/server/impl/RaftReconfigurationBaseTest.java:459: error: Null Dereference
+  `RaftServer$Division MiniRaftCluster.getLeader()` could be null (from the call to `MiniRaftCluster.getLeader()` on line 459) and is dereferenced. 
+  457.             cluster.getNumServers(), numNewPeer, startNewPeer);
+  458.         RaftTestUtil.waitForLeader(cluster);
+  459. >       final RaftPeerId leaderId = cluster.getLeader().getId();
+  460.         try (final RaftClient client = cluster.createClient(leaderId)) {
+  461.   
+
+#45
+ratis-server/src/test/java/org/apache/ratis/server/impl/RaftReconfigurationBaseTest.java:651: error: Null Dereference
+  `RaftServer$Division MiniRaftCluster.getLeader()` could be null (from the call to `MiniRaftCluster.getLeader()` on line 651) and is dereferenced. 
+  649.         RaftTestUtil.waitForLeader(cluster);
+  650.   
+  651. >       final RaftPeerId leaderId = cluster.getLeader().getId();
+  652.   
+  653.         RaftPeer[] newPeers = cluster.addNewPeers(2, true).allPeersInNewConf;
+
+#46
+ratis-server/src/test/java/org/apache/ratis/server/impl/RaftReconfigurationBaseTest.java:713: error: Null Dereference
+  `leader` could be null (from the call to `MiniRaftCluster.getLeader()` on line 712) and is dereferenced. 
+  711.   
+  712.         final RaftServer.Division leader = cluster.getLeader();
+  713. >       final RaftPeerId leaderId = leader.getId();
+  714.   
+  715.         final RaftLog log = leader.getRaftLog();
+
+#47
+ratis-server/src/test/java/org/apache/ratis/server/impl/RaftServerTestUtil.java:237: error: Null Dereference
+  `RaftServer$Division MiniRaftCluster.getLeader()` could be null (from the call to `MiniRaftCluster.getLeader()` on line 237) and is dereferenced. 
+  235.   
+  236.     private static Collection<RaftPeer> parseMinorityPeers(MiniRaftCluster cluster, Collection<RaftPeer> peersInNewConf) {
+  237. >     RaftConfigurationImpl conf = (RaftConfigurationImpl) cluster.getLeader().getRaftConf();
+  238.       Set<RaftPeer> peers = new HashSet<>(conf.getCurrentPeers());
+  239.   
+
+#48
 ratis-server/src/test/java/org/apache/ratis/server/simulation/MiniRaftClusterWithSimulatedRpc.java:117: error: Null Dereference
   `SimulatedRequestReply$EventQueue SimulatedRequestReply.getQueue(String)` could be null (from the call to `SimulatedRequestReply.getQueue(...)` on line 117) and is dereferenced. 
   115.     @Override
@@ -124,7 +439,43 @@ ratis-server/src/test/java/org/apache/ratis/server/simulation/MiniRaftClusterWit
   118.     }
   119.   }
 
-#14
+#49
+ratis-server/src/test/java/org/apache/ratis/statemachine/RaftSnapshotBaseTest.java:83: error: Null Dereference
+  `leader` could be null (from the call to `MiniRaftCluster.getLeader()` on line 82) and is dereferenced in the call to `SimpleStateMachine4Testing.get(...)`. 
+  81.     public static List<File> getSnapshotFiles(MiniRaftCluster cluster, long startIndex, long endIndex) {
+  82.       final RaftServer.Division leader = cluster.getLeader();
+  83. >     final SimpleStateMachineStorage storage = SimpleStateMachine4Testing.get(leader).getStateMachineStorage();
+  84.       final long term = leader.getInfo().getCurrentTerm();
+  85.       return LongStream.range(startIndex, endIndex)
+
+#50
+ratis-server/src/test/java/org/apache/ratis/statemachine/RaftSnapshotBaseTest.java:154: error: Null Dereference
+  `RaftServer$Division MiniRaftCluster.getLeader()` could be null (from the call to `MiniRaftCluster.getLeader()` on line 154) and is dereferenced. 
+  152.     public void testRestartPeer() throws Exception {
+  153.       RaftTestUtil.waitForLeader(cluster);
+  154. >     final RaftPeerId leaderId = cluster.getLeader().getId();
+  155.       int i = 0;
+  156.       try(final RaftClient client = cluster.createClient(leaderId)) {
+
+#51
+ratis-server/src/test/java/org/apache/ratis/statemachine/RaftSnapshotBaseTest.java:201: error: Null Dereference
+  `RaftServer$Division MiniRaftCluster.getLeader()` could be null (from the call to `MiniRaftCluster.getLeader()` on line 201) and is dereferenced. 
+  199.       try {
+  200.         RaftTestUtil.waitForLeader(cluster);
+  201. >       final RaftPeerId leaderId = cluster.getLeader().getId();
+  202.   
+  203.         try(final RaftClient client = cluster.createClient(leaderId)) {
+
+#52
+ratis-server/src/test/java/org/apache/ratis/statemachine/RaftSnapshotBaseTest.java:282: error: Null Dereference
+  `RaftServer$Division MiniRaftCluster.getLeader()` could be null (from the call to `MiniRaftCluster.getLeader()` on line 282) and is dereferenced. 
+  280.       try {
+  281.         RaftTestUtil.waitForLeader(cluster);
+  282. >       final RaftPeerId leaderId = cluster.getLeader().getId();
+  283.   
+  284.         try(final RaftClient client = cluster.createClient(leaderId)) {
+
+#53
 ratis-shell/src/main/java/org/apache/ratis/shell/cli/AbstractShell.java:147: error: Null Dereference
   null (null value originating from line 147) is dereferenced. 
   145.       SortedSet<String> sortedCmds = new TreeSet<>(mCommands.keySet());
@@ -133,7 +484,7 @@ ratis-shell/src/main/java/org/apache/ratis/shell/cli/AbstractShell.java:147: err
   148.       }
   149.     }
 
-#15
+#54
 ratis-test/src/test/java/org/apache/ratis/conf/TestRaftProperties.java:51: error: Null Dereference
   `Boolean RaftProperties.getBoolean(String,Boolean)` could be null (null value originating from line 51) and is dereferenced. 
   49.         Assertions.assertNull(p.getBoolean(KEY, null));
@@ -142,7 +493,7 @@ ratis-test/src/test/java/org/apache/ratis/conf/TestRaftProperties.java:51: error
   52.         setNonUnderscoreValue(p, "false");
   53.         Assertions.assertFalse(p.getBoolean(KEY, null));
 
-#16
+#55
 ratis-test/src/test/java/org/apache/ratis/conf/TestRaftProperties.java:53: error: Null Dereference
   `Boolean RaftProperties.getBoolean(String,Boolean)` could be null (null value originating from line 53) and is dereferenced. 
   51.         Assertions.assertTrue(p.getBoolean(KEY, null));
@@ -151,7 +502,52 @@ ratis-test/src/test/java/org/apache/ratis/conf/TestRaftProperties.java:53: error
   54.         setUnderscoreValue(p, "fa_lse");
   55.         Assertions.assertNull(p.getBoolean(KEY, null));
 
-#17
+#56
+ratis-test/src/test/java/org/apache/ratis/conf/TestRaftProperties.java:83: error: Null Dereference
+  `File RaftProperties.getFile(String,File)` could be null (null value originating from line 83) and is dereferenced. 
+  81.         Assertions.assertNull(p.getFile(KEY, null));
+  82.         setUnderscoreValue(p, expected);
+  83. >       Assertions.assertEquals(expected, p.getFile(KEY, null).getName());
+  84.         p.unset(KEY);
+  85.       }
+
+#57
+ratis-test/src/test/java/org/apache/ratis/grpc/TestGrpcMessageMetrics.java:63: error: Null Dereference
+  `RaftServer$Division MiniRaftCluster.getLeader()` could be null (from the call to `MiniRaftCluster.getLeader()` on line 63) and is dereferenced in the call to `TestGrpcMessageMetrics.assertMessageCount(...)`. 
+  61.       }
+  62.       // Wait for commits to happen on leader
+  63. >     JavaUtils.attempt(() -> assertMessageCount(cluster.getLeader()), 100, HUNDRED_MILLIS,
+  64.           cluster.getLeader().getId() + "-assertMessageCount", null);
+  65.     }
+
+#58
+ratis-test/src/test/java/org/apache/ratis/grpc/TestRaftServerWithGrpc.java:127: error: Null Dereference
+  `RaftServer$Division MiniRaftCluster.getLeader()` could be null (from the call to `MiniRaftCluster.getLeader()` on line 127) and is dereferenced. 
+  125.       // compared to leader. This helps in locking the raft storage directory to
+  126.       // be used by next raft server proxy instance.
+  127. >     final StateMachine stateMachine = cluster.getLeader().getStateMachine();
+  128.       RaftServerConfigKeys.setStorageDir(p, Collections.singletonList(cluster.getStorageDir(leaderId)));
+  129.       newRaftServer(cluster, leaderId, stateMachine, RaftStorage.StartupOption.FORMAT, p);
+
+#59
+ratis-test/src/test/java/org/apache/ratis/grpc/TestRaftServerWithGrpc.java:279: error: Null Dereference
+  `RaftServer$Division MiniRaftCluster.getLeader()` could be null (from the call to `MiniRaftCluster.getLeader()` on line 279) and is dereferenced in the call to `TestRaftServerWithGrpc.getRaftServerMetrics(...)`. 
+  277.   
+  278.         // Because we have passed 11 requests, and the element queue size is 10.
+  279. >       RaftTestUtil.waitFor(() -> getRaftServerMetrics(cluster.getLeader())
+  280.             .getNumRequestQueueLimitHits().getCount() == 1, 300, 5000);
+  281.   
+
+#60
+ratis-test/src/test/java/org/apache/ratis/grpc/TestRaftServerWithGrpc.java:294: error: Null Dereference
+  `RaftServer$Division MiniRaftCluster.getLeader()` could be null (from the call to `MiniRaftCluster.getLeader()` on line 294) and is dereferenced in the call to `TestRaftServerWithGrpc.getRaftServerMetrics(...)`. 
+  292.         clients.add(client);
+  293.   
+  294. >       RaftTestUtil.waitFor(() -> getRaftServerMetrics(cluster.getLeader())
+  295.             .getNumRequestsByteSizeLimitHits().getCount() == 1, 300, 5000);
+  296.   
+
+#61
 ratis-test/src/test/java/org/apache/ratis/retry/TestMultipleLinearRandomRetry.java:57: error: Null Dereference
   `computed` could be null (from the call to `MultipleLinearRandomRetry.parseCommaSeparated(...)` on line 55) and is dereferenced. 
   55.       final MultipleLinearRandomRetry computed = MultipleLinearRandomRetry.parseCommaSeparated(input);
@@ -160,7 +556,34 @@ ratis-test/src/test/java/org/apache/ratis/retry/TestMultipleLinearRandomRetry.ja
   58.       return computed;
   59.     }
 
-#18
+#62
+ratis-test/src/test/java/org/apache/ratis/server/ServerRestartTests.java:96: error: Null Dereference
+  `RaftServer$Division MiniRaftCluster.getLeader()` could be null (from the call to `MiniRaftCluster.getLeader()` on line 96) and is dereferenced. 
+  94.     void runTestRestartFollower(MiniRaftCluster cluster) throws Exception {
+  95.       RaftTestUtil.waitForLeader(cluster);
+  96. >     final RaftPeerId leaderId = cluster.getLeader().getId();
+  97.   
+  98.       // write some messages
+
+#63
+ratis-test/src/test/java/org/apache/ratis/server/ServerRestartTests.java:263: error: Null Dereference
+  `leader` could be null (from the call to `MiniRaftCluster.getLeader()` on line 262) and is dereferenced. 
+  261.       final List<RaftPeerId> ids = new ArrayList<>();
+  262.       final RaftServer.Division leader = cluster.getLeader();
+  263. >     final RaftLog leaderLog = leader.getRaftLog();
+  264.       final RaftPeerId leaderId = leader.getId();
+  265.       ids.add(leaderId);
+
+#64
+ratis-test/src/test/java/org/apache/ratis/server/raftlog/TestRaftLogMetrics.java:113: error: Null Dereference
+  `RaftServer$Division MiniRaftCluster.getLeader()` could be null (from the call to `MiniRaftCluster.getLeader()` on line 113) and is dereferenced in the call to `TestRaftLogMetrics.assertCommitCount(...)`. 
+  111.   
+  112.       // Wait for commits to happen on leader
+  113. >     JavaUtils.attempt(() -> assertCommitCount(cluster.getLeader(), numMsg), 10, HUNDRED_MILLIS,
+  114.           cluster.getLeader().getId() + "-assertCommitCount", null);
+  115.     }
+
+#65
 ratis-test/src/test/java/org/apache/ratis/server/raftlog/TestRaftLogMetrics.java:160: error: Null Dereference
   `tm` could be null (from the call to `RatisMetricRegistryImpl.get(...)` on line 156) and is dereferenced. 
   158.       final MetricsStateMachine stateMachine = MetricsStateMachine.get(server);
@@ -169,7 +592,61 @@ ratis-test/src/test/java/org/apache/ratis/server/raftlog/TestRaftLogMetrics.java
   161.       Assertions.assertTrue(tm.getMeanRate() > 0);
   162.   
 
-#19
+#66
+ratis-test/src/test/java/org/apache/ratis/shell/cli/sh/AbstractCommandIntegrationTestWithGrpc.java:29: error: Null Dereference
+  `RaftServer$Division MiniRaftCluster.getLeader()` could be null (from the call to `MiniRaftCluster.getLeader()` on line 29) and is dereferenced. 
+  27.   
+  28.     public String getClusterAddress(MiniRaftCluster cluster) {
+  29. >     String address = cluster.getLeader().getPeer().getAdminAddress();
+  30.       StringBuilder sb = new StringBuilder();
+  31.       for (RaftServer.Division division : cluster.getFollowers()) {
+
+#67
+ratis-test/src/test/java/org/apache/ratis/shell/cli/sh/ElectionCommandIntegrationTest.java:72: error: Null Dereference
+  `RaftServer$Division MiniRaftCluster.getLeader()` could be null (from the call to `MiniRaftCluster.getLeader()` on line 72) and is dereferenced. 
+  70.       Assertions.assertEquals(0, ret);
+  71.       JavaUtils.attempt(() -> {
+  72. >       Assertions.assertEquals(cluster.getLeader().getId(), newLeader.getId());
+  73.       }, 10, TimeDuration.valueOf(1, TimeUnit.SECONDS), "testElectionTransferCommand", LOG);
+  74.     }
+
+#68
+ratis-test/src/test/java/org/apache/ratis/shell/cli/sh/ElectionCommandIntegrationTest.java:100: error: Null Dereference
+  `RaftServer$Division MiniRaftCluster.getLeader()` could be null (from the call to `MiniRaftCluster.getLeader()` on line 100) and is dereferenced. 
+   98.       Assertions.assertEquals(0, ret);
+   99.   
+  100. >     JavaUtils.attempt(() -> Assertions.assertEquals(cluster.getLeader().getId(), newLeader.getId()),
+  101.           10, TimeDuration.valueOf(1, TimeUnit.SECONDS), "testElectionTransferLeaderCommand", LOG);
+  102.   
+
+#69
+ratis-test/src/test/java/org/apache/ratis/shell/cli/sh/ElectionCommandIntegrationTest.java:133: error: Null Dereference
+  `RaftServer$Division MiniRaftCluster.getLeader()` could be null (from the call to `MiniRaftCluster.getLeader()` on line 133) and is dereferenced. 
+  131.   
+  132.       JavaUtils.attempt(() -> {
+  133. >       Assertions.assertNotEquals(cluster.getLeader().getId(), newLeader.getId());
+  134.       }, 10, TimeDuration.valueOf(1, TimeUnit.SECONDS), "testElectionPauseResumeCommand", LOG);
+  135.   
+
+#70
+ratis-test/src/test/java/org/apache/ratis/shell/cli/sh/ElectionCommandIntegrationTest.java:141: error: Null Dereference
+  `RaftServer$Division MiniRaftCluster.getLeader()` could be null (from the call to `MiniRaftCluster.getLeader()` on line 141) and is dereferenced. 
+  139.   
+  140.       JavaUtils.attempt(() -> {
+  141. >       Assertions.assertEquals(cluster.getLeader().getId(), newLeader.getId());
+  142.       }, 10, TimeDuration.valueOf(1, TimeUnit.SECONDS), "testElectionPauseResumeCommand", LOG);
+  143.     }
+
+#71
+ratis-test/src/test/java/org/apache/ratis/shell/cli/sh/PeerCommandIntegrationTest.java:120: error: Null Dereference
+  `RaftServer$Division MiniRaftCluster.getLeader()` could be null (from the call to `MiniRaftCluster.getLeader()` on line 120) and is dereferenced. 
+  118.       Assertions.assertEquals(0, ret);
+  119.       JavaUtils.attempt(() -> {
+  120. >       Assertions.assertEquals(cluster.getLeader().getId(), newLeader.getId());
+  121.       }, 10, TimeDuration.valueOf(1, TimeUnit.SECONDS), "testPeerSetPriorityCommand", LOG);
+  122.     }
+
+#72
 ratis-test/src/test/java/org/apache/ratis/util/TestLifeCycle.java:54: error: Null Dereference
   null (null value originating from line 54) is dereferenced. 
   52.       states.forEach(
@@ -178,7 +655,7 @@ ratis-test/src/test/java/org/apache/ratis/util/TestLifeCycle.java:54: error: Nul
   55.                   isValid(from, to), from + " -> " + to)));
   56.     }
 
-Found 20 issues
+Found 73 issues
                 Issue Type(ISSUED_TYPE_ID): #
-     Null Dereference(NULLPTR_DEREFERENCE): 18
+     Null Dereference(NULLPTR_DEREFERENCE): 71
   Pulse Resource Leak(PULSE_RESOURCE_LEAK): 2
