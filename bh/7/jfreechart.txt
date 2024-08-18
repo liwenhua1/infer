@@ -1,0 +1,129 @@
+#0
+src/main/java/org/jfree/chart/annotations/CategoryLineAnnotation.java:289: error: Null Dereference
+  `dataset` could be null (from the call to `CategoryPlot.getDataset()` on line 288) and is dereferenced. 
+  287.   
+  288.           CategoryDataset dataset = plot.getDataset();
+  289. >         int catIndex1 = dataset.getColumnIndex(this.category1);
+  290.           int catIndex2 = dataset.getColumnIndex(this.category2);
+  291.           int catCount = dataset.getColumnCount();
+
+#1
+src/main/java/org/jfree/chart/annotations/CategoryTextAnnotation.java:179: error: Null Dereference
+  `dataset` could be null (from the call to `CategoryPlot.getDataset()` on line 178) and is dereferenced. 
+  177.   
+  178.           CategoryDataset dataset = plot.getDataset();
+  179. >         int catIndex = dataset.getColumnIndex(this.category);
+  180.           int catCount = dataset.getColumnCount();
+  181.   
+
+#2
+src/main/java/org/jfree/chart/plot/CombinedDomainCategoryPlot.java:566: error: Null Dereference
+  `more` could be null (from the call to `CategoryPlot.getCategories()` on line 565) and is dereferenced. 
+  564.               for (CategoryPlot plot : this.subplots) {
+  565.                   List more = plot.getCategories();
+  566. >                 for (Object o : more) {
+  567.                       Comparable category = (Comparable) o;
+  568.                       if (!result.contains(category)) {
+
+#3
+src/main/java/org/jfree/chart/renderer/DefaultPolarItemRenderer.java:538: error: Null Dereference
+  `axis` could be null (from the call to `PolarPlot.getAxis()` on line 536) and is dereferenced. 
+  536.           ValueAxis axis = plot.getAxis();
+  537.           double centerValue, outerValue;
+  538. >         if (axis.isInverted()) {
+  539.               outerValue = axis.getLowerBound();
+  540.               centerValue = axis.getUpperBound();
+
+#4
+src/main/java/org/jfree/chart/renderer/WaferMapRenderer.java:193: error: Null Dereference
+  null (null value originating from line 193) is dereferenced. 
+  191.        */
+  192.       private int getPaintIndex(Number value) {
+  193. >         return ((Integer) this.paintIndex.get(value)).intValue();
+  194.       }
+  195.   
+
+#5
+src/main/java/org/jfree/data/statistics/HistogramDataset.java:258: error: Null Dereference
+  null (null value originating from line 258) is dereferenced. 
+  256.       private int getTotal(int series) {
+  257.           Map<String, Object> map = this.list.get(series);
+  258. >         return (Integer) map.get("values.length");
+  259.       }
+  260.   
+
+#6
+src/main/java/org/jfree/data/statistics/HistogramDataset.java:270: error: Null Dereference
+  null (null value originating from line 270) is dereferenced. 
+  268.       private double getBinWidth(int series) {
+  269.           Map<String, Object> map = this.list.get(series);
+  270. >         return (Double) map.get("bin width");
+  271.       }
+  272.   
+
+#7
+src/main/java/org/jfree/data/statistics/HistogramDataset.java:313: error: Null Dereference
+  `List HistogramDataset.getBins(int)` could be null (from the call to `HistogramDataset.getBins(...)` on line 313) and is dereferenced. 
+  311.       @Override
+  312.       public int getItemCount(int series) {
+  313. >         return getBins(series).size();
+  314.       }
+  315.   
+
+#8
+src/main/java/org/jfree/data/statistics/HistogramDataset.java:334: error: Null Dereference
+  `bins` could be null (from the call to `HistogramDataset.getBins(...)` on line 333) and is dereferenced. 
+  332.       public Number getX(int series, int item) {
+  333.           List<HistogramBin> bins = getBins(series);
+  334. >         HistogramBin bin = bins.get(item);
+  335.           return (bin.getStartBoundary() + bin.getEndBoundary()) / 2.0;
+  336.       }
+
+#9
+src/main/java/org/jfree/data/statistics/HistogramDataset.java:354: error: Null Dereference
+  `bins` could be null (from the call to `HistogramDataset.getBins(...)` on line 353) and is dereferenced. 
+  352.       public Number getY(int series, int item) {
+  353.           List<HistogramBin> bins = getBins(series);
+  354. >         HistogramBin bin = bins.get(item);
+  355.           double total = getTotal(series);
+  356.           double binWidth = getBinWidth(series);
+
+#10
+src/main/java/org/jfree/data/statistics/HistogramDataset.java:387: error: Null Dereference
+  `bins` could be null (from the call to `HistogramDataset.getBins(...)` on line 386) and is dereferenced. 
+  385.       public Number getStartX(int series, int item) {
+  386.           List<HistogramBin> bins = getBins(series);
+  387. >         HistogramBin bin = bins.get(item);
+  388.           return bin.getStartBoundary();
+  389.       }
+
+#11
+src/main/java/org/jfree/data/statistics/HistogramDataset.java:406: error: Null Dereference
+  `bins` could be null (from the call to `HistogramDataset.getBins(...)` on line 405) and is dereferenced. 
+  404.       public Number getEndX(int series, int item) {
+  405.           List<HistogramBin> bins = getBins(series);
+  406. >         HistogramBin bin = bins.get(item);
+  407.           return bin.getEndBoundary();
+  408.       }
+
+#12
+src/main/java/org/jfree/data/time/TimeSeriesCollection.java:564: error: Null Dereference
+  `series` could be null (from the call to `TimeSeriesCollection.getSeries(...)` on line 563) and is dereferenced. 
+  562.               Comparable seriesKey = (Comparable) visibleSeriesKey;
+  563.               TimeSeries<S> series = getSeries((S) seriesKey);
+  564. >             int count = series.getItemCount();
+  565.               if (count > 0) {
+  566.                   RegularTimePeriod start = series.getTimePeriod(0);
+
+#13
+src/main/java/org/jfree/data/time/TimeSeriesCollection.java:619: error: Null Dereference
+  `series` could be null (from the call to `TimeSeriesCollection.getSeries(...)` on line 618) and is dereferenced. 
+  617.               Comparable seriesKey = (Comparable) visibleSeriesKey;
+  618.               TimeSeries<S> series = getSeries((S) seriesKey);
+  619. >             Range r = series.findValueRange(xRange, this.xPosition,
+  620.                       this.workingCalendar);
+  621.               result = Range.combineIgnoringNaN(result, r);
+
+Found 14 issues
+             Issue Type(ISSUED_TYPE_ID): #
+  Null Dereference(NULLPTR_DEREFERENCE): 14
