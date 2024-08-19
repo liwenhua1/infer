@@ -1,0 +1,94 @@
+#0
+impl/src/main/java/io/jsonwebtoken/impl/DefaultJwtBuilder.java:798: error: Pulse Resource Leak
+  Resource dynamically allocated by constructor io.jsonwebtoken.impl.io.EncodingOutputStream(), indirectly via call to `DefaultJwtBuilder.encode(...)` on line 796 is not closed after the last access at line 798. 
+  796.           out = encode(out, name);
+  797.           writeAndClose(name, map, out);
+  798. >     }
+  799.   
+  800.       private void encodeAndWrite(String name, Payload payload, OutputStream out) {
+
+#1
+impl/src/main/java/io/jsonwebtoken/impl/DefaultJwtBuilder.java:803: error: Pulse Resource Leak
+  Resource dynamically allocated by constructor io.jsonwebtoken.impl.io.EncodingOutputStream(), indirectly via call to `DefaultJwtBuilder.encode(...)` on line 801 is not closed after the last access at line 803. 
+  801.           out = encode(out, name);
+  802.           writeAndClose(name, payload, out);
+  803. >     }
+  804.   
+  805.       private void encodeAndWrite(String name, byte[] data, OutputStream out) {
+
+#2
+impl/src/main/java/io/jsonwebtoken/impl/DefaultJwtBuilder.java:808: error: Pulse Resource Leak
+  Resource dynamically allocated by constructor io.jsonwebtoken.impl.io.EncodingOutputStream(), indirectly via call to `DefaultJwtBuilder.encode(...)` on line 806 is not closed after the last access at line 808. 
+  806.           out = encode(out, name);
+  807.           Streams.writeAndClose(out, data, "Unable to write bytes");
+  808. >     }
+  809.   
+  810.       private InputStream toInputStream(final String name, Payload payload) {
+
+#3
+impl/src/main/java/io/jsonwebtoken/impl/DefaultJwtParser.java:260: error: Pulse Resource Leak
+  Resource dynamically allocated by constructor io.jsonwebtoken.impl.io.CharSequenceReader() on line 257 is not closed after the last access at line 260. 
+  258.               return !(tokenized instanceof TokenizedJwe) && Strings.hasText(tokenized.getDigest());
+  259.           } catch (MalformedJwtException e) {
+  260. >             return false;
+  261.           }
+  262.       }
+
+#4
+impl/src/main/java/io/jsonwebtoken/impl/DefaultJwtParser.java:737: error: Null Dereference
+  null (null value originating from line 737) is dereferenced in the call to `DefaultJwtParser.normalize(...)`. 
+  735.           for (String expectedClaimName : expected.keySet()) {
+  736.   
+  737. >             Object expectedClaimValue = normalize(expected.get(expectedClaimName));
+  738.               Object actualClaimValue = normalize(claims.get(expectedClaimName));
+  739.   
+
+#5
+impl/src/main/java/io/jsonwebtoken/impl/DefaultJwtParser.java:738: error: Null Dereference
+  null (null value originating from line 738) is dereferenced in the call to `DefaultJwtParser.normalize(...)`. 
+  736.   
+  737.               Object expectedClaimValue = normalize(expected.get(expectedClaimName));
+  738. >             Object actualClaimValue = normalize(claims.get(expectedClaimName));
+  739.   
+  740.               if (expectedClaimValue instanceof Date) {
+
+#6
+impl/src/main/java/io/jsonwebtoken/impl/DefaultJwtParser.java:786: error: Pulse Resource Leak
+  Resource dynamically allocated by constructor io.jsonwebtoken.impl.io.CharSequenceReader() on line 786 is not closed after the last access at line 786. 
+  784.       private Jwt<?, ?> parse(CharSequence compact, Payload unencodedPayload) {
+  785.           Assert.hasText(compact, "JWT String argument cannot be null or empty.");
+  786. >         return parse(new CharSequenceReader(compact), unencodedPayload);
+  787.       }
+  788.   
+
+#7
+impl/src/main/java/io/jsonwebtoken/impl/DelegatingClaimsMutator.java:107: error: Null Dereference
+  null (null value originating from line 107) is dereferenced. 
+  105.       private Set<String> getAudience() {
+  106.           // caller expects that we're working with a String<Set> so ensure that:
+  107. >         if (!this.DELEGATE.PARAMS.get(AUDIENCE_STRING.getId()).supports(Collections.emptySet())) {
+  108.               String existing = get(AUDIENCE_STRING);
+  109.               remove(AUDIENCE_STRING.getId()); // clear out any canonical/idiomatic values since we're replacing
+
+#8
+impl/src/main/java/io/jsonwebtoken/impl/security/HmacAesAeadAlgorithm.java:118: error: Pulse Resource Leak
+  Resource dynamically allocated by constructor io.jsonwebtoken.impl.io.TeeOutputStream() on line 116 is not closed after the last access at line 118. 
+  116.           final OutputStream tee = new TeeOutputStream(out, copy);
+  117.   
+  118. >         jca(req).withCipher(new CheckedFunction<Cipher, Object>() {
+  119.               @Override
+  120.               public Object apply(Cipher cipher) throws Exception {
+
+#9
+impl/src/main/java/io/jsonwebtoken/impl/security/HmacAesAeadAlgorithm.java:136: error: Pulse Resource Leak
+  Resource dynamically allocated by constructor io.jsonwebtoken.impl.io.TeeOutputStream() on line 116 is not closed after the last access at line 136. 
+  134.               Bytes.clear(macKeyBytes);
+  135.           }
+  136. >     }
+  137.   
+  138.       private byte[] sign(byte[] aad, byte[] iv, InputStream ciphertext, byte[] macKeyBytes) {
+
+Found 10 issues
+                Issue Type(ISSUED_TYPE_ID): #
+  Pulse Resource Leak(PULSE_RESOURCE_LEAK): 7
+     Null Dereference(NULLPTR_DEREFERENCE): 3
