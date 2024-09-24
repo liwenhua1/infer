@@ -1,0 +1,435 @@
+#0
+client-hc/src/main/java/com/graphhopper/api/MatrixResponse.java:61: error: Null Dereference
+  `res` could be null (null value originating from line 60) and is dereferenced. 
+  59.       public String getHeader(String key, String defaultValue) {
+  60.           List<String> res = headers.get(key);
+  61. >         if (!res.isEmpty()) return res.get(0);
+  62.           return defaultValue;
+  63.       }
+
+#1
+core/src/main/java/com/graphhopper/GraphHopper.java:1133: error: Null Dereference
+  `profile` could be null (null value originating from line 1132) and is dereferenced. 
+  1131.           for (CHProfile chProfile : chProfiles) {
+  1132.               Profile profile = profilesByName.get(chProfile.getProfile());
+  1133. >             if (profile.hasTurnCosts()) {
+  1134.                   chConfigs.add(CHConfig.edgeBased(profile.getName(), createWeighting(profile, new PMap())));
+  1135.               } else {
+
+#2
+core/src/main/java/com/graphhopper/reader/dem/CGIARProvider.java:101: error: Pulse Resource Leak
+  Resource dynamically allocated by constructor java.io.FileInputStream() on line 100 is not closed after the last access at line 101. 
+   99.           try {
+  100.               InputStream is = new FileInputStream(file);
+  101. >             ZipInputStream zis = new ZipInputStream(is);
+  102.               // find tif file in zip
+  103.               ZipEntry entry = zis.getNextEntry();
+
+#3
+core/src/main/java/com/graphhopper/reader/dem/SRTMProvider.java:122: error: Pulse Resource Leak
+  Resource dynamically allocated by constructor java.io.FileInputStream() on line 121 is not closed after the last access at line 122. 
+  120.       byte[] readFile(File file) throws IOException {
+  121.           InputStream is = new FileInputStream(file);
+  122. >         ZipInputStream zis = new ZipInputStream(is);
+  123.           zis.getNextEntry();
+  124.           BufferedInputStream buff = new BufferedInputStream(zis);
+
+#4
+core/src/main/java/com/graphhopper/reader/dem/SkadiProvider.java:93: error: Pulse Resource Leak
+  Resource dynamically allocated by constructor java.io.FileInputStream() on line 82 is not closed after the last access at line 93. 
+  91.           os.flush();
+  92.           close(buff);
+  93. >         return os.toByteArray();
+  94.       }
+  95.   
+
+#5
+core/src/main/java/com/graphhopper/reader/osm/OSMInputFile.java:107: error: Pulse Resource Leak
+  Resource dynamically allocated by constructor java.io.BufferedInputStream() on line 99 is not closed after the last access at line 107. 
+  105.           // check file header
+  106.           byte header[] = new byte[6];
+  107. >         if (ips.read(header) < 0)
+  108.               throw new IllegalArgumentException("Input file is not of valid type " + file.getPath());
+  109.   
+
+#6
+core/src/main/java/com/graphhopper/reader/osm/OSMInputFile.java:127: error: Pulse Resource Leak
+  Resource dynamically allocated by constructor java.io.FileInputStream() on line 99 is not closed after the last access at line 127. 
+  125.           } else if (header[0] == 'P' && header[1] == 'K') {
+  126.               ips.reset();
+  127. >             ZipInputStream zip = new ZipInputStream(ips);
+  128.               zip.getNextEntry();
+  129.   
+
+#7
+core/src/main/java/com/graphhopper/reader/osm/OSMInputFile.java:134: error: Pulse Resource Leak
+  Resource dynamically allocated by constructor java.io.BufferedInputStream() on line 99 is not closed after the last access at line 134. 
+  132.               ips.reset();
+  133.               return ips;
+  134. >         } else if (name.endsWith(".bz2") || name.endsWith(".bzip2")) {
+  135.               String clName = "org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream";
+  136.               try {
+
+#8
+core/src/main/java/com/graphhopper/reader/osm/OSMInputFile.java:145: error: Pulse Resource Leak
+  Resource dynamically allocated by constructor java.io.BufferedInputStream() on line 99 is not closed after the last access at line 145. 
+  143.               }
+  144.           } else {
+  145. >             throw new IllegalArgumentException("Input file is not of valid type " + file.getPath());
+  146.           }
+  147.       }
+
+#9
+core/src/main/java/com/graphhopper/util/Downloader.java:125: error: Pulse Resource Leak
+  Resource dynamically allocated by constructor java.util.zip.GZIPInputStream(), indirectly via call to `Downloader.fetch(...)` on line 110 is not closed after the last access at line 125. 
+  123.               Helper.close(in);
+  124.           }
+  125. >     }
+  126.   
+  127.       public void downloadAndUnzip(String url, String toFolder, final LongConsumer progressListener) throws IOException {
+
+#10
+core/src/main/java/com/graphhopper/util/Downloader.java:125: error: Pulse Resource Leak
+  Resource dynamically allocated by constructor java.util.zip.InflaterInputStream(), indirectly via call to `Downloader.fetch(...)` on line 110 is not closed after the last access at line 125. 
+  123.               Helper.close(in);
+  124.           }
+  125. >     }
+  126.   
+  127.       public void downloadAndUnzip(String url, String toFolder, final LongConsumer progressListener) throws IOException {
+
+#11
+core/src/main/java/com/graphhopper/util/Downloader.java:136: error: Pulse Resource Leak
+  Resource dynamically allocated by constructor java.util.zip.InflaterInputStream(), indirectly via call to `Downloader.fetch(...)` on line 136 is not closed after the last access at line 136. 
+  134.   
+  135.       public String downloadAsString(String url, boolean readErrorStreamNoException) throws IOException {
+  136. >         return Helper.isToString(fetch(createConnection(url), readErrorStreamNoException));
+  137.       }
+  138.   }
+
+#12
+core/src/main/java/com/graphhopper/util/TranslationMap.java:133: error: Null Dereference
+  `Translation TranslationMap.get(String)` could be null (from the call to `TranslationMap.get(...)` on line 133) and is dereferenced. 
+  131.        */
+  132.       private void postImportHook() {
+  133. >         Map<String, String> enMap = get("en").asMap();
+  134.           StringBuilder sb = new StringBuilder();
+  135.           for (Translation tr : translations.values()) {
+
+#13
+reader-gtfs/src/main/java/com/conveyal/gtfs/GTFSFeed.java:302: error: Null Dereference
+  `trip` could be null (null value originating from line 299) and is dereferenced. 
+  300.   
+  301.           Iterable<StopTime> stopTimes;
+  302. >         stopTimes = getOrderedStopTimesForTrip(trip.trip_id);
+  303.           if (Iterables.size(stopTimes) > 1) {
+  304.               for (StopTime stopTime : stopTimes) {
+
+#14
+reader-gtfs/src/main/java/com/conveyal/gtfs/GTFSFeed.java:335: error: Null Dereference
+  `trip` could be null (null value originating from line 332) and is dereferenced. 
+  333.   
+  334.           // If trip has shape_id, use it to generate geometry.
+  335. >         if (trip.shape_id != null) {
+  336.               Shape shape = getShape(trip.shape_id);
+  337.               if (shape != null) ls = shape.geometry;
+
+#15
+reader-gtfs/src/main/java/com/conveyal/gtfs/model/Entity.java:283: error: Pulse Resource Leak
+  Resource dynamically allocated by constructor java.io.FileInputStream() on line 259 is not closed after the last access at line 283. 
+  281.               // but the GTFS spec says that "files that include the UTF byte order mark are acceptable"
+  282.               InputStream bis = new BOMInputStream(zis);
+  283. >             CsvReader reader = new CsvReader(bis, ',', Charset.forName("UTF8"));
+  284.               this.reader = reader;
+  285.               reader.readHeaders();
+
+#16
+reader-gtfs/src/main/java/com/graphhopper/gtfs/GtfsReader.java:209: error: Null Dereference
+  null (null value originating from line 209) is dereferenced. 
+  207.   
+  208.       public ArrayList<Integer> insertTransferEdges(int arrivalPlatformNode, int minTransferTime, GtfsStorage.PlatformDescriptor departurePlatform) {
+  209. >         return insertTransferEdges(arrivalPlatformNode, minTransferTime, departureTimelinesByStop.get(departurePlatform.stop_id).get(departurePlatform), departurePlatform);
+  210.       }
+  211.   
+
+#17
+reader-gtfs/src/main/java/com/graphhopper/gtfs/GtfsReader.java:305: error: Null Dereference
+  null (null value originating from line 305) is dereferenced. 
+  303.           LOGGER.debug("Creating timeline at stop {} for departure platform {}", stop.stop_id, platformDescriptor);
+  304.           int platformEnterNode = out.createNode();
+  305. >         int streetNode = gtfsStorage.getStationNodes().get(new GtfsStorage.FeedIdWithStopId(platformDescriptor.feed_id, platformDescriptor.stop_id));
+  306.           out.createEdge(streetNode, platformEnterNode, new PtEdgeAttributes(GtfsStorage.EdgeType.ENTER_PT, 0,null, route_type, null,0, -1, null, platformDescriptor));
+  307.           wireUpAndConnectTimeline(platformEnterNode, departureTimeline, GtfsStorage.EdgeType.ENTER_TIME_EXPANDED_NETWORK, GtfsStorage.EdgeType.WAIT);
+
+#18
+reader-gtfs/src/main/java/com/graphhopper/gtfs/GtfsReader.java:313: error: Null Dereference
+  null (null value originating from line 313) is dereferenced. 
+  311.           LOGGER.debug("Creating timeline at stop {} for arrival platform {}", stop.stop_id, platformDescriptor);
+  312.           int platformExitNode = out.createNode();
+  313. >         int streetNode = gtfsStorage.getStationNodes().get(new GtfsStorage.FeedIdWithStopId(platformDescriptor.feed_id, platformDescriptor.stop_id));
+  314.           out.createEdge(platformExitNode, streetNode, new PtEdgeAttributes(GtfsStorage.EdgeType.EXIT_PT, 0, null, route_type, null, 0, -1, null, platformDescriptor));
+  315.           wireUpAndConnectTimeline(platformExitNode, arrivalTimeline, GtfsStorage.EdgeType.LEAVE_TIME_EXPANDED_NETWORK, GtfsStorage.EdgeType.WAIT_ARRIVAL);
+
+#19
+reader-gtfs/src/main/java/com/graphhopper/gtfs/GtfsReader.java:375: error: Null Dereference
+  null (null value originating from line 375) is dereferenced. 
+  373.   
+  374.       private int findPlatformEnter(GtfsStorage.PlatformDescriptor platformDescriptor) {
+  375. >         int stopNode = gtfsStorage.getStationNodes().get(new GtfsStorage.FeedIdWithStopId(platformDescriptor.feed_id, platformDescriptor.stop_id));
+  376.           for (PtGraph.PtEdge ptEdge : ptGraph.edgesAround(stopNode)) {
+  377.               if (ptEdge.getType() == GtfsStorage.EdgeType.ENTER_PT && platformDescriptor.equals(ptEdge.getAttrs().platformDescriptor)) {
+
+#20
+reader-gtfs/src/main/java/com/graphhopper/gtfs/GtfsReader.java:385: error: Null Dereference
+  null (null value originating from line 385) is dereferenced. 
+  383.   
+  384.       private int findPlatformExit(GtfsStorage.PlatformDescriptor platformDescriptor) {
+  385. >         int stopNode = gtfsStorage.getStationNodes().get(new GtfsStorage.FeedIdWithStopId(platformDescriptor.feed_id, platformDescriptor.stop_id));
+  386.           for (PtGraph.PtEdge ptEdge : ptGraph.backEdgesAround(stopNode)) {
+  387.               if (ptEdge.getType() == GtfsStorage.EdgeType.EXIT_PT && platformDescriptor.equals(ptEdge.getAttrs().platformDescriptor)) {
+
+#21
+reader-gtfs/src/main/java/com/graphhopper/gtfs/GtfsReader.java:452: error: Null Dereference
+  null (null value originating from line 452) is dereferenced. 
+  450.   
+  451.       private void insertOutboundTransfers(String toStopId, String toRouteId, int minimumTransferTime, NavigableMap<Integer, Integer> fromStopTimelineNodes) {
+  452. >         int stationNode = gtfsStorage.getStationNodes().get(new GtfsStorage.FeedIdWithStopId(id, toStopId));
+  453.           for (PtGraph.PtEdge ptEdge : ptGraph.edgesAround(stationNode)) {
+  454.               GtfsStorage.PlatformDescriptor toPlatform = ptEdge.getAttrs().platformDescriptor;
+
+#22
+reader-gtfs/src/main/java/com/graphhopper/gtfs/GtfsStorage.java:204: error: Pulse Resource Leak
+  Resource dynamically allocated by constructor java.io.BufferedInputStream() on line 196 is not closed after the last access at line 204. 
+  202.   			return result;
+  203.   		} catch (IOException e) {
+  204. > 			throw new RuntimeException(e);
+  205.   		}
+  206.   	}
+
+#23
+reader-gtfs/src/main/java/com/graphhopper/gtfs/GtfsStorage.java:218: error: Pulse Resource Leak
+  Resource dynamically allocated by constructor java.io.BufferedInputStream() on line 210 is not closed after the last access at line 218. 
+  216.   			return result;
+  217.   		} catch (IOException | ClassNotFoundException e) {
+  218. > 			throw new RuntimeException(e);
+  219.   		}
+  220.   	}
+
+#24
+reader-gtfs/src/main/java/com/graphhopper/gtfs/GtfsStorage.java:257: error: Null Dereference
+  `LocalDate GTFSFeed.getStartDate()` could be null (from the call to `GTFSFeed.getStartDate()` on line 257) and is dereferenced. 
+  255.   	// TODO: Refactor initialization
+  256.   	public void postInit() {
+  257. > 		LocalDate latestStartDate = LocalDate.ofEpochDay(this.gtfsFeeds.values().stream().mapToLong(f -> f.getStartDate().toEpochDay()).max().getAsLong());
+  258.   		LocalDate earliestEndDate = LocalDate.ofEpochDay(this.gtfsFeeds.values().stream().mapToLong(f -> f.getEndDate().toEpochDay()).min().getAsLong());
+  259.   		LOGGER.info("Calendar range covered by all feeds: {} till {}", latestStartDate, earliestEndDate);
+
+#25
+reader-gtfs/src/main/java/com/graphhopper/gtfs/GtfsStorage.java:258: error: Null Dereference
+  `LocalDate GTFSFeed.getEndDate()` could be null (from the call to `GTFSFeed.getEndDate()` on line 258) and is dereferenced. 
+  256.   	public void postInit() {
+  257.   		LocalDate latestStartDate = LocalDate.ofEpochDay(this.gtfsFeeds.values().stream().mapToLong(f -> f.getStartDate().toEpochDay()).max().getAsLong());
+  258. > 		LocalDate earliestEndDate = LocalDate.ofEpochDay(this.gtfsFeeds.values().stream().mapToLong(f -> f.getEndDate().toEpochDay()).min().getAsLong());
+  259.   		LOGGER.info("Calendar range covered by all feeds: {} till {}", latestStartDate, earliestEndDate);
+  260.   		faresByFeed = new HashMap<>();
+
+#26
+reader-gtfs/src/main/java/com/graphhopper/gtfs/GtfsStorage.java:310: error: Pulse Resource Leak
+  Resource dynamically allocated by constructor java.io.BufferedOutputStream() on line 301 is not closed after the last access at line 310. 
+  308.   			throw new RuntimeException(e);
+  309.   		}
+  310. > 	}
+  311.   
+  312.   	private void serialize(String filename, IntIntHashMap data) {
+
+#27
+reader-gtfs/src/main/java/com/graphhopper/gtfs/GtfsStorage.java:322: error: Pulse Resource Leak
+  Resource dynamically allocated by constructor java.io.BufferedOutputStream() on line 313 is not closed after the last access at line 322. 
+  320.   			throw new RuntimeException(e);
+  321.   		}
+  322. > 	}
+  323.   
+  324.   	public abstract static class PlatformDescriptor implements Serializable {
+
+#28
+reader-gtfs/src/main/java/com/graphhopper/gtfs/PtGraph.java:268: error: Pulse Resource Leak
+  Resource dynamically allocated by constructor java.io.FileOutputStream() on line 262 is not closed after the last access at line 268. 
+  266.               os.writeObject(feedIdWithTimezoneList);
+  267.           }
+  268. >     }
+  269.   
+  270.       private void deserializeExtraStuff() throws IOException, ClassNotFoundException {
+
+#29
+reader-gtfs/src/main/java/com/graphhopper/gtfs/PtGraph.java:277: error: Pulse Resource Leak
+  Resource dynamically allocated by constructor java.io.FileInputStream() on line 271 is not closed after the last access at line 277. 
+  275.               feedIdWithTimezoneList = ((List<GtfsStorage.FeedIdWithTimezone>) is.readObject());
+  276.           }
+  277. >     }
+  278.   
+  279.       @Override
+
+#30
+reader-gtfs/src/main/java/com/graphhopper/gtfs/PtLocationSnapper.java:95: error: Null Dereference
+  null (null value originating from line 95) is dereferenced. 
+  93.               final Integer node = gtfsStorage.getStationNodes().get(new GtfsStorage.FeedIdWithStopId(entry.getKey(), station.stop_id));
+  94.               if (node != null) {
+  95. >                 Stop stop = gtfsStorage.getGtfsFeeds().get(entry.getKey()).stops.get(station.stop_id);
+  96.                   final Snap stationSnap = new Snap(stop.stop_lat, stop.stop_lon);
+  97.                   stationSnap.setClosestNode(node);
+
+#31
+reader-gtfs/src/main/java/com/graphhopper/gtfs/PtLocationSnapper.java:96: error: Null Dereference
+  `stop` could be null (null value originating from line 95) and is dereferenced. 
+  94.               if (node != null) {
+  95.                   Stop stop = gtfsStorage.getGtfsFeeds().get(entry.getKey()).stops.get(station.stop_id);
+  96. >                 final Snap stationSnap = new Snap(stop.stop_lat, stop.stop_lon);
+  97.                   stationSnap.setClosestNode(node);
+  98.                   return stationSnap;
+
+#32
+reader-gtfs/src/main/java/com/graphhopper/gtfs/RealtimeFeed.java:94: error: Null Dereference
+  `feed` could be null (null value originating from line 93) and is dereferenced. 
+  92.           feedMessages.forEach((feedKey, feedMessage) -> {
+  93.               GTFSFeed feed = staticGtfs.getGtfsFeeds().get(feedKey);
+  94. >             ZoneId timezone = ZoneId.of(feed.agency.values().stream().findFirst().get().agency_timezone);
+  95.               PtGraph ptGraphNodesAndEdges = staticGtfs.getPtGraph();
+  96.               final GtfsReader gtfsReader = new GtfsReader(feedKey, ptGraphNodesAndEdges, overlayGraph, staticGtfs, null, transfers.get(feedKey), null);
+
+#33
+reader-gtfs/src/main/java/com/graphhopper/gtfs/RealtimeFeed.java:172: error: Null Dereference
+  `trip` could be null (null value originating from line 171) and is dereferenced. 
+  170.       private static int[] findLeaveEdgesForTrip(GtfsStorage staticGtfs, String feedKey, GTFSFeed feed, GtfsRealtime.TripUpdate tripUpdate) {
+  171.           Trip trip = feed.trips.get(tripUpdate.getTrip().getTripId());
+  172. >         StopTime next = feed.getOrderedStopTimesForTrip(trip.trip_id).iterator().next();
+  173.           int station = staticGtfs.getStationNodes().get(new GtfsStorage.FeedIdWithStopId(feedKey, next.stop_id));
+  174.           Optional<PtGraph.PtEdge> firstBoarding = StreamSupport.stream(staticGtfs.getPtGraph().backEdgesAround(station).spliterator(), false)
+
+#34
+reader-gtfs/src/main/java/com/graphhopper/gtfs/RealtimeFeed.java:188: error: Null Dereference
+  `trip` could be null (null value originating from line 187) and is dereferenced. 
+  186.       private static int[] findBoardEdgesForTrip(GtfsStorage staticGtfs, String feedKey, GTFSFeed feed, GtfsRealtime.TripUpdate tripUpdate) {
+  187.           Trip trip = feed.trips.get(tripUpdate.getTrip().getTripId());
+  188. >         StopTime next = feed.getOrderedStopTimesForTrip(trip.trip_id).iterator().next();
+  189.           int station = staticGtfs.getStationNodes().get(new GtfsStorage.FeedIdWithStopId(feedKey, next.stop_id));
+  190.           Optional<PtGraph.PtEdge> firstBoarding = StreamSupport.stream(staticGtfs.getPtGraph().edgesAround(station).spliterator(), false)
+
+#35
+reader-gtfs/src/main/java/com/graphhopper/gtfs/Transfers.java:40: error: Null Dereference
+  null (null value originating from line 40) is dereferenced. 
+  38.           this.routesByStop = feed.stop_times.values().stream()
+  39.                   .collect(Collectors.groupingBy(stopTime -> stopTime.stop_id,
+  40. >                         Collectors.mapping(stopTime -> feed.trips.get(stopTime.trip_id).route_id, Collectors.toSet())));
+  41.       }
+  42.   
+
+#36
+reader-gtfs/src/main/java/com/graphhopper/gtfs/Transfers.java:47: error: Null Dereference
+  `fromStop` could be null (null value originating from line 46) and is dereferenced. 
+  45.                   .flatMap(t -> {
+  46.                       Stop fromStop = feed.stops.get(t.from_stop_id);
+  47. >                     if (fromStop.location_type == 1) {
+  48.                           return feed.stops.values().stream()
+  49.                                   .filter(location -> location.location_type == 0)
+
+#37
+reader-gtfs/src/main/java/com/graphhopper/gtfs/Transfers.java:62: error: Null Dereference
+  `toStop` could be null (null value originating from line 61) and is dereferenced. 
+  60.                   .flatMap(t -> {
+  61.                       Stop toStop = feed.stops.get(t.to_stop_id);
+  62. >                     if (toStop.location_type == 1) {
+  63.                           return feed.stops.values().stream()
+  64.                                   .filter(location -> location.location_type == 0)
+
+#38
+reader-gtfs/src/main/java/com/graphhopper/gtfs/TripFromLabel.java:176: error: Null Dereference
+  `gtfsFeed` could be null (null value originating from line 173) and is dereferenced. 
+  174.                                   return new com.graphhopper.gtfs.fare.Trip.Segment(ptLeg.feed_id, ptLeg.route_id,
+  175.                                           Duration.between(firstPtDepartureTime, GtfsHelper.localDateTimeFromDate(ptLeg.getDepartureTime())).getSeconds(),
+  176. >                                         gtfsFeed.stops.get(ptLeg.stops.get(0).stop_id).zone_id, gtfsFeed.stops.get(ptLeg.stops.get(ptLeg.stops.size() - 1).stop_id).zone_id,
+  177.                                           ptLeg.stops.stream().map(s -> gtfsFeed.stops.get(s.stop_id).zone_id).collect(Collectors.toSet()));
+  178.                               })
+
+#39
+reader-gtfs/src/main/java/com/graphhopper/gtfs/TripFromLabel.java:176: error: Null Dereference
+  null (null value originating from line 176) is dereferenced. 
+  174.                                   return new com.graphhopper.gtfs.fare.Trip.Segment(ptLeg.feed_id, ptLeg.route_id,
+  175.                                           Duration.between(firstPtDepartureTime, GtfsHelper.localDateTimeFromDate(ptLeg.getDepartureTime())).getSeconds(),
+  176. >                                         gtfsFeed.stops.get(ptLeg.stops.get(0).stop_id).zone_id, gtfsFeed.stops.get(ptLeg.stops.get(ptLeg.stops.size() - 1).stop_id).zone_id,
+  177.                                           ptLeg.stops.stream().map(s -> gtfsFeed.stops.get(s.stop_id).zone_id).collect(Collectors.toSet()));
+  178.                               })
+
+#40
+reader-gtfs/src/main/java/com/graphhopper/gtfs/TripFromLabel.java:177: error: Null Dereference
+  null (null value originating from line 177) is dereferenced. 
+  175.                                           Duration.between(firstPtDepartureTime, GtfsHelper.localDateTimeFromDate(ptLeg.getDepartureTime())).getSeconds(),
+  176.                                           gtfsFeed.stops.get(ptLeg.stops.get(0).stop_id).zone_id, gtfsFeed.stops.get(ptLeg.stops.get(ptLeg.stops.size() - 1).stop_id).zone_id,
+  177. >                                         ptLeg.stops.stream().map(s -> gtfsFeed.stops.get(s.stop_id).zone_id).collect(Collectors.toSet()));
+  178.                               })
+  179.                               .forEach(faresTrip.segments::add);
+
+#41
+reader-gtfs/src/main/java/com/graphhopper/gtfs/TripFromLabel.java:311: error: Null Dereference
+  `stop` could be null (null value originating from line 310) and is dereferenced. 
+  309.           void finish() {
+  310.               Stop stop = gtfsFeed.stops.get(stopTime.stop_id);
+  311. >             stops.add(new Trip.Stop(stop.stop_id, stop.stop_name, geometryFactory.createPoint(new Coordinate(stop.stop_lon, stop.stop_lat)),
+  312.                       updatedArrival.map(Date::from).orElse(Date.from(arrivalTimeFromHopEdge)), Date.from(arrivalTimeFromHopEdge),
+  313.                       updatedArrival.map(Date::from).orElse(null), isArrivalCancelled(stopSequence), null,
+
+#42
+reader-gtfs/src/main/java/com/graphhopper/gtfs/fare/Fares.java:36: error: Null Dereference
+  null (null value originating from line 36) is dereferenced. 
+  34.                   .flatMap(tickets -> tickets.stream()
+  35.                           .map(ticket -> {
+  36. >                             Fare fare = fares.get(ticket.feed_id).get(ticket.getFare().fare_id);
+  37.                               final BigDecimal priceOfOneTicket = BigDecimal.valueOf(fare.fare_attribute.price);
+  38.                               return new Amount(priceOfOneTicket, fare.fare_attribute.currency_type);
+
+#43
+tools/src/main/java/com/graphhopper/tools/Bzip2.java:44: error: Pulse Resource Leak
+  Resource dynamically allocated by constructor java.io.FileInputStream() on line 42 is not closed after the last access at line 44. 
+  42.           FileInputStream in = new FileInputStream(fromFile);
+  43.           FileOutputStream out = new FileOutputStream(toFile);
+  44. >         BZip2CompressorInputStream bzIn = new BZip2CompressorInputStream(in);
+  45.           try {
+  46.               final byte[] buffer = new byte[1024 * 8];
+
+#44
+tools/src/main/java/com/graphhopper/tools/Bzip2.java:55: error: Pulse Resource Leak
+  Resource dynamically allocated by constructor java.io.FileInputStream() on line 42 is not closed after the last access at line 55. 
+  53.               bzIn.close();
+  54.           }
+  55. >     }
+  56.   }
+
+#45
+tools/src/main/java/com/graphhopper/tools/Measurement.java:212: error: Null Dereference
+  The call to `void Measurement.measureRouting(GraphHopper,Measurement$QuerySettings)` may trigger the following issue: `Profile GraphHopper.getProfile(String)` could be null (from the call to `Measurement.measureRouting(...)` on line 531) and is dereferenced in the call to `Measurement.measureRouting(...)`. 
+  210.                   Helper.parseList(args.getString("measurement.lm.active_counts", "[4,8,12]")).stream()
+  211.                           .mapToInt(Integer::parseInt).forEach(activeLMCount -> {
+  212. >                             measureRouting(hopper, new QuerySettings("routingLM" + activeLMCount, count / 20, isCH, isLM).
+  213.                                       withInstructions().activeLandmarks(activeLMCount));
+  214.                               measureRouting(hopper, new QuerySettings("routingLM" + activeLMCount + "_alt", count / 500, isCH, isLM).
+
+#46
+web-api/src/main/java/com/graphhopper/util/exceptions/PointNotFoundException.java:39: error: Null Dereference
+  null (null value originating from line 39) is dereferenced. 
+  37.   
+  38.       public int getPointIndex() {
+  39. >         return (int) getDetails().get(INDEX_KEY);
+  40.       }
+  41.   }
+
+#47
+web-bundle/src/main/java/com/graphhopper/resources/I18NResource.java:55: error: Null Dereference
+  The call to `I18NResource$Response I18NResource.get(String)` may trigger the following issue: `Translation TranslationMap.get(String)` could be null (from the call to `I18NResource.get(...)` on line 67) and is dereferenced in the call to `I18NResource.get(...)`. 
+  53.           if (acceptLang == null)
+  54.               return get("");
+  55. >         return get(acceptLang.split(",")[0]);
+  56.       }
+  57.   
+
+Found 48 issues
+                Issue Type(ISSUED_TYPE_ID): #
+     Null Dereference(NULLPTR_DEREFERENCE): 29
+  Pulse Resource Leak(PULSE_RESOURCE_LEAK): 19
