@@ -1,0 +1,84 @@
+#0
+mall-portal/src/main/java/com/macro/mall/portal/service/impl/OmsPromotionServiceImpl.java:41: error: Null Dereference
+  `promotionProduct` could be null (from the call to `OmsPromotionServiceImpl.getPromotionProductById(...)` on line 39) and is dereferenced. 
+  39.               PromotionProduct promotionProduct = getPromotionProductById(productId, promotionProductList);
+  40.               List<OmsCartItem> itemList = entry.getValue();
+  41. >             Integer promotionType = promotionProduct.getPromotionType();
+  42.               if (promotionType == 1) {
+  43.                   //单品促销
+
+#1
+mall-portal/src/main/java/com/macro/mall/portal/service/impl/OmsPromotionServiceImpl.java:50: error: Null Dereference
+  `skuStock` could be null (from the call to `OmsPromotionServiceImpl.getOriginalPrice(...)` on line 49) and is dereferenced. 
+  48.                       //商品原价-促销价
+  49.                       PmsSkuStock skuStock = getOriginalPrice(promotionProduct, item.getProductSkuId());
+  50. >                     BigDecimal originalPrice = skuStock.getPrice();
+  51.                       //单品促销使用原价
+  52.                       cartPromotionItem.setPrice(originalPrice);
+
+#2
+mall-portal/src/main/java/com/macro/mall/portal/service/impl/OmsPromotionServiceImpl.java:71: error: Null Dereference
+  `skuStock` could be null (from the call to `OmsPromotionServiceImpl.getOriginalPrice(...)` on line 70) and is dereferenced. 
+  69.                           //商品原价-折扣*商品原价
+  70.                           PmsSkuStock skuStock = getOriginalPrice(promotionProduct,item.getProductSkuId());
+  71. >                         BigDecimal originalPrice = skuStock.getPrice();
+  72.                           BigDecimal reduceAmount = originalPrice.subtract(ladder.getDiscount().multiply(originalPrice));
+  73.                           cartPromotionItem.setReduceAmount(reduceAmount);
+
+#3
+mall-portal/src/main/java/com/macro/mall/portal/service/impl/OmsPromotionServiceImpl.java:94: error: Null Dereference
+  `skuStock` could be null (from the call to `OmsPromotionServiceImpl.getOriginalPrice(...)` on line 93) and is dereferenced. 
+  92.                           //(商品原价/总价)*满减金额
+  93.                           PmsSkuStock skuStock= getOriginalPrice(promotionProduct, item.getProductSkuId());
+  94. >                         BigDecimal originalPrice = skuStock.getPrice();
+  95.                           BigDecimal reduceAmount = originalPrice.divide(totalAmount,RoundingMode.HALF_EVEN).multiply(fullReduction.getReducePrice());
+  96.                           cartPromotionItem.setReduceAmount(reduceAmount);
+
+#4
+mall-portal/src/main/java/com/macro/mall/portal/service/impl/OmsPromotionServiceImpl.java:245: error: Null Dereference
+  `promotionProduct` could be null (from the call to `OmsPromotionServiceImpl.getPromotionProductById(...)` on line 244) and is dereferenced in the call to `OmsPromotionServiceImpl.getOriginalPrice(...)`. 
+  243.               //计算出商品原价
+  244.               PromotionProduct promotionProduct = getPromotionProductById(item.getProductId(), promotionProductList);
+  245. >             PmsSkuStock skuStock = getOriginalPrice(promotionProduct,item.getProductSkuId());
+  246.               amount = amount.add(skuStock.getPrice().multiply(new BigDecimal(item.getQuantity())));
+  247.           }
+
+#5
+mall-portal/src/main/java/com/macro/mall/portal/service/impl/OmsPromotionServiceImpl.java:246: error: Null Dereference
+  `skuStock` could be null (from the call to `OmsPromotionServiceImpl.getOriginalPrice(...)` on line 245) and is dereferenced. 
+  244.               PromotionProduct promotionProduct = getPromotionProductById(item.getProductId(), promotionProductList);
+  245.               PmsSkuStock skuStock = getOriginalPrice(promotionProduct,item.getProductSkuId());
+  246. >             amount = amount.add(skuStock.getPrice().multiply(new BigDecimal(item.getQuantity())));
+  247.           }
+  248.           return amount;
+
+#6
+mall-search/src/main/java/com/macro/mall/search/service/impl/EsProductServiceImpl.java:251: error: Null Dereference
+  `brandNames` could be null (null value originating from line 249) and is dereferenced. 
+  249.           ElasticsearchAggregation brandNames = esAggregationMap.get("brandNames");
+  250.           List<String> brandNameList = new ArrayList<>();
+  251. >         List<StringTermsBucket> brandNameBuckets = ((StringTermsAggregate) brandNames.aggregation().getAggregate()._get()).buckets().array();
+  252.           for(int i = 0; i<brandNameBuckets.size(); i++){
+  253.               brandNameList.add(brandNameBuckets.get(i).key().stringValue());
+
+#7
+mall-search/src/main/java/com/macro/mall/search/service/impl/EsProductServiceImpl.java:266: error: Null Dereference
+  `i` could be null (null value originating from line 266) and is dereferenced. 
+  264.           //设置参数
+  265.           ElasticsearchAggregation productAttrs = esAggregationMap.get("allAttrValues");
+  266. >         List<LongTermsBucket> attrIdBuckets = ((LongTermsAggregate) ((FilterAggregate) ((NestedAggregate) productAttrs.aggregation().getAggregate()._get()).aggregations().get("productAttrs")._get()).aggregations().get("attrIds")._get()).buckets().array();
+  267.           List<EsProductRelatedInfo.ProductAttr> attrList = new ArrayList<>();
+  268.           for (LongTermsBucket item : attrIdBuckets) {
+
+#8
+mall-search/src/main/java/com/macro/mall/search/service/impl/EsProductServiceImpl.java:272: error: Null Dereference
+  `i` could be null (null value originating from line 272) and is dereferenced. 
+  270.               attr.setAttrId(item.key());
+  271.               List<String> attrValueList = new ArrayList<>();
+  272. >             List<StringTermsBucket> attrValues = ((StringTermsAggregate) item.aggregations().get("attrValues")._get()).buckets().array();
+  273.               List<StringTermsBucket> attrNames = ((StringTermsAggregate) item.aggregations().get("attrNames")._get()).buckets().array();
+  274.               for (StringTermsBucket attrValue : attrValues) {
+
+Found 9 issues
+             Issue Type(ISSUED_TYPE_ID): #
+  Null Dereference(NULLPTR_DEREFERENCE): 9
