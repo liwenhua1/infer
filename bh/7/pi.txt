@@ -8,15 +8,6 @@ src/main/java/picocli/CommandLine.java:6363: error: Null Dereference
   6365.               /** Creates and returns a new {@code CommandSpec} with the specified associated user object.
 
 #1
-src/main/java/picocli/CommandLine.java:11031: error: Null Dereference
-  null (null value originating from line 11031) is dereferenced in the call to `CommandLine$Model$UnmatchedArgsBinding(...)`. 
-  11029.               /** Creates a {@code UnmatchedArgsBinding} for a setter that consumes {@code String[]} objects.
-  11030.                * @param setter consumes the String[] array with unmatched arguments. */
-  11031. >             public static UnmatchedArgsBinding forStringArrayConsumer(ISetter setter) { return new UnmatchedArgsBinding(null, setter); }
-  11032.   
-  11033.               /** Creates a {@code UnmatchedArgsBinding} for a getter that produces a {@code Collection<String>} that the unmatched arguments can be added to.
-
-#2
 src/main/java/picocli/CommandLine.java:13098: error: Null Dereference
   null (null value originating from line 13098) is dereferenced. 
   13096.                       for (ArgGroupSpec group : subgroups.keySet()) {
@@ -25,7 +16,7 @@ src/main/java/picocli/CommandLine.java:13098: error: Null Dereference
   13099.                           }
   13100.                       }
 
-#3
+#2
 src/main/java/picocli/CommandLine.java:13111: error: Null Dereference
   null (null value originating from line 13111) is dereferenced in the call to `CommandLine.flatList(...)`. 
   13109.               private boolean simplifyErrorMessageForSingleGroup(Map<ArgGroupSpec, List<List<ParseResult.GroupMatch>>> matchesPerGroup, CommandLine commandLine) {
@@ -34,7 +25,7 @@ src/main/java/picocli/CommandLine.java:13111: error: Null Dereference
   13112.                       Set<ArgSpec> matchedArgs = new LinkedHashSet<ArgSpec>();
   13113.                       for (ParseResult.GroupMatch match : flat) {
 
-#4
+#3
 src/main/java/picocli/CommandLine.java:13251: error: Null Dereference
   `values` could be null (null value originating from line 13250) and is dereferenced. 
   13249.                   for (ArgSpec arg : originalStringValues.keySet()) {
@@ -43,7 +34,7 @@ src/main/java/picocli/CommandLine.java:13251: error: Null Dereference
   13252.                           if (result.length() != originalLength) { result.append(" "); }
   13253.                           result.append(ArgSpec.describe(arg, "=", value));
 
-#5
+#4
 src/main/java/picocli/CommandLine.java:15640: error: Null Dereference
   `aliases` could be null (null value originating from line 15639) and is dereferenced. 
   15638.               for (Map.Entry<String, CommandLine> entry : subcommands.entrySet()) {
@@ -52,7 +43,7 @@ src/main/java/picocli/CommandLine.java:15640: error: Null Dereference
   15641.               }
   15642.               // The aliases list for each command now has at least one entry, with the main name at the front.
 
-#6
+#5
 src/main/java/picocli/CommandLine.java:18528: error: Null Dereference
   null (null value originating from line 18528) is dereferenced. 
   18526.           private static double dotProduct(Map<String, Integer> m1, Map<String, Integer> m2) {
@@ -61,6 +52,6 @@ src/main/java/picocli/CommandLine.java:18528: error: Null Dereference
   18529.               return result;
   18530.           }
 
-Found 7 issues
+Found 6 issues
              Issue Type(ISSUED_TYPE_ID): #
-  Null Dereference(NULLPTR_DEREFERENCE): 7
+  Null Dereference(NULLPTR_DEREFERENCE): 6
