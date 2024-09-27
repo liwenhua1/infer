@@ -160,16 +160,7 @@ src/main/java/spoon/support/util/RtHelper.java:170: error: Null Dereference
   171.   		}
   172.   		return l;
 
-#18
-src/main/java/spoon/template/TemplateMatcher.java:53: error: Null Dereference
-  The call to `TemplateMatcher.<init>(CtElement,CtClass)` may trigger the following issue: null (from the call to `TemplateMatcher(...)` on line 63) is dereferenced in the call to `TemplateMatcher(...)`. 
-  51.   	 */
-  52.   	public TemplateMatcher(CtElement templateRoot) {
-  53. > 		this(templateRoot, templateRoot.getParent(CtClass.class));
-  54.   	}
-  55.   
-
-Found 19 issues
+Found 18 issues
                 Issue Type(ISSUED_TYPE_ID): #
-     Null Dereference(NULLPTR_DEREFERENCE): 11
+     Null Dereference(NULLPTR_DEREFERENCE): 10
   Pulse Resource Leak(PULSE_RESOURCE_LEAK): 8
