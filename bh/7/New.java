@@ -1,44 +1,21 @@
 public class New {
     
 }
+ class DynamicDispatch {
 
-class Specialization {
+  static interface Interface {
+    public Object foo();
+  }
 
-    static class C {
-      C f;
+  static class Impl implements Interface {
+    @Override
+    public Object foo() {
+      return null;
     }
-  
-    abstract static class A {
-      abstract C buildC();
-  
-      abstract C callBuildC(A a);
-    }
-  
-    static class A_Good extends A {
-      C buildC() {
-        return new C();
-      }
-  
-      C callBuildC(A a) {
-        return a.buildC();
-      }
-    }
-  
-    static class A_Bad extends A {
-      C buildC() {
-        return null;
-      }
-  
-      C callBuildC(A a) {
-        return a.buildC();
-      }
-    }
-  
-    // basic specialization on parameters
-    C callBuildCGood(A a) {
-      return a.buildC();
-    }
-  
-    C buildCAndDerefBad() {
-      return callBuildCGood(new A_Bad()).f;
-    }}
+  }
+
+
+  static void FN_interfaceShouldNotCauseFalseNegativeHardOK(Interface i) {
+    i.foo().toString();
+  }
+}

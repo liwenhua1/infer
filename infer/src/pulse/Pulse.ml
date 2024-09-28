@@ -1315,6 +1315,16 @@ module PulseTransferFunctions = struct
         
         
         ->
+          let ty_name = (match Procname.get_class_type_name p with 
+                        |None -> raise AboutToOOM
+                        |Some n -> n
+                        
+                        )
+          in 
+          let inter_or_abs = Tenv.is_java_abstract_cls tenv ty_name || Tenv.is_java_interface_cls tenv ty_name 
+
+          in
+          
           if (String.equal "isAssignableFrom" (Procname.get_method p)) || (String.equal "getType" (Procname.get_method p)) then
             Caml.Hashtbl.replace PulseModelsJava.should_analyse_cast (Procdesc.get_proc_name proc_desc) false;
           let is_known_call = ref true in 
@@ -1325,7 +1335,7 @@ module PulseTransferFunctions = struct
           let _tryss =  is_known_call_aux >>|| (fun x -> if x then is_known_call := true else is_known_call := false ; x) in
                       
           if (Procname.equal p BuiltinDecl.__new) || (Procname.equal p BuiltinDecl.__cast) 
-            || (not (!is_known_call))
+            || ((not (!is_known_call)) && (not inter_or_abs))
             ||(List.is_empty actuals) || Procname.is_java_static_method p then
         
         (* let all_possible_subtypes = 
@@ -2009,8 +2019,8 @@ let analyze specialization
     
    (* let procname_java_class = Procname.get_class_name proc_name in *)
      
-    
-    (* let () =
+(*     
+    let () =
     (* match procname_java_class with | None -> () 
     | Some aa -> let test_name = "PDVisibleSigBuilder" in 
     
