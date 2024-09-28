@@ -1,0 +1,337 @@
+#0
+src/main/java/redis/clients/jedis/ConnectionFactory.java:60: error: Pulse Resource Leak
+  Resource dynamically allocated by constructor redis.clients.jedis.util.RedisOutputStream(), indirectly via call to `Connection(...)` on line 59 is not closed after the last access at line 60. 
+  58.       try {
+  59.         jedis = new Connection(jedisSocketFactory, clientConfig);
+  60. >       return new DefaultPooledObject<>(jedis);
+  61.       } catch (JedisException je) {
+  62.         logger.debug("Error while makeObject", je);
+
+#1
+src/main/java/redis/clients/jedis/JedisClusterInfoCache.java:208: error: Pulse Resource Leak
+  Resource dynamically allocated by constructor redis.clients.jedis.util.RedisOutputStream(), indirectly via call to `Connection(...)` on line 181 is not closed after the last access at line 208. 
+  206.         }
+  207.       }
+  208. >   }
+  209.   
+  210.     private void discoverClusterSlots(Connection jedis) {
+
+#2
+src/main/java/redis/clients/jedis/JedisFactory.java:150: error: Pulse Resource Leak
+  Resource dynamically allocated by constructor redis.clients.jedis.util.RedisInputStream(), indirectly via call to `Jedis.select(...)` on line 150 is not closed after the last access at line 150. 
+  148.       final Jedis jedis = pooledJedis.getObject();
+  149.       if (jedis.getDB() != clientConfig.getDatabase()) {
+  150. >       jedis.select(clientConfig.getDatabase());
+  151.       }
+  152.     }
+
+#3
+src/main/java/redis/clients/jedis/JedisFactory.java:171: error: Pulse Resource Leak
+  Resource dynamically allocated by constructor redis.clients.jedis.util.RedisOutputStream(), indirectly via call to `Jedis(...)` on line 170 is not closed after the last access at line 171. 
+  169.       try {
+  170.         jedis = new Jedis(jedisSocketFactory, clientConfig);
+  171. >       return new DefaultPooledObject<>(jedis);
+  172.       } catch (JedisException je) {
+  173.         logger.debug("Error while makeObject", je);
+
+#4
+src/main/java/redis/clients/jedis/JedisSentinelPool.java:291: error: Pulse Resource Leak
+  Resource dynamically allocated by constructor redis.clients.jedis.util.RedisOutputStream(), indirectly via call to `Jedis(...)` on line 246 is not closed after the last access at line 291. 
+  289.       }
+  290.   
+  291. >     return master;
+  292.     }
+  293.   
+
+#5
+src/main/java/redis/clients/jedis/MultiNodePipelineBase.java:78: error: Pulse Resource Leak
+  Resource dynamically allocated by constructor redis.clients.jedis.util.RedisInputStream(), indirectly via call to `Connection.sendCommand(...)` on line 78 is not closed after the last access at line 78. 
+  76.       }
+  77.   
+  78. >     connection.sendCommand(commandObject.getArguments());
+  79.       Response<T> response = new Response<>(commandObject.getBuilder());
+  80.       queue.add(response);
+
+#6
+src/main/java/redis/clients/jedis/MultiNodePipelineBase.java:81: error: Pulse Resource Leak
+  Resource dynamically allocated by constructor redis.clients.jedis.util.RedisInputStream(), indirectly via call to `Connection.sendCommand(...)` on line 78 is not closed after the last access at line 81. 
+  79.       Response<T> response = new Response<>(commandObject.getBuilder());
+  80.       queue.add(response);
+  81. >     return response;
+  82.     }
+  83.   
+
+#7
+src/main/java/redis/clients/jedis/UnifiedJedis.java:5048: error: Pulse Resource Leak
+  Resource dynamically allocated by constructor redis.clients.jedis.util.RedisOutputStream(), indirectly via call to `Transaction(...)` on line 5048 is not closed after the last access at line 5048. 
+  5046.         return new MultiClusterTransaction((MultiClusterPooledConnectionProvider) provider, doMulti, commandObjects);
+  5047.       } else {
+  5048. >       return new Transaction(provider.getConnection(), doMulti, true, commandObjects);
+  5049.       }
+  5050.     }
+
+#8
+src/main/java/redis/clients/jedis/executors/ClusterCommandExecutor.java:63: error: Pulse Resource Leak
+  Resource dynamically allocated by constructor redis.clients.jedis.util.RedisInputStream(), indirectly via call to `ClusterCommandExecutor.execute(...)` on line 52 is not closed after the last access at line 63. 
+  61.             reply = null;
+  62.           }
+  63. >       } catch (Exception anError) {
+  64.           bcastError.addReply(node, anError);
+  65.           isErrored = true;
+
+#9
+src/main/java/redis/clients/jedis/executors/DefaultCommandExecutor.java:25: error: Pulse Resource Leak
+  Resource dynamically allocated by constructor redis.clients.jedis.util.RedisOutputStream(), indirectly via call to `Connection.executeCommand(...)` on line 24 is not closed after the last access at line 25. 
+  23.       try (Connection connection = provider.getConnection(commandObject.getArguments())) {
+  24.         return connection.executeCommand(commandObject);
+  25. >     }
+  26.     }
+  27.   }
+
+#10
+src/main/java/redis/clients/jedis/executors/RetryableCommandExecutor.java:62: error: Pulse Resource Leak
+  Resource dynamically allocated by constructor redis.clients.jedis.util.RedisInputStream(), indirectly via call to `RetryableCommandExecutor.execute(...)` on line 49 is not closed after the last access at line 62. 
+  60.         } finally {
+  61.           if (connection != null) {
+  62. >           connection.close();
+  63.           }
+  64.         }
+
+#11
+src/main/java/redis/clients/jedis/graph/GraphCommandObjects.java:217: error: Pulse Resource Leak
+  Resource dynamically allocated by constructor redis.clients.jedis.util.RedisOutputStream(), indirectly via call to `Connection.executeCommand(...)` on line 216 is not closed after the last access at line 217. 
+  215.           try (Connection provided = provider.getConnection(commandObject.getArguments())) {
+  216.             return provided.executeCommand(commandObject);
+  217. >         }
+  218.         }
+  219.       }
+
+#12
+src/main/java/redis/clients/jedis/mcf/CircuitBreakerCommandExecutor.java:35: error: Null Dereference
+  `cluster` could be null (from the call to `MultiClusterPooledConnectionProvider.getCluster()` on line 31) and is dereferenced. 
+  33.           DecorateSupplier<T> supplier = Decorators.ofSupplier(() -> this.handleExecuteCommand(commandObject, cluster));
+  34.   
+  35. >         supplier.withRetry(cluster.getRetry());
+  36.           supplier.withCircuitBreaker(cluster.getCircuitBreaker());
+  37.           supplier.withFallback(provider.getFallbackExceptionList(),
+
+#13
+src/main/java/redis/clients/jedis/mcf/CircuitBreakerCommandExecutor.java:49: error: Pulse Resource Leak
+  Resource dynamically allocated by constructor redis.clients.jedis.util.RedisOutputStream(), indirectly via call to `Connection.executeCommand(...)` on line 48 is not closed after the last access at line 49. 
+  47.           try (Connection connection = cluster.getConnection()) {
+  48.               return connection.executeCommand(commandObject);
+  49. >         }
+  50.       }
+  51.   
+
+#14
+src/main/java/redis/clients/jedis/mcf/CircuitBreakerFailoverConnectionProvider.java:29: error: Null Dereference
+  `cluster` could be null (from the call to `MultiClusterPooledConnectionProvider.getCluster()` on line 25) and is dereferenced. 
+  27.           DecorateSupplier<Connection> supplier = Decorators.ofSupplier(() -> this.handleGetConnection(cluster));
+  28.   
+  29. >         supplier.withRetry(cluster.getRetry());
+  30.           supplier.withCircuitBreaker(cluster.getCircuitBreaker());
+  31.           supplier.withFallback(provider.getFallbackExceptionList(),
+
+#15
+src/main/java/redis/clients/jedis/mcf/MultiClusterTransaction.java:153: error: Pulse Resource Leak
+  Resource dynamically allocated by constructor redis.clients.jedis.util.RedisOutputStream(), indirectly via call to `Connection.sendCommand(...)` on line 166 is not closed after the last access at line 153. 
+  151.       }
+  152.   
+  153. >     try (Connection connection = failoverProvider.getConnection()) {
+  154.   
+  155.         commands.forEach((command) -> connection.sendCommand(command.getKey()));
+
+#16
+src/main/java/redis/clients/jedis/mcf/MultiClusterTransaction.java:186: error: Pulse Resource Leak
+  Resource dynamically allocated by constructor redis.clients.jedis.util.RedisOutputStream(), indirectly via call to `Connection.sendCommand(...)` on line 166 is not closed after the last access at line 186. 
+  184.         return formatted;
+  185.   
+  186. >     } finally {
+  187.         inMulti = false;
+  188.         inWatch = false;
+
+#17
+src/main/java/redis/clients/jedis/mcf/MultiClusterTransaction.java:189: error: Pulse Resource Leak
+  Resource dynamically allocated by constructor redis.clients.jedis.util.RedisOutputStream(), indirectly via call to `Connection.sendCommand(...)` on line 166 is not closed after the last access at line 189. 
+  187.         inMulti = false;
+  188.         inWatch = false;
+  189. >     }
+  190.     }
+  191.   
+
+#18
+src/main/java/redis/clients/jedis/mcf/MultiClusterTransaction.java:209: error: Pulse Resource Leak
+  Resource dynamically allocated by constructor redis.clients.jedis.util.RedisOutputStream(), indirectly via call to `Connection.sendCommand(...)` on line 206 is not closed after the last access at line 209. 
+  207.   
+  208.         return connection.getStatusCodeReply();
+  209. >     } finally {
+  210.         inMulti = false;
+  211.         inWatch = false;
+
+#19
+src/main/java/redis/clients/jedis/mcf/MultiClusterTransaction.java:212: error: Pulse Resource Leak
+  Resource dynamically allocated by constructor redis.clients.jedis.util.RedisOutputStream(), indirectly via call to `Connection.sendCommand(...)` on line 206 is not closed after the last access at line 212. 
+  210.         inMulti = false;
+  211.         inWatch = false;
+  212. >     }
+  213.     }
+  214.   
+
+#20
+src/main/java/redis/clients/jedis/providers/ClusterConnectionProvider.java:73: error: Pulse Resource Leak
+  Resource dynamically allocated by constructor redis.clients.jedis.util.RedisOutputStream(), indirectly via call to `Connection(...)` on line 56 is not closed after the last access at line 73. 
+  71.           = new JedisClusterOperationException("Could not initialize cluster slots cache.");
+  72.       uninitializedException.addSuppressed(firstException);
+  73. >     throw uninitializedException;
+  74.     }
+  75.   
+
+#21
+src/main/java/redis/clients/jedis/providers/MultiClusterPooledConnectionProvider.java:220: error: Pulse Resource Leak
+  Resource dynamically allocated by constructor redis.clients.jedis.util.RedisInputStream(), indirectly via call to `Connection.ping()` on line 219 is not closed after the last access at line 220. 
+  218.               try (Connection targetConnection = getConnection(multiClusterIndex)) {
+  219.                   targetConnection.ping();
+  220. >             }
+  221.           }
+  222.           catch (Exception e) {
+
+#22
+src/main/java/redis/clients/jedis/providers/MultiClusterPooledConnectionProvider.java:276: error: Null Dereference
+  null (null value originating from line 276) is dereferenced. 
+  274.       @Override
+  275.       public void close() {
+  276. >         multiClusterMap.get(activeMultiClusterIndex).getConnectionPool().close();
+  277.       }
+  278.   
+
+#23
+src/main/java/redis/clients/jedis/providers/MultiClusterPooledConnectionProvider.java:281: error: Null Dereference
+  null (null value originating from line 281) is dereferenced. 
+  279.       @Override
+  280.       public Connection getConnection() {
+  281. >         return multiClusterMap.get(activeMultiClusterIndex).getConnection();
+  282.       }
+  283.   
+
+#24
+src/main/java/redis/clients/jedis/providers/MultiClusterPooledConnectionProvider.java:285: error: Null Dereference
+  null (null value originating from line 285) is dereferenced. 
+  283.   
+  284.       public Connection getConnection(int multiClusterIndex) {
+  285. >         return multiClusterMap.get(multiClusterIndex).getConnection();
+  286.       }
+  287.   
+
+#25
+src/main/java/redis/clients/jedis/providers/MultiClusterPooledConnectionProvider.java:290: error: Null Dereference
+  null (null value originating from line 290) is dereferenced. 
+  288.       @Override
+  289.       public Connection getConnection(CommandArguments args) {
+  290. >         return multiClusterMap.get(activeMultiClusterIndex).getConnection();
+  291.       }
+  292.   
+
+#26
+src/main/java/redis/clients/jedis/providers/MultiClusterPooledConnectionProvider.java:295: error: Null Dereference
+  null (null value originating from line 295) is dereferenced. 
+  293.       @Override
+  294.       public Map<?, Pool<Connection>> getConnectionMap() {
+  295. >         ConnectionPool connectionPool = multiClusterMap.get(activeMultiClusterIndex).getConnectionPool();
+  296.           return Collections.singletonMap(connectionPool.getFactory(), connectionPool);
+  297.       }
+
+#27
+src/main/java/redis/clients/jedis/providers/MultiClusterPooledConnectionProvider.java:309: error: Null Dereference
+  null (null value originating from line 309) is dereferenced. 
+  307.   
+  308.       public CircuitBreaker getClusterCircuitBreaker() {
+  309. >         return multiClusterMap.get(activeMultiClusterIndex).getCircuitBreaker();
+  310.       }
+  311.   
+
+#28
+src/main/java/redis/clients/jedis/providers/MultiClusterPooledConnectionProvider.java:313: error: Null Dereference
+  null (null value originating from line 313) is dereferenced. 
+  311.   
+  312.       public CircuitBreaker getClusterCircuitBreaker(int multiClusterIndex) {
+  313. >         return multiClusterMap.get(multiClusterIndex).getCircuitBreaker();
+  314.       }
+  315.   
+
+#29
+src/main/java/redis/clients/jedis/providers/SentineledConnectionProvider.java:181: error: Pulse Resource Leak
+  Resource dynamically allocated by constructor redis.clients.jedis.util.RedisOutputStream(), indirectly via call to `Jedis(...)` on line 137 is not closed after the last access at line 181. 
+  179.       }
+  180.   
+  181. >     return master;
+  182.     }
+  183.   
+
+#30
+src/main/java/redis/clients/jedis/resps/AccessControlLogEntry.java:42: error: Null Dereference
+  null (null value originating from line 42) is dereferenced. 
+  40.   
+  41.     public AccessControlLogEntry(Map<String, Object> map) {
+  42. >     count = (long) map.get(COUNT);
+  43.       reason = (String) map.get(REASON);
+  44.       context = (String) map.get(CONTEXT);
+
+#31
+src/main/java/redis/clients/jedis/resps/StreamFullInfo.java:38: error: Null Dereference
+  null (null value originating from line 38) is dereferenced. 
+  36.   
+  37.       streamFullInfo = map;
+  38. >     length = (Long) map.get(LENGTH);
+  39.       radixTreeKeys = (Long) map.get(RADIX_TREE_KEYS);
+  40.       radixTreeNodes = (Long) map.get(RADIX_TREE_NODES);
+
+#32
+src/main/java/redis/clients/jedis/resps/StreamInfo.java:37: error: Null Dereference
+  null (null value originating from line 37) is dereferenced. 
+  35.   
+  36.       streamInfo = map;
+  37. >     length = (Long) map.get(LENGTH);
+  38.       radixTreeKeys = (Long) map.get(RADIX_TREE_KEYS);
+  39.       radixTreeNodes = (Long) map.get(RADIX_TREE_NODES);
+
+#33
+src/main/java/redis/clients/jedis/util/JedisCommandIterationBase.java:69: error: Pulse Resource Leak
+  Resource dynamically allocated by constructor redis.clients.jedis.util.RedisOutputStream(), indirectly via call to `Connection.executeCommand(...)` on line 69 is not closed after the last access at line 69. 
+  67.       Object rawReply;
+  68.       if (connection.getValue() instanceof Connection) {
+  69. >       rawReply = ((Connection) connection.getValue()).executeCommand(args);
+  70.       } else if (connection.getValue() instanceof Pool) {
+  71.         try (Connection c = ((Pool<Connection>) connection.getValue()).getResource()) {
+
+#34
+src/main/java/redis/clients/jedis/util/JedisCommandIterationBase.java:73: error: Pulse Resource Leak
+  Resource dynamically allocated by constructor redis.clients.jedis.util.RedisOutputStream(), indirectly via call to `Connection.executeCommand(...)` on line 72 is not closed after the last access at line 73. 
+  71.         try (Connection c = ((Pool<Connection>) connection.getValue()).getResource()) {
+  72.           rawReply = c.executeCommand(args);
+  73. >       }
+  74.       } else {
+  75.         throw new IllegalArgumentException(connection.getValue().getClass() + "is not supported.");
+
+#35
+src/main/java/redis/clients/jedis/util/JedisCommandIterationBase.java:85: error: Pulse Resource Leak
+  Resource dynamically allocated by constructor redis.clients.jedis.util.RedisOutputStream(), indirectly via call to `Connection.executeCommand(...)` on line 69 is not closed after the last access at line 85. 
+  83.         }
+  84.       }
+  85. >     return lastReply;
+  86.     }
+  87.   
+
+#36
+src/main/java/redis/clients/jedis/util/JedisCommandIterationBase.java:85: error: Pulse Resource Leak
+  Resource dynamically allocated by constructor redis.clients.jedis.util.RedisOutputStream(), indirectly via call to `Connection.executeCommand(...)` on line 72 is not closed after the last access at line 85. 
+  83.         }
+  84.       }
+  85. >     return lastReply;
+  86.     }
+  87.   
+
+Found 37 issues
+                Issue Type(ISSUED_TYPE_ID): #
+  Pulse Resource Leak(PULSE_RESOURCE_LEAK): 25
+     Null Dereference(NULLPTR_DEREFERENCE): 12
