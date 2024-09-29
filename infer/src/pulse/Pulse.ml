@@ -1321,19 +1321,23 @@ module PulseTransferFunctions = struct
                         
                         )
           in 
-          let inter_or_abs = not (Tenv.is_java_normal_cls tenv ty_name)  
+          let inter_or_abs_known =  (Tenv.is_java_normal_cls tenv ty_name)  
 
           in
           let rec helper_check tlist = 
             match tlist with 
-            |[] -> true
-            |x::xs -> if Tenv.is_java_normal_cls tenv x then false else helper_check xs 
+            |[] -> false
+            |x::xs -> if Tenv.is_java_normal_cls tenv x then true else helper_check xs 
 
           in
-          let inter_or_abs_have_unknown = if inter_or_abs then 
-            helper_check (Tenv.find_limited_sub ty_name tenv) else false
+          let inter_or_abs_have_known = if inter_or_abs_known then true
+             else helper_check (Tenv.find_limited_sub ty_name tenv)
 
           in
+
+          (* let inter_or_abs = Tenv.is_java_abstract_cls tenv ty_name || Tenv.is_java_interface_cls tenv ty_name 
+
+          in *)
           
           if (String.equal "isAssignableFrom" (Procname.get_method p)) || (String.equal "getType" (Procname.get_method p)) then
             Caml.Hashtbl.replace PulseModelsJava.should_analyse_cast (Procdesc.get_proc_name proc_desc) false;
@@ -1345,8 +1349,10 @@ module PulseTransferFunctions = struct
           let _tryss =  is_known_call_aux >>|| (fun x -> if x then is_known_call := true else is_known_call := false ; x) in
                       
           if (Procname.equal p BuiltinDecl.__new) || (Procname.equal p BuiltinDecl.__cast) 
-            || ((not (!is_known_call)) && (inter_or_abs_have_unknown))
+            ||  ((not (!is_known_call)) && (not inter_or_abs_have_known))
             ||(List.is_empty actuals) || Procname.is_java_static_method p then
+
+              (*不要做subtyping的情况*)
         
         (* let all_possible_subtypes = 
         in *)
@@ -2030,7 +2036,7 @@ let analyze specialization
    (* let procname_java_class = Procname.get_class_name proc_name in *)
      
     
-    let () =
+    (* let () =
     (* match procname_java_class with | None -> () 
     | Some aa -> let test_name = "PDVisibleSigBuilder" in 
     
@@ -2044,7 +2050,7 @@ let analyze specialization
     | Some a -> DisjunctiveAnalyzer.TransferFunctions.Domain.pp F.std_formatter a in
     res;print_endline "process analysis end" in ppp
     in
-  
+   *)
     
   
     (*print_endline "------------------------------------------";
