@@ -16,6 +16,7 @@ let rec list_printer f alist =
   | [] -> print_endline ""
   | x::xs -> f x ; list_printer f xs 
 
+
 let print_bool b = 
   print_endline (Bool.to_string b)
 

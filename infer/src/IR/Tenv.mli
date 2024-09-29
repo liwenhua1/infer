@@ -61,6 +61,8 @@ val is_java_abstract_cls : t -> Typ.Name.t -> bool
 
 val is_java_interface_cls : t -> Typ.Name.t -> bool
 
+val is_java_normal_cls : t -> Typ.Name.t -> bool
+
 val pp : Format.formatter -> t -> unit
 (** print a type environment *)
 

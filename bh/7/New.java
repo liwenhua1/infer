@@ -1,3 +1,5 @@
+import java.util.*;
+
 public class New {
     
 }
@@ -7,12 +9,13 @@ public class New {
     public Object foo();
   }
 
-  static class Impl implements Interface {
-    @Override
-    public Object foo() {
-      return null;
-    }
-  }
+  // static class Impl implements Interface {
+  //   @Override
+  //   public Object foo() {
+  //     List<String> list = new ArrayList<>();
+  //     return null;
+  //   }
+  // }
 
 
   static void FN_interfaceShouldNotCauseFalseNegativeHardOK(Interface i) {
