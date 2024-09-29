@@ -17,24 +17,6 @@ ratis-common/src/main/java/org/apache/ratis/util/LifeCycle.java:111: error: Null
   113.   
 
 #2
-ratis-examples/src/main/java/org/apache/ratis/examples/arithmetic/ArithmeticStateMachine.java:140: error: Pulse Resource Leak
-  Resource dynamically allocated by constructor java.io.BufferedInputStream() on line 133 is not closed after the last access at line 140. 
-  138.         throw new IllegalStateException("Failed to load " + snapshot, e);
-  139.       }
-  140. >     return last.getIndex();
-  141.     }
-  142.   
-
-#3
-ratis-examples/src/main/java/org/apache/ratis/examples/counter/client/CounterClient.java:182: error: Null Dereference
-  The call to `CounterClient.<init>()` ends up calling `RpcType RaftConfigKeys$Rpc.type(RaftProperties,Consumer)` (after 2 more calls) and may trigger the following issue: null (from the call to `CounterClient()` on line 43) is dereferenced in the call to `CounterClient()`. 
-  180.   
-  181.     public static void main(String[] args) {
-  182. >     try(CounterClient client = new CounterClient()) {
-  183.         //the number of INCREMENT commands, default is 10
-  184.         final int increment = args.length > 0 ? Integer.parseInt(args[0]) : 10;
-
-#4
 ratis-examples/src/main/java/org/apache/ratis/examples/counter/server/CounterStateMachine.java:211: error: Pulse Resource Leak
   Resource dynamically allocated by constructor java.io.BufferedInputStream() on line 205 is not closed after the last access at line 211. 
   209.       //update state
@@ -43,7 +25,7 @@ ratis-examples/src/main/java/org/apache/ratis/examples/counter/server/CounterSta
   212.   
   213.     /**
 
-#5
+#3
 ratis-grpc/src/main/java/org/apache/ratis/grpc/metrics/MessageMetrics.java:62: error: Null Dereference
   null (null value originating from line 61) is dereferenced. 
   60.     private void inc(String metricNamePrefix, Type t) {
@@ -52,7 +34,7 @@ ratis-grpc/src/main/java/org/apache/ratis/grpc/metrics/MessageMetrics.java:62: e
   63.           .inc();
   64.       final Map<String, LongCounter> counters = types.get(t);
 
-#6
+#4
 ratis-netty/src/main/java/org/apache/ratis/netty/metrics/NettyServerStreamRpcMetrics.java:134: error: Null Dereference
   null (null value originating from line 134) is dereferenced. 
   132.   
@@ -61,16 +43,7 @@ ratis-netty/src/main/java/org/apache/ratis/netty/metrics/NettyServerStreamRpcMet
   135.     }
   136.   
 
-#7
-ratis-server/src/main/java/org/apache/ratis/server/impl/RaftServerImpl.java:1847: error: Null Dereference
-  `RaftProtos$LogEntryProto$LogEntryBodyCase RaftProtos$LogEntryProto.getLogEntryBodyCase()` could be null (from the call to `RaftProtos$LogEntryProto.getLogEntryBodyCase()` on line 1847) and is dereferenced. 
-  1845.       CompletableFuture<Message> messageFuture = null;
-  1846.   
-  1847. >     switch (next.getLogEntryBodyCase()) {
-  1848.       case CONFIGURATIONENTRY:
-  1849.         // the reply should have already been set. only need to record
-
-#8
+#5
 ratis-server/src/main/java/org/apache/ratis/server/impl/WatchRequests.java:216: error: Null Dereference
   `queue` could be null (null value originating from line 215) and is dereferenced. 
   214.     void update(ReplicationLevel replication, final long newIndex) {
@@ -79,7 +52,7 @@ ratis-server/src/main/java/org/apache/ratis/server/impl/WatchRequests.java:216: 
   217.         queue.updateIndex(newIndex);
   218.       }
 
-#9
+#6
 ratis-server/src/main/java/org/apache/ratis/server/metrics/RaftServerMetricsImpl.java:259: error: Null Dereference
   null (null value originating from line 259) is dereferenced. 
   257.   
@@ -88,7 +61,7 @@ ratis-server/src/main/java/org/apache/ratis/server/metrics/RaftServerMetricsImpl
   260.     }
   261.   
 
-#10
+#7
 ratis-server/src/main/java/org/apache/ratis/server/metrics/RaftServerMetricsImpl.java:263: error: Null Dereference
   null (null value originating from line 263) is dereferenced. 
   261.   
@@ -97,7 +70,7 @@ ratis-server/src/main/java/org/apache/ratis/server/metrics/RaftServerMetricsImpl
   264.     }
   265.   
 
-#11
+#8
 ratis-shell/src/main/java/org/apache/ratis/shell/cli/AbstractShell.java:147: error: Null Dereference
   null (null value originating from line 147) is dereferenced. 
   145.       SortedSet<String> sortedCmds = new TreeSet<>(mCommands.keySet());
@@ -106,7 +79,7 @@ ratis-shell/src/main/java/org/apache/ratis/shell/cli/AbstractShell.java:147: err
   148.       }
   149.     }
 
-Found 12 issues
+Found 9 issues
                 Issue Type(ISSUED_TYPE_ID): #
-     Null Dereference(NULLPTR_DEREFERENCE): 10
-  Pulse Resource Leak(PULSE_RESOURCE_LEAK): 2
+     Null Dereference(NULLPTR_DEREFERENCE): 8
+  Pulse Resource Leak(PULSE_RESOURCE_LEAK): 1
