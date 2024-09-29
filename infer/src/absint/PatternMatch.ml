@@ -55,7 +55,7 @@ let type_get_direct_supertypes tenv (typ : Typ.t) =
   | _ ->
       []
 
-let is_direct_abstract_super super sub tenv = (*no intermediate concrect class between super and sub*)
+let is_direct_abstract_super_no_sbl super sub tenv = (*no intermediate concrect class between super and sub*)
       if not (Tenv.is_java_abstract_cls tenv super || Tenv.is_java_interface_cls tenv super) then false else
       if not (is_subtype tenv sub super) then false else 
       
@@ -67,7 +67,18 @@ let is_direct_abstract_super super sub tenv = (*no intermediate concrect class b
                         (if not (Tenv.is_java_abstract_cls tenv x || Tenv.is_java_interface_cls tenv x) then false else 
                           let superss = match Tenv.lookup tenv x with Some {supers} -> supers | None -> [] in 
                           helper superss)) in 
-        helper (match Tenv.lookup tenv sub with Some {supers} -> supers | None -> [])  
+        let direct = helper (match Tenv.lookup tenv sub with Some {supers} -> supers | None -> [])  in
+        let all_sub = Tenv.find_limited_sub super tenv in 
+        let rec no_sib sub_list = match sub_list with
+        | [] -> true 
+        | x::xs -> if (Tenv.is_java_normal_cls tenv x && (not (is_subtype tenv x sub)) || (not (is_subtype tenv sub x))) then false 
+                  (* else if ((Tenv.is_java_abstract_cls tenv x || Tenv.is_java_interface_cls tenv x)) then help xs  *)
+                  (* else if (Tenv.is_java_normal_cls tenv x && (is_subtype tenv sub x) && (not (Typ.equal_name x sub))) then false  *)
+                  else no_sib xs in 
+        let non_sib =  no_sib all_sub in 
+        non_sib &&
+        direct 
+                  
 
    
 

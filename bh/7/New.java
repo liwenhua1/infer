@@ -8,19 +8,11 @@ class A {
   int x;}
 class DynamicDispatch {
 
-  public <T> T id_generics(T o) {
-    o.toString();
-    return o;
-  }
-
-  public A frame(A x) {
-    return id_generics(x);
-  }
-  public void nullPointerExceptionUnlessFrameFails() {
-    String s = null;
-    Object a = frame(new A());
-    if (a instanceof A) {
-      s.length();
+  void clearCausesEmptinessNPEBad(List l) {
+    l.clear();
+    Object o = null;
+    if (l.isEmpty()) {
+      o.toString();
     }
   }
 

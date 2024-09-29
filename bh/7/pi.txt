@@ -44,6 +44,15 @@ src/main/java/picocli/CommandLine.java:15640: error: Null Dereference
   15642.               // The aliases list for each command now has at least one entry, with the main name at the front.
 
 #5
+src/main/java/picocli/CommandLine.java:18420: error: Null Dereference
+  null (null value originating from line 18420) is dereferenced in the call to `CommandLine$Model$UsageMessageSpec$_.render(...)`. 
+  18418.           }
+  18419.           static void assertTrue(boolean condition, IHelpSectionRenderer producer) {
+  18420. >             if (!condition) throw new IllegalStateException(producer.render(null));
+  18421.           }
+  18422.           private Assert() {} // private constructor: never instantiate
+
+#6
 src/main/java/picocli/CommandLine.java:18528: error: Null Dereference
   null (null value originating from line 18528) is dereferenced. 
   18526.           private static double dotProduct(Map<String, Integer> m1, Map<String, Integer> m2) {
@@ -52,6 +61,6 @@ src/main/java/picocli/CommandLine.java:18528: error: Null Dereference
   18529.               return result;
   18530.           }
 
-Found 6 issues
+Found 7 issues
              Issue Type(ISSUED_TYPE_ID): #
-  Null Dereference(NULLPTR_DEREFERENCE): 6
+  Null Dereference(NULLPTR_DEREFERENCE): 7

@@ -17,6 +17,15 @@ ebean-core/src/main/java/io/ebeaninternal/server/core/DScriptRunner.java:95: err
   97.   
 
 #2
+ebean-core/src/main/java/io/ebeaninternal/server/core/DefaultBeanLoader.java:53: error: Null Dereference
+  `parentDesc` could be null (from the call to `DefaultServer.descriptor(...)` on line 52) and is dereferenced. 
+  51.       PersistenceContext pc = ebi.persistenceContext();
+  52.       BeanDescriptor<?> parentDesc = server.descriptor(parentBean.getClass());
+  53. >     BeanPropertyAssocMany<?> many = (BeanPropertyAssocMany<?>) parentDesc.beanProperty(propertyName);
+  54.       BeanCollection<?> beanCollection = null;
+  55.       ExpressionList<?> filterMany = null;
+
+#3
 ebean-core/src/main/java/io/ebeaninternal/server/core/DefaultServer.java:541: error: Null Dereference
   `BeanDescriptor DefaultServer.descriptor(Class)` could be null (from the call to `DefaultServer.descriptor(...)` on line 541) and is dereferenced. 
   539.       List<String> tableNames = new ArrayList<>();
@@ -25,7 +34,7 @@ ebean-core/src/main/java/io/ebeaninternal/server/core/DefaultServer.java:541: er
   542.       }
   543.       truncate(tableNames.toArray(new String[0]));
 
-#3
+#4
 ebean-core/src/main/java/io/ebeaninternal/server/core/DefaultServer.java:611: error: Null Dereference
   `desc` could be null (from the call to `DefaultServer.descriptor(...)` on line 610) and is dereferenced. 
   609.       Objects.requireNonNull(id);
@@ -34,7 +43,7 @@ ebean-core/src/main/java/io/ebeaninternal/server/core/DefaultServer.java:611: er
   612.       PersistenceContext pc = null;
   613.       SpiTransaction t = transactionManager.active();
 
-#4
+#5
 ebean-core/src/main/java/io/ebeaninternal/server/core/DefaultServer.java:769: error: Null Dereference
   `BeanDescriptor DefaultServer.descriptor(Class)` could be null (from the call to `DefaultServer.descriptor(...)` on line 769) and is dereferenced. 
   767.     @Override
@@ -43,7 +52,7 @@ ebean-core/src/main/java/io/ebeaninternal/server/core/DefaultServer.java:769: er
   770.     }
   771.   
 
-#5
+#6
 ebean-core/src/main/java/io/ebeaninternal/server/core/DefaultServer.java:2202: error: Null Dereference
   `beanDesc` could be null (from the call to `DefaultServer.descriptor(...)` on line 2201) and is dereferenced. 
   2200.       EntityBean entityBean = checkEntityBean(bean);
@@ -52,7 +61,7 @@ ebean-core/src/main/java/io/ebeaninternal/server/core/DefaultServer.java:2202: e
   2203.       // if the ID of the Property is null we are unable to check uniqueness
   2204.       if (idProperty == null) {
 
-#6
+#7
 ebean-core/src/main/java/io/ebeaninternal/server/deploy/BeanDescriptorManager.java:715: error: Null Dereference
   `rootBeanInfo` could be null (null value originating from line 714) and is dereferenced. 
   713.         if (inheritInfo != null && !inheritInfo.isRoot()) {
@@ -61,7 +70,7 @@ ebean-core/src/main/java/io/ebeaninternal/server/deploy/BeanDescriptorManager.ja
   716.           if (rootIdGen != null) {
   717.             descriptor.setIdGenerator(rootIdGen);
 
-#7
+#8
 ebean-core/src/main/java/io/ebeaninternal/server/deploy/meta/DeployBeanPropertyAssoc.java:53: error: Null Dereference
   `DeployBeanInfo DeployBeanDescriptor.getDeploy(Class)` could be null (from the call to `DeployBeanDescriptor.getDeploy(...)` on line 53) and is dereferenced. 
   51.      */
@@ -70,7 +79,7 @@ ebean-core/src/main/java/io/ebeaninternal/server/deploy/meta/DeployBeanPropertyA
   54.     }
   55.   
 
-#8
+#9
 ebean-core/src/main/java/io/ebeaninternal/server/deploy/parse/DeployInherit.java:58: error: Null Dereference
   `parent` could be null (from the call to `DeployInherit.getInfo(...)` on line 57) and is dereferenced. 
   56.         if (!info.isRoot()) {
@@ -79,7 +88,16 @@ ebean-core/src/main/java/io/ebeaninternal/server/deploy/parse/DeployInherit.java
   59.         }
   60.       }
 
-#9
+#10
+ebean-core/src/main/java/io/ebeaninternal/server/json/DJsonContext.java:251: error: Null Dereference
+  `info` could be null (from the call to `ParamTypeHelper.getTypeInfo(...)` on line 250) and is dereferenced. 
+  249.     public Object toObject(Type genericType, JsonParser jsonParser) throws JsonIOException {
+  250.       TypeInfo info = ParamTypeHelper.getTypeInfo(genericType);
+  251. >     ManyType manyType = info.getManyType();
+  252.       switch (manyType) {
+  253.         case NONE:
+
+#11
 ebean-core/src/main/java/io/ebeaninternal/server/persist/DefaultPersister.java:643: error: Null Dereference
   `descriptor` could be null (from the call to `BeanDescriptorManager.descriptor(...)` on line 642) and is dereferenced. 
   641.     public int delete(Class<?> beanType, Object id, Transaction transaction, boolean permanent) {
@@ -88,52 +106,16 @@ ebean-core/src/main/java/io/ebeaninternal/server/persist/DefaultPersister.java:6
   644.         // convert to a delete by bean
   645.         EntityBean bean = descriptor.createEntityBean();
 
-#10
-ebean-core/src/main/java/io/ebeaninternal/server/querydefn/OrmUpdateProperties.java:182: error: Null Dereference
-  `String DeployParser.parse(String)` could be null (from the call to `DeployParser.parse(...)` on line 182) and is dereferenced in the call to `OrmUpdateProperties.trim(...)`. 
-  180.         }
-  181.         // translate to db columns and remove table alias placeholders
-  182. >       sb.append(trim(deployParser.parse(property)));
-  183.         sb.append(entry.getValue().bindClause());
-  184.       }
-
-#11
-ebean-core/src/main/java/io/ebeaninternal/server/type/DefaultTypeManager.java:632: error: Null Dereference
-  The call to `Class[] TypeReflectHelper.getParams(Class,Class)` in turn calls `Class[] TypeResolver.resolveRawArgs(Class,Class)` and may trigger the following issue: null (from the call to `TypeReflectHelper.getParams(...)` on line 40) is dereferenced in the call to `TypeReflectHelper.getParams(...)`. 
-  630.       for (Class<? extends ScalarTypeConverter<?, ?>> foundType : bootupClasses.getScalarConverters()) {
-  631.         try {
-  632. >         Class<?>[] paramTypes = TypeReflectHelper.getParams(foundType, ScalarTypeConverter.class);
-  633.           if (paramTypes.length != 2) {
-  634.             throw new IllegalStateException("Expected 2 generics paramtypes but got: " + Arrays.toString(paramTypes));
-
 #12
-ebean-core/src/main/java/io/ebeaninternal/server/type/DefaultTypeManager.java:633: error: Null Dereference
-  `paramTypes` could be null (from the call to `TypeReflectHelper.getParams(...)` on line 632) and is dereferenced. 
-  631.         try {
-  632.           Class<?>[] paramTypes = TypeReflectHelper.getParams(foundType, ScalarTypeConverter.class);
-  633. >         if (paramTypes.length != 2) {
-  634.             throw new IllegalStateException("Expected 2 generics paramtypes but got: " + Arrays.toString(paramTypes));
-  635.           }
+ebean-core/src/main/java/io/ebeaninternal/server/transaction/BeanPersistIds.java:51: error: Null Dereference
+  `desc` could be null (from the call to `DefaultServer.descriptorById(...)` on line 50) and is dereferenced in the call to `BeanPersistIds(...)`. 
+  49.   
+  50.       BeanDescriptor<?> desc = server.descriptorById(input.readUTF());
+  51. >     BeanPersistIds bp = new BeanPersistIds(desc);
+  52.       bp.read(input);
+  53.       return bp;
 
 #13
-ebean-core/src/main/java/io/ebeaninternal/server/type/DefaultTypeManager.java:656: error: Null Dereference
-  The call to `Class[] TypeReflectHelper.getParams(Class,Class)` in turn calls `Class[] TypeResolver.resolveRawArgs(Class,Class)` and may trigger the following issue: null (from the call to `TypeReflectHelper.getParams(...)` on line 40) is dereferenced in the call to `TypeReflectHelper.getParams(...)`. 
-  654.       for (Class<? extends AttributeConverter<?, ?>> foundType : bootupClasses.getAttributeConverters()) {
-  655.         try {
-  656. >         Class<?>[] paramTypes = TypeReflectHelper.getParams(foundType, AttributeConverter.class);
-  657.           if (paramTypes.length != 2) {
-  658.             throw new IllegalStateException("Expected 2 generics paramtypes but got: " + Arrays.toString(paramTypes));
-
-#14
-ebean-core/src/main/java/io/ebeaninternal/server/type/DefaultTypeManager.java:657: error: Null Dereference
-  `paramTypes` could be null (from the call to `TypeReflectHelper.getParams(...)` on line 656) and is dereferenced. 
-  655.         try {
-  656.           Class<?>[] paramTypes = TypeReflectHelper.getParams(foundType, AttributeConverter.class);
-  657. >         if (paramTypes.length != 2) {
-  658.             throw new IllegalStateException("Expected 2 generics paramtypes but got: " + Arrays.toString(paramTypes));
-  659.           }
-
-#15
 ebean-core/src/main/java/io/ebeaninternal/server/type/ScalarTypeFile.java:71: error: Pulse Resource Leak
   Resource dynamically allocated by constructor java.io.FileOutputStream(), indirectly via call to `ScalarTypeFile.getOutputStream(...)` on line 70 is not closed after the last access at line 71. 
   69.         File tempFile = File.createTempFile(prefix, suffix, directory);
@@ -142,7 +124,7 @@ ebean-core/src/main/java/io/ebeaninternal/server/type/ScalarTypeFile.java:71: er
   72.         return tempFile;
   73.       } catch (IOException e) {
 
-#16
+#14
 ebean-core/src/main/java/io/ebeaninternal/server/type/ScalarTypeFile.java:74: error: Pulse Resource Leak
   Resource dynamically allocated by constructor java.io.FileOutputStream(), indirectly via call to `ScalarTypeFile.getOutputStream(...)` on line 70 is not closed after the last access at line 74. 
   72.         return tempFile;
@@ -151,7 +133,7 @@ ebean-core/src/main/java/io/ebeaninternal/server/type/ScalarTypeFile.java:74: er
   75.       }
   76.     }
 
-#17
+#15
 ebean-ddl-generator/src/main/java/io/ebeaninternal/dbmigration/DefaultDbMigration.java:363: error: Null Dereference
   The call to `void DatabasePlatform.configure(PlatformConfig)` ends up calling `void DbPlatformTypeMapping.config(boolean,PlatformConfig$DbUuid)` (after 1 more call) and may trigger the following issue: `config->dbUuid->binary` could be null (from the call to `DatabasePlatform.configure(...)` on line 212) and is dereferenced in the call to `DatabasePlatform.configure(...)`. 
   361.       for (Pair pair : platforms) {
@@ -160,7 +142,7 @@ ebean-ddl-generator/src/main/java/io/ebeaninternal/dbmigration/DefaultDbMigratio
   364.       }
   365.     }
 
-#18
+#16
 ebean-ddl-generator/src/main/java/io/ebeaninternal/dbmigration/DefaultDbMigration.java:363: error: Null Dereference
   The call to `void DatabasePlatform.configure(PlatformConfig)` ends up calling `void DbPlatformTypeMapping.config(boolean,PlatformConfig$DbUuid)` (after 1 more call) and may trigger the following issue: `config->dbUuid->nativeType` could be null (from the call to `DatabasePlatform.configure(...)` on line 210) and is dereferenced in the call to `DatabasePlatform.configure(...)`. 
   361.       for (Pair pair : platforms) {
@@ -169,7 +151,7 @@ ebean-ddl-generator/src/main/java/io/ebeaninternal/dbmigration/DefaultDbMigratio
   364.       }
   365.     }
 
-#19
+#17
 ebean-ddl-generator/src/main/java/io/ebeaninternal/dbmigration/DefaultDbMigration.java:363: error: Null Dereference
   The call to `void DatabasePlatform.configure(PlatformConfig)` ends up calling `void DbPlatformTypeMapping.config(boolean,PlatformConfig$DbUuid)` (after 1 more call) and may trigger the following issue: `pair->platform->nativeUuidType` could be null (from the call to `DatabasePlatform.configure(...)` on line 210) and is dereferenced in the call to `DatabasePlatform.configure(...)`. 
   361.       for (Pair pair : platforms) {
@@ -178,7 +160,7 @@ ebean-ddl-generator/src/main/java/io/ebeaninternal/dbmigration/DefaultDbMigratio
   364.       }
   365.     }
 
-#20
+#18
 ebean-ddl-generator/src/main/java/io/ebeaninternal/dbmigration/DefaultDbMigration.java:363: error: Null Dereference
   The call to `void DatabasePlatform.configure(PlatformConfig)` ends up calling `void DbPlatformTypeMapping.config(boolean,PlatformConfig$DbUuid)` (after 1 more call) and may trigger the following issue: `pair->platform->nativeUuidType` could be null (from the call to `DatabasePlatform.configure(...)` on line 212) and is dereferenced in the call to `DatabasePlatform.configure(...)`. 
   361.       for (Pair pair : platforms) {
@@ -187,7 +169,7 @@ ebean-ddl-generator/src/main/java/io/ebeaninternal/dbmigration/DefaultDbMigratio
   364.       }
   365.     }
 
-#21
+#19
 ebean-ddl-generator/src/main/java/io/ebeaninternal/dbmigration/ddlgeneration/platform/Db2HistoryDdl.java:99: error: Null Dereference
   `table` could be null (from the call to `DdlWrite.getTable(...)` on line 98) and is dereferenced. 
    97.       DdlAlterTable alter = platformDdl.alterTable(writer, tableName);
@@ -196,7 +178,7 @@ ebean-ddl-generator/src/main/java/io/ebeaninternal/dbmigration/ddlgeneration/pla
   100.         disableSystemVersioning(writer.apply(), tableName);
   101.         enableSystemVersioning(writer.applyPostAlter(), tableName);
 
-#22
+#20
 ebean-ddl-generator/src/main/java/io/ebeaninternal/dbmigration/ddlgeneration/platform/HanaHistoryDdl.java:96: error: Null Dereference
   `table` could be null (from the call to `DdlWrite.getTable(...)` on line 95) and is dereferenced. 
   94.       DdlAlterTable alter = platformDdl.alterTable(writer, tableName);
@@ -205,7 +187,7 @@ ebean-ddl-generator/src/main/java/io/ebeaninternal/dbmigration/ddlgeneration/pla
   97.         disableSystemVersioning(writer.apply(), tableName);
   98.         enableSystemVersioning(writer.applyPostAlter(), tableName, false);
 
-#23
+#21
 ebean-ddl-generator/src/main/java/io/ebeaninternal/dbmigration/model/MTable.java:698: error: Null Dereference
   `refBaseTable` could be null (from the call to `ModelContainer.getTable(...)` on line 697) and is dereferenced. 
   696.           String baseTable = extractBaseTable(references);
@@ -214,7 +196,7 @@ ebean-ddl-generator/src/main/java/io/ebeaninternal/dbmigration/model/MTable.java
   699.             // change references to another associated 'draft' table
   700.             String newReferences = deriveReferences(references, refBaseTable.draftTable.getName());
 
-Found 24 issues
+Found 22 issues
                 Issue Type(ISSUED_TYPE_ID): #
-     Null Dereference(NULLPTR_DEREFERENCE): 22
+     Null Dereference(NULLPTR_DEREFERENCE): 20
   Pulse Resource Leak(PULSE_RESOURCE_LEAK): 2

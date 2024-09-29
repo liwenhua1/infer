@@ -22,7 +22,7 @@ val get_vararg_type_names : Tenv.t -> Procdesc.Node.t -> Pvar.t -> string list
 val is_subtype : Tenv.t -> Typ.Name.t -> Typ.Name.t -> bool
 (** Is the type a transitive subtype of the typename? *)
 
-val is_direct_abstract_super : Typ.name -> Typ.name -> Tenv.t -> bool
+val is_direct_abstract_super_no_sbl : Typ.name -> Typ.name -> Tenv.t -> bool
 
 val is_subtype_of_str : Tenv.t -> Typ.Name.t -> string -> bool
 (** Resolve [typ_str] in [tenv], then check [typ] <: [typ_str] *)
