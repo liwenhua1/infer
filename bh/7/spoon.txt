@@ -17,42 +17,15 @@ src/main/java/spoon/IncrementalLauncher.java:86: error: Pulse Resource Leak
   88.   	private static Factory loadFactory(File file) {
 
 #2
-src/main/java/spoon/IncrementalLauncher.java:90: error: Pulse Resource Leak
-  Resource dynamically allocated by constructor java.io.FileInputStream() on line 90 is not closed after the last access at line 90. 
-  88.   	private static Factory loadFactory(File file) {
-  89.   		try {
-  90. > 			return new SerializationModelStreamer().load(new FileInputStream(file));
-  91.   		} catch (IOException e) {
-  92.   			throw new SpoonException("unable to load factory from cache");
+src/main/java/spoon/reflect/factory/CodeFactory.java:166: error: Null Dereference
+  `classType` could be null (from the call to `TypeFactory.createReference(...)` on line 157) and is dereferenced. 
+  164.   
+  165.   		CtFieldRead<Class<T>> fieldRead = factory.Core().createFieldRead();
+  166. > 		fieldRead.setType(classType.clone());
+  167.   		fieldRead.setVariable(fieldReference);
+  168.   		fieldRead.setTarget(typeAccess);
 
 #3
-src/main/java/spoon/IncrementalLauncher.java:92: error: Pulse Resource Leak
-  Resource dynamically allocated by constructor java.io.FileInputStream() on line 90 is not closed after the last access at line 92. 
-  90.   			return new SerializationModelStreamer().load(new FileInputStream(file));
-  91.   		} catch (IOException e) {
-  92. > 			throw new SpoonException("unable to load factory from cache");
-  93.   		}
-  94.   	}
-
-#4
-src/main/java/spoon/pattern/PatternParameterConfigurator.java:799: error: Null Dereference
-  The call to `InlinedStatementConfigurator InlinedStatementConfigurator.byElement(CtElement)` may trigger the following issue: `ctElement->parent` could be null (from the call to `InlinedStatementConfigurator.byElement(...)` on line 102) and is dereferenced in the call to `InlinedStatementConfigurator.byElement(...)`. 
-  797.   		InlinedStatementConfigurator sb = new InlinedStatementConfigurator(patternBuilder);
-  798.   		for (CtElement ctElement : substitutedNodes) {
-  799. > 			sb.byElement(ctElement);
-  800.   		}
-  801.   		return this;
-
-#5
-src/main/java/spoon/pattern/PatternParameterConfigurator.java:799: error: Null Dereference
-  The call to `InlinedStatementConfigurator InlinedStatementConfigurator.byElement(CtElement)` may trigger the following issue: null (from the call to `InlinedStatementConfigurator.byElement(...)` on line 102) is dereferenced in the call to `InlinedStatementConfigurator.byElement(...)`. 
-  797.   		InlinedStatementConfigurator sb = new InlinedStatementConfigurator(patternBuilder);
-  798.   		for (CtElement ctElement : substitutedNodes) {
-  799. > 			sb.byElement(ctElement);
-  800.   		}
-  801.   		return this;
-
-#6
 src/main/java/spoon/reflect/meta/impl/RoleHandlerHelper.java:41: error: Null Dereference
   null (null value originating from line 41) is dereferenced. 
   39.   		Comparator<RoleHandler> cmp = (a, b) -> a.getTargetType().isAssignableFrom(b.getTargetType()) ? 1 : -1;
@@ -61,7 +34,7 @@ src/main/java/spoon/reflect/meta/impl/RoleHandlerHelper.java:41: error: Null Der
   42.   		}
   43.   	}
 
-#7
+#4
 src/main/java/spoon/reflect/meta/impl/RoleHandlerHelper.java:67: error: Null Dereference
   `handlers` could be null (null value originating from line 66) and is dereferenced. 
   65.   	public static RoleHandler getOptionalRoleHandler(Class<? extends CtElement> targetClass, CtRole role) {
@@ -70,25 +43,16 @@ src/main/java/spoon/reflect/meta/impl/RoleHandlerHelper.java:67: error: Null Der
   68.   			if (ctRoleHandler.getTargetType().isAssignableFrom(targetClass)) {
   69.   				return ctRoleHandler;
 
-#8
-src/main/java/spoon/support/SerializationModelStreamer.java:58: error: Pulse Resource Leak
-  Resource dynamically allocated by constructor java.io.BufferedOutputStream() on line 54 is not closed after the last access at line 58. 
-  56.   			oos.flush();
-  57.   		}
-  58. > 	}
-  59.   
-  60.   	@Override
+#5
+src/main/java/spoon/support/DefaultCoreFactory.java:676: error: Null Dereference
+  The call to `CtWildcardReference CtWildcardReferenceImpl.setBoundingType(CtTypeReference)` may trigger the following issue: null (from the call to `CtWildcardReferenceImpl.setBoundingType(...)` on line 58) is dereferenced in the call to `CtWildcardReferenceImpl.setBoundingType(...)`. 
+  674.   		CtWildcardReference e = new CtWildcardReferenceImpl();
+  675.   		e.setFactory(getMainFactory());
+  676. > 		e.setBoundingType(null);
+  677.   		return e;
+  678.   	}
 
-#9
-src/main/java/spoon/support/SerializationModelStreamer.java:92: error: Pulse Resource Leak
-  Resource dynamically allocated by constructor java.util.zip.GZIPInputStream() on line 67 is not closed after the last access at line 92. 
-  90.   		} catch (ClassNotFoundException e) {
-  91.   			Launcher.LOGGER.error(e.getMessage(), e);
-  92. > 			throw new IOException(e.getMessage());
-  93.   		}
-  94.   	}
-
-#10
+#6
 src/main/java/spoon/support/compiler/ZipFolder.java:193: error: Pulse Resource Leak
   Resource dynamically allocated by constructor java.io.BufferedInputStream() on line 193 is not closed after the last access at line 193. 
   191.   	/** physically extracts on disk all files of this zip file in the destinationDir `destDir` */
@@ -97,7 +61,7 @@ src/main/java/spoon/support/compiler/ZipFolder.java:193: error: Pulse Resource L
   194.   			ZipEntry entry;
   195.   			while ((entry = zipInput.getNextEntry()) != null) {
 
-#11
+#7
 src/main/java/spoon/support/compiler/ZipFolder.java:193: error: Pulse Resource Leak
   Resource dynamically allocated by constructor java.io.FileInputStream() on line 193 is not closed after the last access at line 193. 
   191.   	/** physically extracts on disk all files of this zip file in the destinationDir `destDir` */
@@ -106,7 +70,7 @@ src/main/java/spoon/support/compiler/ZipFolder.java:193: error: Pulse Resource L
   194.   			ZipEntry entry;
   195.   			while ((entry = zipInput.getNextEntry()) != null) {
 
-#12
+#8
 src/main/java/spoon/support/compiler/jdt/JDTTreeBuilder.java:1259: error: Null Dereference
   The call to `CtLiteral CodeFactory.createLiteral(Object)` may trigger the following issue: null (from the call to `CodeFactory.createLiteral(...)` on line 266) is dereferenced in the call to `CodeFactory.createLiteral(...)`. 
   1257.   	@Override
@@ -115,7 +79,7 @@ src/main/java/spoon/support/compiler/jdt/JDTTreeBuilder.java:1259: error: Null D
   1260.   		return true;
   1261.   	}
 
-#13
+#9
 src/main/java/spoon/support/compiler/jdt/JDTTreeBuilder.java:1340: error: Null Dereference
   The call to `CtLiteral CodeFactory.createLiteral(Object)` may trigger the following issue: null (from the call to `CodeFactory.createLiteral(...)` on line 266) is dereferenced in the call to `CodeFactory.createLiteral(...)`. 
   1338.   	public boolean visit(IntLiteral intLiteral, BlockScope scope) {
@@ -124,7 +88,7 @@ src/main/java/spoon/support/compiler/jdt/JDTTreeBuilder.java:1340: error: Null D
   1341.   		l.setBase(getBase(intLiteral));
   1342.   		context.enter(l, intLiteral);
 
-#14
+#10
 src/main/java/spoon/support/compiler/jdt/JDTTreeBuilder.java:1807: error: Null Dereference
   The call to `CtLiteral CodeFactory.createLiteral(Object)` may trigger the following issue: null (from the call to `CodeFactory.createLiteral(...)` on line 266) is dereferenced in the call to `CodeFactory.createLiteral(...)`. 
   1805.   	@Override
@@ -133,7 +97,7 @@ src/main/java/spoon/support/compiler/jdt/JDTTreeBuilder.java:1807: error: Null D
   1808.   		return true;
   1809.   	}
 
-#15
+#11
 src/main/java/spoon/support/compiler/jdt/ReferenceBuilder.java:1219: error: Null Dereference
   null (null value originating from line 1219) is dereferenced. 
   1217.   
@@ -142,16 +106,25 @@ src/main/java/spoon/support/compiler/jdt/ReferenceBuilder.java:1219: error: Null
   1220.   	}
   1221.   
 
-#16
-src/main/java/spoon/template/Substitution.java:101: error: Null Dereference
-  `PatternBuilder PatternBuilder.create(CtElement[]).templateTypeRef` could be null (from the call to `PatternBuilder.create(...)` on line 100) and is dereferenced in the call to `PatternBuilder.configurePatternParameters(...)`. 
-   99.   		return PatternBuilder
-  100.   				.create(templateOfType)
-  101. > 				.configurePatternParameters(pc -> {
-  102.   					pc.byTemplateParameter(templateParameters);
-  103.   					pc.byParameterValues(templateParameters);
+#12
+src/main/java/spoon/support/sniper/internal/IndentationDetector.java:35: error: Null Dereference
+  The call to `List ElementSourceFragment.getGroupedChildrenFragments()` ends up calling `void ElementSourceFragment.forEachConstantFragment(int,int,Consumer)` (after 1 more call) and may trigger the following issue: `ElementSourceFragment CtCompilationUnit.getOriginalSourceFragment().firstChild` could be null (from the call to `ElementSourceFragment.getGroupedChildrenFragments()` on line 669) and is dereferenced in the call to `ElementSourceFragment.getGroupedChildrenFragments()`. 
+  33.   	public static Pair<Integer, Boolean> detectIndentation(CtCompilationUnit cu) {
+  34.   		List<ElementSourceFragment> typeFragments = cu.getOriginalSourceFragment()
+  35. > 				.getGroupedChildrenFragments().stream()
+  36.   				.filter(fragment -> fragment instanceof CollectionSourceFragment)
+  37.   				.flatMap(fragment -> extractTypeFragments((CollectionSourceFragment) fragment).stream())
 
-Found 17 issues
+#13
+src/main/java/spoon/support/util/RtHelper.java:170: error: Null Dereference
+  The call to `CtExecutableReference ConstructorFactory.createReference(Constructor)` may trigger the following issue: null (from the call to `ConstructorFactory.createReference(...)` on line 145) is dereferenced in the call to `ConstructorFactory.createReference(...)`. 
+  168.   		}
+  169.   		for (Constructor<?> c : clazz.getDeclaredConstructors()) {
+  170. > 			l.add(factory.Constructor().createReference(c));
+  171.   		}
+  172.   		return l;
+
+Found 14 issues
                 Issue Type(ISSUED_TYPE_ID): #
-     Null Dereference(NULLPTR_DEREFERENCE): 9
-  Pulse Resource Leak(PULSE_RESOURCE_LEAK): 8
+     Null Dereference(NULLPTR_DEREFERENCE): 10
+  Pulse Resource Leak(PULSE_RESOURCE_LEAK): 4
