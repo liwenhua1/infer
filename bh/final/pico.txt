@@ -1,0 +1,66 @@
+#0
+src/main/java/picocli/CommandLine.java:6363: error: Null Dereference
+  null (null value originating from line 6363) is dereferenced in the call to `CommandLine$Model$CommandSpec.wrapWithoutInspection(...)`. 
+  6361.   
+  6362.               /** Creates and returns a new {@code CommandSpec} without any associated user object. */
+  6363. >             public static CommandSpec create() { return wrapWithoutInspection(null); }
+  6364.   
+  6365.               /** Creates and returns a new {@code CommandSpec} with the specified associated user object.
+
+#1
+src/main/java/picocli/CommandLine.java:13098: error: Null Dereference
+  null (null value originating from line 13098) is dereferenced. 
+  13096.                       for (ArgGroupSpec group : subgroups.keySet()) {
+  13097.                           if (group.validate()) { // don't raise errors for non-validating groups: https://github.com/remkop/picocli/issues/810
+  13098. >                             addValueToListInMap(matchesPerGroup, group, subgroups.get(group).matches());
+  13099.                           }
+  13100.                       }
+
+#2
+src/main/java/picocli/CommandLine.java:13111: error: Null Dereference
+  null (null value originating from line 13111) is dereferenced in the call to `CommandLine.flatList(...)`. 
+  13109.               private boolean simplifyErrorMessageForSingleGroup(Map<ArgGroupSpec, List<List<ParseResult.GroupMatch>>> matchesPerGroup, CommandLine commandLine) {
+  13110.                   for (ArgGroupSpec group : matchesPerGroup.keySet()) {
+  13111. >                     List<ParseResult.GroupMatch> flat = flatList(matchesPerGroup.get(group));
+  13112.                       Set<ArgSpec> matchedArgs = new LinkedHashSet<ArgSpec>();
+  13113.                       for (ParseResult.GroupMatch match : flat) {
+
+#3
+src/main/java/picocli/CommandLine.java:13251: error: Null Dereference
+  `values` could be null (null value originating from line 13250) and is dereferenced. 
+  13249.                   for (ArgSpec arg : originalStringValues.keySet()) {
+  13250.                       List<String> values = originalStringValues.get(arg);
+  13251. >                     for (String value : values) {
+  13252.                           if (result.length() != originalLength) { result.append(" "); }
+  13253.                           result.append(ArgSpec.describe(arg, "=", value));
+
+#4
+src/main/java/picocli/CommandLine.java:15640: error: Null Dereference
+  `aliases` could be null (null value originating from line 15639) and is dereferenced. 
+  15638.               for (Map.Entry<String, CommandLine> entry : subcommands.entrySet()) {
+  15639.                   List<String> aliases = done.get(entry.getValue());
+  15640. >                 if (!aliases.contains(entry.getKey())) { aliases.add(0, entry.getKey()); }
+  15641.               }
+  15642.               // The aliases list for each command now has at least one entry, with the main name at the front.
+
+#5
+src/main/java/picocli/CommandLine.java:18420: error: Null Dereference
+  null (null value originating from line 18420) is dereferenced in the call to `CommandLine$Model$UsageMessageSpec$_.render(...)`. 
+  18418.           }
+  18419.           static void assertTrue(boolean condition, IHelpSectionRenderer producer) {
+  18420. >             if (!condition) throw new IllegalStateException(producer.render(null));
+  18421.           }
+  18422.           private Assert() {} // private constructor: never instantiate
+
+#6
+src/main/java/picocli/CommandLine.java:18528: error: Null Dereference
+  null (null value originating from line 18528) is dereferenced. 
+  18526.           private static double dotProduct(Map<String, Integer> m1, Map<String, Integer> m2) {
+  18527.               double result = 0;
+  18528. >             for (String key : m1.keySet()) { result += m1.get(key) * (m2.containsKey(key) ? m2.get(key) : 0); }
+  18529.               return result;
+  18530.           }
+
+Found 7 issues
+             Issue Type(ISSUED_TYPE_ID): #
+  Null Dereference(NULLPTR_DEREFERENCE): 7
