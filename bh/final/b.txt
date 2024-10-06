@@ -107,15 +107,6 @@ Xplat/src/main/java/vazkii/botania/common/item/brew/BaseBrewItem.java:118: error
   120.   				continue;
 
 #12
-Xplat/src/main/java/vazkii/botania/common/item/brew/BaseBrewItem.java:198: error: Null Dereference
-  `Registry BotaniaAPI.getBrewRegistry()` could be null (from the call to `BotaniaAPI.getBrewRegistry()` on line 198) and is dereferenced. 
-  196.   	public Brew getBrew(ItemStack stack) {
-  197.   		String key = ItemNBTHelper.getString(stack, TAG_BREW_KEY, "");
-  198. > 		return BotaniaAPI.instance().getBrewRegistry().get(ResourceLocation.tryParse(key));
-  199.   	}
-  200.   
-
-#13
 Xplat/src/main/java/vazkii/botania/common/item/brew/IncenseStickItem.java:42: error: Null Dereference
   `Registry BotaniaAPI.getBrewRegistry()` could be null (from the call to `BotaniaAPI.getBrewRegistry()` on line 42) and is dereferenced. 
   40.   	public void addToCreativeTab(Item me, CreativeModeTab.Output output) {
@@ -124,16 +115,7 @@ Xplat/src/main/java/vazkii/botania/common/item/brew/IncenseStickItem.java:42: er
   43.   			ItemStack brewStack = getItemForBrew(brew, new ItemStack(this));
   44.   			if (!brewStack.isEmpty()) {
 
-#14
-Xplat/src/main/java/vazkii/botania/common/item/brew/IncenseStickItem.java:65: error: Null Dereference
-  `Registry BotaniaAPI.getBrewRegistry()` could be null (from the call to `BotaniaAPI.getBrewRegistry()` on line 65) and is dereferenced. 
-  63.   	public Brew getBrew(ItemStack stack) {
-  64.   		String key = ItemNBTHelper.getString(stack, TAG_BREW_KEY, "");
-  65. > 		return BotaniaAPI.instance().getBrewRegistry().get(ResourceLocation.tryParse(key));
-  66.   	}
-  67.   
-
-#15
+#13
 Xplat/src/main/java/vazkii/botania/common/item/brew/IncenseStickItem.java:69: error: Null Dereference
   `Registry BotaniaAPI.getBrewRegistry()` could be null (from the call to `BotaniaAPI.getBrewRegistry()` on line 69) and is dereferenced. 
   67.   
@@ -142,7 +124,7 @@ Xplat/src/main/java/vazkii/botania/common/item/brew/IncenseStickItem.java:69: er
   70.   	}
   71.   
 
-#16
+#14
 Xplat/src/main/java/vazkii/botania/common/item/equipment/bauble/TaintedBloodPendantItem.java:64: error: Null Dereference
   `Registry BotaniaAPI.getBrewRegistry()` could be null (from the call to `BotaniaAPI.getBrewRegistry()` on line 64) and is dereferenced. 
   62.   	public void addToCreativeTab(Item me, CreativeModeTab.Output output) {
@@ -151,16 +133,7 @@ Xplat/src/main/java/vazkii/botania/common/item/equipment/bauble/TaintedBloodPend
   65.   			ItemStack brewStack = getItemForBrew(brew, new ItemStack(this));
   66.   			if (!brewStack.isEmpty()) {
 
-#17
-Xplat/src/main/java/vazkii/botania/common/item/equipment/bauble/TaintedBloodPendantItem.java:142: error: Null Dereference
-  `Registry BotaniaAPI.getBrewRegistry()` could be null (from the call to `BotaniaAPI.getBrewRegistry()` on line 142) and is dereferenced. 
-  140.   	public Brew getBrew(ItemStack stack) {
-  141.   		String key = ItemNBTHelper.getString(stack, TAG_BREW_KEY, "");
-  142. > 		return BotaniaAPI.instance().getBrewRegistry().get(ResourceLocation.tryParse(key));
-  143.   	}
-  144.   
-
-#18
+#15
 Xplat/src/main/java/vazkii/botania/common/item/equipment/bauble/TaintedBloodPendantItem.java:146: error: Null Dereference
   `Registry BotaniaAPI.getBrewRegistry()` could be null (from the call to `BotaniaAPI.getBrewRegistry()` on line 146) and is dereferenced. 
   144.   
@@ -169,7 +142,7 @@ Xplat/src/main/java/vazkii/botania/common/item/equipment/bauble/TaintedBloodPend
   147.   	}
   148.   
 
-#19
+#16
 Xplat/src/main/java/vazkii/botania/common/item/rod/SkiesRodItem.java:243: error: Null Dereference
   null (null value originating from line 243) is dereferenced. 
   241.   	private static void decAvatarCooldowns(Map<UUID, Integer> cooldownTag) {
@@ -178,7 +151,7 @@ Xplat/src/main/java/vazkii/botania/common/item/rod/SkiesRodItem.java:243: error:
   244.   			if (val > 0) {
   245.   				cooldownTag.put(key, val - 1);
 
-#20
+#17
 Xplat/src/main/java/vazkii/botania/data/recipes/BrewProvider.java:86: error: Null Dereference
   `Registry BotaniaAPI.getBrewRegistry()` could be null (from the call to `BotaniaAPI.getBrewRegistry()` on line 86) and is dereferenced. 
   84.   		@Override
@@ -187,6 +160,6 @@ Xplat/src/main/java/vazkii/botania/data/recipes/BrewProvider.java:86: error: Nul
   87.   			JsonArray ingredients = new JsonArray();
   88.   			for (Ingredient ingr : inputs) {
 
-Found 21 issues
+Found 18 issues
              Issue Type(ISSUED_TYPE_ID): #
-  Null Dereference(NULLPTR_DEREFERENCE): 21
+  Null Dereference(NULLPTR_DEREFERENCE): 18
