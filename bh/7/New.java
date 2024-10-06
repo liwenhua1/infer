@@ -4,16 +4,19 @@ public class New {
     
 }
 
-class A {
-  int x;}
+class A {public Object foo(){ return new Object();} }
+class B extends A {public Object foo(){return null;}}
 class DynamicDispatch {
 
-  void clearCausesEmptinessNPEBad(List l) {
-    l.clear();
-    Object o = null;
-    if (l.isEmpty()) {
-      o.toString();
-    }
+  void clearCausesEmptinessNPEBad(A l) {
+     if (l instanceof B) {
+      
+     }
+    else {l.toString();}
+  }
+
+  void clearCausesEmptinessNPEBad2(B l) {
+    clearCausesEmptinessNPEBad(null);
   }
 
 
