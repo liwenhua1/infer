@@ -182,7 +182,7 @@ let add_instance_of_info_succ is_instance argv typ astate ret_id path event=
 
 
 
-let _java_cast (argv, hist) typeexpr : model =
+let java_cast (argv, hist) typeexpr : model =
         
         (* print_endline "====";
         
@@ -239,6 +239,7 @@ let _java_cast (argv, hist) typeexpr : model =
           in
         let access_trace = Trace.Immediate {location; history = hist} in 
         if ( specifical_unsolved_method || apply_get_class || is_null || (not (Caml.Hashtbl.find should_analyse_cast (Procdesc.get_proc_name analysis_data.proc_desc)))) then 
+          
           let astate = PulseOperations.write_id ret_id (argv, Hist.single_event path event) astate in 
                     astate |> Basic.ok_continue else
         (* print_endline "..............";
@@ -283,6 +284,7 @@ let _java_cast (argv, hist) typeexpr : model =
                                     
 
                   if ((not (Typ.Name.equal name1 Typ.make_object)) && not (exist_super)) then  
+                   
                     let astate = PulseOperations.write_id ret_id (argv, Hist.single_event path event) astate in 
                     astate |> Basic.ok_continue else
                     let res = PatternMatch.is_subtype tenv name1 name2 in
@@ -301,18 +303,31 @@ let _java_cast (argv, hist) typeexpr : model =
                   (* let () = print_endline ("no cast error at "^ (Location.to_string location)) in *)
                 
                   let astate = PulseOperations.write_id ret_id (argv, Hist.single_event path event) astate in 
+                 
                   astate |> Basic.ok_continue
                         | _ -> let astate = PulseOperations.write_id ret_id (argv, Hist.single_event path event) astate in 
+                        
                                 astate |> Basic.ok_continue)
         |None ->  
           match AbductiveDomain.AddressAttributes.get_static_type argv astate with 
-                |None ->  (  match typeexpr with
+                |None when (List.is_empty (fst (Formula.get_all_instance_constrains argv astate.path_condition))) 
+                
+                ->  (  match typeexpr with
                           (* |Exp.Sizeof {typ} -> add_instance_of_info_succ true argv typ astate  *)
                           (* assume cast success *)
-                          |_ ->  let astate = PulseOperations.write_id ret_id (argv, Hist.single_event path event) astate in 
+                          |_ ->  let astate = PulseOperations.write_id ret_id (argv, Hist.single_event path event) astate in
+                          
                                   astate |> Basic.ok_continue)
 
-                |Some a -> let name1 = a in
+                |_ -> 
+                  
+                  let (instance,not_instance) = Formula.get_all_instance_constrains argv astate.path_condition in 
+                  
+                 
+                  let name1 = (match AbductiveDomain.AddressAttributes.get_static_type argv astate with| Some a -> a|None-> 
+                    let cons_list_head = 
+                       (match List.hd instance with |Some a -> a | _ -> (raise UnsupportCast)) in (match Typ.name cons_list_head with |Some z -> z |_ -> (raise UnsupportCast))
+                    ) in
 
                 (* (List.is_empty (fst (Formula.get_all_instance_constrains argv astate.path_condition)))
                 (* && (List.is_empty (snd (Formula.get_all_instance_constrains argv astate.path_condition)))) *) (*todo*)
@@ -337,11 +352,12 @@ let _java_cast (argv, hist) typeexpr : model =
                 (* Typ.print_name name1; *)
                 if ((not (Typ.Name.equal name1 Typ.make_object)) && not (exist_super)) then 
                   let astate = PulseOperations.write_id ret_id (argv, Hist.single_event path event) astate in 
+             
                   astate |> Basic.ok_continue
                 else
                 (* Utils.list_printer (fun x -> Typ.print_name x) (Tenv.find_limited_sub name1 tenv); *)
         (* AbductiveDomain.pp Format.std_formatter astate; *)
-        let (instance,not_instance) = Formula.get_all_instance_constrains argv astate.path_condition in 
+       
         (* Utils.list_printer (fun x -> Typ.pp Pp.text Format.std_formatter x) not_instance; *)
         let not_instance = List.filter_map not_instance ~f:(fun x -> Typ.name x) in 
         (* Utils.list_printer (fun x -> print_endline ("yes "^(Typ.to_string x))) a;
@@ -365,9 +381,12 @@ let _java_cast (argv, hist) typeexpr : model =
             
             if b then let ninstance = Formula.check_not_instance tenv yinstance not_instance in 
                 if (fst ninstance) then 
-                  let check_non_interface_abstract_class_1 top_class = 
-                    let all_possible_subtypes = Tenv.find_limited_sub top_class tenv in
-                    let possible_subclass = List.filter all_possible_subtypes ~f:(fun x -> (not (Tenv.is_java_abstract_cls tenv x || Tenv.is_java_interface_cls tenv x)) && (fst (Formula.check_not_instance tenv x not_instance) ) ) in 
+                  let check_non_interface_abstract_class_1 top_class = (*找到一个确切subclass 违反not instanceof 的要求*)
+                    let all_possible_subtypes = top_class :: (Tenv.find_limited_sub top_class tenv) in 
+                     (* let  () = print_endline "kkkkkkkkkkkkkkk" in  
+                    Utils.list_printer (fun x -> Typ.print_name (x)) all_possible_subtypes; *)
+                    let possible_subclass = List.filter all_possible_subtypes ~f:(fun x -> (List.exists not_instance ~f:(fun z -> Typ.equal_name z x))
+                      || ((not (Tenv.is_java_abstract_cls tenv x || Tenv.is_java_interface_cls tenv x)) && (fst (Formula.check_not_instance tenv x not_instance) )) ) in 
                     List.hd possible_subclass 
                   in
 
@@ -382,6 +401,7 @@ let _java_cast (argv, hist) typeexpr : model =
                   | Some outsider ->
                   add_instance_of_info_fail num_instance false argv typ astate outsider name2 access_trace location ret_id path event app_before access argv
                   | _ -> let astate = PulseOperations.write_id ret_id (argv, Hist.single_event path event) astate in 
+                  (* let  () = print_endline "kkkkkkkkkkkkkkk" in   *)
                            astate |> Basic.ok_continue)
                             (* astate |> Basic.err_cast_abort yinstance name2 access_trace location *)
                          else if not (res2) then (*yinstance is not instance of target type*)
@@ -1200,7 +1220,7 @@ let matchers : matcher list =
     &:: "next" <>$ capt_arg_payload
     $!--> Iterator.next ~desc:"Iterator.next()"
   ; +BuiltinDecl.(match_builtin __instanceof) <>$ capt_arg_payload $+ capt_exp $--> instance_of
-  (* ; +BuiltinDecl.(match_builtin __cast) <>$ capt_arg_payload $+ capt_exp $--> java_cast *)
+  ; +BuiltinDecl.(match_builtin __cast) <>$ capt_arg_payload $+ capt_exp $--> java_cast
   ; ( +map_context_tenv PatternMatch.Java.implements_enumeration
     &:: "nextElement" <>$ capt_arg_payload
     $!--> fun x ->
