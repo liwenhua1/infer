@@ -296,6 +296,8 @@ val parameter_of_name : t -> Typ.Name.t -> Parameter.t
 
 val get_complete_java_method : t -> string
 
+val is_java_equal_method: t -> bool
+
 val is_cpp_assignment_operator : t -> bool
 
 val is_destructor : t -> bool

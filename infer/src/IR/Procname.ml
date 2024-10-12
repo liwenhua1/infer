@@ -1425,6 +1425,8 @@ let rec get_parameters procname =
 
 let get_complete_java_method p = match p with | Java a -> Java.get_complete_method a | _ -> ""
 
+let is_java_equal_method p = match p with | Java a -> String.equal (Java.get_method a) "equals"| _ -> false
+
 let rec replace_parameters new_parameters procname =
   let params_to_java_params params =
     List.map

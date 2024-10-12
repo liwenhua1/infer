@@ -133,6 +133,8 @@ let should_report ?(current_path = -1) ?(instra_hash = Caml.Hashtbl.create 1000)
     | None -> 
     (* `ReportNow *)
     (* print_endline (IR.Typ.Name.to_string latent.class_name); *)
+      if (String.equal (IR.Typ.Name.to_string latent.class_name) "class java.lang.Object" ) && 
+        (latent.apply_before) then ( (if tag then (Caml.Hashtbl.add reported_casting latent.location true)); `ReportNow) else
       if String.equal (IR.Typ.Name.to_string latent.class_name) "class java.lang.Object" then `DelayReport (JavaCastError latent) else
       if latent.apply_before then ( (if tag then (Caml.Hashtbl.add reported_casting latent.location true)); `ReportNow ) else `DelayReport (JavaCastError latent)
     (* if PulseArithmetic.is_manifest ~current_path:current_path ~instra_hash:instra_hash ~key:inst astate then `ReportNow

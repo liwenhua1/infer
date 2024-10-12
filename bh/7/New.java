@@ -1,27 +1,38 @@
 import java.util.*;
 
-public class New {
-    
+public interface New {
+
+  public void foo();
+  
+} 
+
+class A implements New{
+  public void foo() {
+    "s".toString();
+  }
 }
 
-class A {
-  public A x;
-  public Object foo(){ return new Object();} }
-class B extends A {public Object foo(){return null;}}
-class DynamicDispatch {
-
- public void clearCausesEmptinessNPEBad(A l) {
-     if (l.x instanceof B) {
-    
-     }
-     if (l.x instanceof A){
-    B h = (B) l.x;}
+class B extends A{
+  public void foo() {
+    "H".toString();
   }
+
+  public void eeee(New x) {
+    x.foo();
+  }
+}
+
+/**
+ * InnerNew
+ */
+
+
+  
+
 
  
 
 
-  }
 
 //   static interface Interface {
 //     public String foo();

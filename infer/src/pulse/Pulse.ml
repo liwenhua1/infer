@@ -2033,15 +2033,15 @@ let analyze specialization
       DisjunctiveAnalyzer.compute_post_including_exceptional analysis_data ~initial proc_desc
     in
     
-    (* let procname_java_class = Procname.get_class_name proc_name in
+    (* let procname_java_class = Procname.get_class_name proc_name in *)
      
     
-    let () =
-    match procname_java_class with | None -> () 
+    (* let () =
+    (* match procname_java_class with | None -> () 
     | Some aa -> let test_name = "CtTypeReferenceImpl" in  
     
   
-    if (String.is_suffix ~suffix:test_name aa) then 
+    if (String.is_suffix ~suffix:test_name aa) then  *)
     let ppp = 
     print_endline "process analysis";
     Procname.pp_name_only F.std_formatter proc_name;

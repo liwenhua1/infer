@@ -182,7 +182,7 @@ let add_instance_of_info_succ is_instance argv typ astate ret_id path event=
 
 
 
-let java_cast (argv, hist) typeexpr : model =
+let _java_cast (argv, hist) typeexpr : model =
         
         (* print_endline "====";
         
@@ -220,6 +220,7 @@ let java_cast (argv, hist) typeexpr : model =
             in 
         
         let pname = Procdesc.get_proc_name proc in 
+        
 
         let specifical_unsolved_method = 
            match Procname.get_class_name pname with | None -> false 
@@ -317,7 +318,35 @@ let java_cast (argv, hist) typeexpr : model =
                           (* assume cast success *)
                           |_ ->  let astate = PulseOperations.write_id ret_id (argv, Hist.single_event path event) astate in
                           
-                                  astate |> Basic.ok_continue)
+                                  astate |> Basic.ok_continue) 
+                |Some t when (Typ.equal_name (t) (Typ.make_object)) && (List.is_empty (fst (Formula.get_all_instance_constrains argv astate.path_condition)))
+                    && (List.is_empty (snd (Formula.get_all_instance_constrains argv astate.path_condition))) && Procname.is_java_equal_method pname-> 
+
+                      
+                 let re = match typeexpr with
+                  | Exp.Sizeof {typ} -> 
+                    (* let javaname = JavaClassName.from_string (Typ.to_string typ) in *)
+                     let name2 =
+                      
+                      (match (Typ.name typ) with
+                      | None -> raise (UnsupportCast) (*todo*)
+                      | Some a1 -> a1 )
+                      in
+                     
+                     
+                      if not (Typ.equal_name (name2) (Typ.make_object)) then 
+                       
+                        add_instance_of_info_fail num_instance false argv typ astate t name2 access_trace location ret_id path event true false argv 
+                      else 
+                        
+                        let astate = PulseOperations.write_id ret_id (argv, Hist.single_event path event) astate in
+                      astate |> Basic.ok_continue 
+
+                    |_->  
+                      let astate = PulseOperations.write_id ret_id (argv, Hist.single_event path event) astate in
+                           astate |> Basic.ok_continue 
+                          
+                          in re
 
                 |_ -> 
                   
@@ -1220,7 +1249,7 @@ let matchers : matcher list =
     &:: "next" <>$ capt_arg_payload
     $!--> Iterator.next ~desc:"Iterator.next()"
   ; +BuiltinDecl.(match_builtin __instanceof) <>$ capt_arg_payload $+ capt_exp $--> instance_of
-  ; +BuiltinDecl.(match_builtin __cast) <>$ capt_arg_payload $+ capt_exp $--> java_cast
+  (* ; +BuiltinDecl.(match_builtin __cast) <>$ capt_arg_payload $+ capt_exp $--> java_cast *)
   ; ( +map_context_tenv PatternMatch.Java.implements_enumeration
     &:: "nextElement" <>$ capt_arg_payload
     $!--> fun x ->
