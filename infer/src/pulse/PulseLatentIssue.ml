@@ -97,7 +97,7 @@ let add_call call_and_loc call_subst astate latent_issue (_subs:(AbstractValue.t
 
     | JavaCastError err ->
       (* Utils.print_bool access; *)
-      JavaCastError {calling_context=err.calling_context; class_name =  err.class_name; target_class= err.target_class; allocation_trace = err.allocation_trace; location=err.location;num_instance = err.num_instance;apply_before = err.apply_before;private_or_report = access;abs_var = err.abs_var}
+      JavaCastError {calling_context=err.calling_context; class_name =  err.class_name; target_class= err.target_class; allocation_trace = err.allocation_trace; location=err.location;num_instance = err.num_instance;apply_before = err.apply_before;private_or_report = access;abs_var = err.abs_var;is_equal=err.is_equal}
     | _ ->
         latent_issue
   in
@@ -133,8 +133,7 @@ let should_report ?(current_path = -1) ?(instra_hash = Caml.Hashtbl.create 1000)
     | None -> 
     (* `ReportNow *)
     (* print_endline (IR.Typ.Name.to_string latent.class_name); *)
-      if (String.equal (IR.Typ.Name.to_string latent.class_name) "class java.lang.Object" ) && 
-        (latent.apply_before) then ( (if tag then (Caml.Hashtbl.add reported_casting latent.location true)); `ReportNow) else
+      if latent.is_equal then ( (if tag then (Caml.Hashtbl.add reported_casting latent.location true)); `ReportNow) else
       if String.equal (IR.Typ.Name.to_string latent.class_name) "class java.lang.Object" then `DelayReport (JavaCastError latent) else
       if latent.apply_before then ( (if tag then (Caml.Hashtbl.add reported_casting latent.location true)); `ReportNow ) else `DelayReport (JavaCastError latent)
     (* if PulseArithmetic.is_manifest ~current_path:current_path ~instra_hash:instra_hash ~key:inst astate then `ReportNow
