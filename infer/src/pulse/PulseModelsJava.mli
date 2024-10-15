@@ -12,6 +12,7 @@ open PulseDomainInterface
 module Cplusplus = PulseModelsCpp
 module GenericArrayBackedCollection = PulseModelsGenericArrayBackedCollection
 
+val java_cast : AbstractValue.t * ValueHistory.t -> Exp.t -> model
 
 val load_field :
      PathContext.t
