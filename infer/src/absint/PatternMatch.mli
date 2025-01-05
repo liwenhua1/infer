@@ -24,6 +24,8 @@ val is_subtype : Tenv.t -> Typ.Name.t -> Typ.Name.t -> bool
 
 val is_direct_abstract_super_no_sbl : Typ.name -> Typ.name -> Tenv.t -> bool
 
+val is_direct_abstract_super : Typ.name -> Typ.name -> Tenv.t -> bool
+
 val is_subtype_of_str : Tenv.t -> Typ.Name.t -> string -> bool
 (** Resolve [typ_str] in [tenv], then check [typ] <: [typ_str] *)
 

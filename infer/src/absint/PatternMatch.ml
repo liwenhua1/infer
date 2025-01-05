@@ -79,7 +79,19 @@ let is_direct_abstract_super_no_sbl super sub tenv = (*no intermediate concrect 
         non_sib &&
         direct 
                   
-
+let is_direct_abstract_super super sub tenv = (*no intermediate concrect class between super and sub*)
+        if not (Tenv.is_java_abstract_cls tenv super || Tenv.is_java_interface_cls tenv super) then false else
+        if not (is_subtype tenv sub super) then false else 
+  
+         let rec helper super_list  =  
+            (* let supers = match Tenv.lookup tenv subtype with Some {supers} -> supers | None -> [] in  *)
+            match super_list with 
+            | [] -> false 
+            | x::xs -> if (Typ.equal_name x super) then true else (if not (is_subtype tenv x super) then helper xs else 
+                          (if not (Tenv.is_java_abstract_cls tenv x || Tenv.is_java_interface_cls tenv x) then false else 
+                            let superss = match Tenv.lookup tenv x with Some {supers} -> supers | None -> [] in 
+                            helper superss)) in 
+          helper (match Tenv.lookup tenv sub with Some {supers} -> supers | None -> [])
    
 
 
