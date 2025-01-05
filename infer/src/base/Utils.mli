@@ -184,4 +184,6 @@ val print_bool : bool -> unit
 
 val print_int : int -> unit
 
-val item_in_list : 'a -> 'b list -> ('a -> 'b -> bool) -> bool
+val item_in_list : 'a -> 'b list -> ('a -> 'b -> bool) -> bool 
+
+val print_option : 'a option -> ('a -> unit) -> unit

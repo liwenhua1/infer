@@ -1055,6 +1055,7 @@ let non_static_method name1 (_, procname) name2 =
 
 
 let matchers : matcher list =
+  if not !InferCommand.analyse_cast then
   let open ProcnameDispatcher.Call in
   let pushback_modeled =
     StringSet.of_list
@@ -1255,3 +1256,206 @@ let matchers : matcher list =
     $!--> fun x ->
     Cplusplus.Vector.at ~desc:"Enumeration.nextElement" x (AbstractValue.mk_fresh (), []) ) ]
   |> List.map ~f:(ProcnameDispatcher.Call.contramap_arg_payload ~f:ValuePath.addr_hist)
+
+    else
+    
+      let open ProcnameDispatcher.Call in
+      let pushback_modeled =
+        StringSet.of_list
+          ["add"; "addAll"; "append"; "delete"; "remove"; "replace"; "poll"; "put"; "putAll"]
+      in
+      let cpp_push_back_without_desc vector : model =
+       fun ({callee_procname} as model_data) astate ->
+        Cplusplus.Vector.push_back vector ~desc:(Procname.to_string callee_procname) model_data astate
+      in
+      let map_context_tenv f (x, _) = f x in
+      [ +BuiltinDecl.(match_builtin __java_throw) <>--> throw
+      ; +BuiltinDecl.(match_builtin __unwrap_exception)
+        <>$ capt_arg_payload
+        $--> Basic.id_first_arg ~desc:"unwrap_exception"
+      ; +BuiltinDecl.(match_builtin __set_file_attribute) <>$ any_arg $--> Basic.skip
+      ; +BuiltinDecl.(match_builtin __set_mem_attribute) <>$ any_arg $--> Basic.skip
+      ; +map_context_tenv
+           (PatternMatch.Java.implements_one_of
+              ["java.io.FileInputStream"; "java.io.FileOutputStream"] )
+        &:: "<init>" <>$ capt_arg_payload
+        $+...$--> Resource.allocate ~exn_class_name:"java.io.FileNotFoundException"
+      ; +map_context_tenv
+           (PatternMatch.Java.implements_one_of
+              [ "java.io.ObjectInputStream"
+              ; "java.io.ObjectOutputStream"
+              ; "java.util.jar.JarInputStream"
+              ; "java.util.jar.JarOutputStream"
+              ; "java.util.zip.GZIPInputStream"
+              ; "java.util.zip.GZIPOutputStream" ] )
+        &:: "<init>" <>$ capt_arg_payload $+ capt_arg_payload
+        $+...$--> Resource.allocate_with_delegation ~exn_class_name:"java.io.IOException" ()
+      ; +map_context_tenv (* <init> that does not throw exceptions *)
+           (PatternMatch.Java.implements_one_of
+              [ "java.io.BufferedInputStream"
+              ; "java.io.BufferedOutputStream"
+              ; "java.io.DataInputStream"
+              ; "java.io.DataOutputStream"
+              ; "java.io.FilterInputStream"
+              ; "java.io.FilterOutputStream"
+              ; "java.io.PushbackInputStream"
+              ; "java.io.Reader"
+              ; "java.io.Writer"
+              ; "java.security.DigestInputStream"
+              ; "java.security.DigestOutputStream"
+              ; "java.util.Scanner"
+              ; "java.util.zip.CheckedInputStream"
+              ; "java.util.zip.CheckedOutputStream"
+              ; "java.util.zip.DeflaterInputStream"
+              ; "java.util.zip.DeflaterOutputStream"
+              ; "java.util.zip.InflaterInputStream"
+              ; "java.util.zip.InflaterOutputStream"
+              ; "javax.crypto.CipherInputStream"
+              ; "javax.crypto.CipherOutputStream" ] )
+        &:: "<init>" <>$ capt_arg_payload $+ capt_arg_payload
+        $+...$--> Resource.allocate_with_delegation ()
+      ; +map_context_tenv (PatternMatch.Java.implements "java.io.OutputStream")
+        &::+ non_static_method "write" <>$ any_arg
+        $+...$--> Resource.use ~exn_class_name:"java.io.IOException"
+      ; +map_context_tenv (PatternMatch.Java.implements "java.io.OutputStream")
+        &:: "flush" <>$ any_arg
+        $+...$--> Resource.use ~exn_class_name:"java.io.IOException"
+      ; +map_context_tenv (PatternMatch.Java.implements "java.io.InputStream")
+        &::+ (fun _ proc_name_str ->
+               StringSet.mem proc_name_str
+                 Resource.inputstream_resource_usage_modeled_throws_IOException )
+        <>$ any_arg
+        $+...$--> Resource.use ~exn_class_name:"java.io.IOException"
+      ; +map_context_tenv (PatternMatch.Java.implements "java.io.InputStream")
+        &::+ (fun _ proc_name_str ->
+               StringSet.mem proc_name_str Resource.inputstream_resource_usage_modeled_do_not_throws )
+        <>$ any_arg $+...$--> Basic.skip
+      ; +map_context_tenv (PatternMatch.Java.implements "java.io.Reader")
+        &::+ (fun _ proc_name_str ->
+               StringSet.mem proc_name_str Resource.reader_resource_usage_modeled_throws_IOException )
+        <>$ any_arg
+        $+...$--> Resource.use ~exn_class_name:"java.io.IOException"
+      ; +map_context_tenv (PatternMatch.Java.implements "java.io.Reader")
+        &::+ (fun _ proc_name_str ->
+               StringSet.mem proc_name_str Resource.reader_resource_usage_modeled_do_not_throws )
+        <>$ any_arg $+...$--> Basic.skip
+      ; +map_context_tenv (PatternMatch.Java.implements "java.io.Writer")
+        &::+ (fun _ proc_name_str -> StringSet.mem proc_name_str Resource.writer_resource_usage_modeled)
+        <>$ any_arg
+        $+...$--> Resource.use ~exn_class_name:"java.io.IOException"
+      ; +map_context_tenv (PatternMatch.Java.implements "java.io.Writer")
+        &:: "append" <>$ capt_arg_payload $+...$--> Resource.writer_append
+      ; +map_context_tenv (PatternMatch.Java.implements "java.io.Closeable")
+        &:: "close" <>$ capt_arg_payload $--> Resource.release
+      ; +map_context_tenv (PatternMatch.Java.implements "com.google.common.io.Closeables")
+        &:: "close" <>$ capt_arg_payload $+...$--> Resource.release
+      ; +map_context_tenv (PatternMatch.Java.implements "com.google.common.io.Closeables")
+        &:: "closeQuietly" <>$ capt_arg_payload $+...$--> Resource.release
+      ; +map_context_tenv (PatternMatch.Java.implements "java.util.zip.DeflaterOutputStream")
+        &:: "finish" <>$ capt_arg_payload $+...$--> Resource.release_this_only
+      ; +map_context_tenv (PatternMatch.Java.implements_lang "Object")
+        &:: "clone" $ capt_arg_payload $--> Object.clone
+      ; ( +map_context_tenv (PatternMatch.Java.implements_lang "System")
+        &:: "arraycopy" $ capt_arg_payload $+ any_arg $+ capt_arg_payload
+        $+...$--> fun src dest -> Basic.shallow_copy_model "System.arraycopy" dest src )
+      ; +map_context_tenv (PatternMatch.Java.implements_lang "System") &:: "exit" <>--> Basic.early_exit
+      ; +map_context_tenv PatternMatch.Java.implements_collection
+        &:: "<init>" <>$ capt_arg_payload
+        $--> Collection.init ~desc:"Collection.init()"
+      ; +map_context_tenv PatternMatch.Java.implements_collection
+        &:: "add" <>$ capt_arg_payload $+ capt_arg_payload
+        $--> Collection.add ~desc:"Collection.add"
+      ; +map_context_tenv PatternMatch.Java.implements_list
+        &:: "add" <>$ capt_arg_payload $+ any_arg $+ capt_arg_payload
+        $--> Collection.add ~desc:"Collection.add()"
+      ; +map_context_tenv PatternMatch.Java.implements_collection
+        &:: "remove"
+        &++> Collection.remove ~desc:"Collection.remove"
+      ; +map_context_tenv PatternMatch.Java.implements_collection
+        &:: "isEmpty" <>$ capt_arg_payload
+        $--> Collection.is_empty ~desc:"Collection.isEmpty()"
+      ; +map_context_tenv PatternMatch.Java.implements_collection
+        &:: "clear" <>$ capt_arg_payload
+        $--> Collection.clear ~desc:"Collection.clear()"
+      ; +map_context_tenv PatternMatch.Java.implements_collection
+        &::+ (fun _ proc_name_str -> StringSet.mem proc_name_str pushback_modeled)
+        <>$ capt_arg_payload $+...$--> cpp_push_back_without_desc
+      ; +map_context_tenv PatternMatch.Java.implements_map
+        &:: "<init>" <>$ capt_arg_payload
+        $--> Collection.init ~desc:"Map.init()"
+      ; +map_context_tenv PatternMatch.Java.implements_map
+        &:: "put" <>$ capt_arg_payload $+ capt_arg_payload $+ capt_arg_payload
+        $--> Collection.put ~desc:"Map.put()"
+      ; +map_context_tenv PatternMatch.Java.implements_map
+        &:: "remove"
+        &++> Collection.remove ~desc:"Map.remove()"
+      ; +map_context_tenv PatternMatch.Java.implements_map
+        &:: "get" <>$ capt_arg_payload $+ capt_arg_payload $--> Collection.get ~desc:"Map.get()"
+      ; +map_context_tenv PatternMatch.Java.implements_map
+        &:: "containsKey" <>$ capt_arg_payload $+ capt_arg_payload
+        $--> Collection.get ~desc:"Map.containsKey()"
+      ; +map_context_tenv PatternMatch.Java.implements_map
+        &:: "isEmpty" <>$ capt_arg_payload
+        $--> Collection.is_empty ~desc:"Map.isEmpty()"
+      ; +map_context_tenv PatternMatch.Java.implements_map
+        &:: "clear" <>$ capt_arg_payload
+        $--> Collection.clear ~desc:"Map.clear()"
+      ; +map_context_tenv PatternMatch.Java.implements_queue
+        &::+ (fun _ proc_name_str -> StringSet.mem proc_name_str pushback_modeled)
+        <>$ capt_arg_payload $+...$--> cpp_push_back_without_desc
+      ; +map_context_tenv (PatternMatch.Java.implements_lang "StringBuilder")
+        &::+ (fun _ proc_name_str -> StringSet.mem proc_name_str pushback_modeled)
+        <>$ capt_arg_payload $+...$--> cpp_push_back_without_desc
+      ; +map_context_tenv (PatternMatch.Java.implements_lang "StringBuilder")
+        &:: "setLength" <>$ capt_arg_payload
+        $+...$--> Cplusplus.Vector.invalidate_references ShrinkToFit
+      ; +map_context_tenv (PatternMatch.Java.implements_lang "String")
+        &::+ (fun _ proc_name_str -> StringSet.mem proc_name_str pushback_modeled)
+        <>$ capt_arg_payload $+...$--> cpp_push_back_without_desc
+      ; +map_context_tenv (PatternMatch.Java.implements_lang "Integer")
+        &:: "<init>" $ capt_arg_payload $+ capt_arg_payload $--> Integer.init
+      ; +map_context_tenv (PatternMatch.Java.implements_lang "Integer")
+        &:: "equals" $ capt_arg_payload $+ capt_arg_payload $--> Integer.equals
+      ; +map_context_tenv (PatternMatch.Java.implements_lang "Integer")
+        &:: "intValue" <>$ capt_arg_payload $--> Integer.int_val
+      ; +map_context_tenv (PatternMatch.Java.implements_lang "Integer")
+        &:: "valueOf" <>$ capt_arg_payload $--> Integer.value_of
+      ; +map_context_tenv (PatternMatch.Java.implements_google "common.base.Preconditions")
+        &:: "checkNotNull" $ capt_arg_payload $+...$--> Preconditions.check_not_null
+      ; +map_context_tenv (PatternMatch.Java.implements_google "common.base.Preconditions")
+        &:: "checkState" $ capt_arg_payload $+...$--> Preconditions.check_state_argument
+      ; +map_context_tenv (PatternMatch.Java.implements_google "common.base.Preconditions")
+        &:: "checkArgument" $ capt_arg_payload $+...$--> Preconditions.check_state_argument
+      ; +map_context_tenv PatternMatch.Java.implements_iterator
+        &:: "remove" <>$ capt_arg_payload $+...$--> Iterator.remove ~desc:"remove"
+      ; +map_context_tenv PatternMatch.Java.implements_map
+        &:: "putAll" <>$ capt_arg_payload $+...$--> cpp_push_back_without_desc
+      ; -"std" &:: "vector" &:: "reserve" <>$ capt_arg_payload $+...$--> Cplusplus.Vector.reserve
+      ; -"std" &:: "vector" &:: "size" &--> Basic.nondet ~desc:"std::vector::size"
+      ; +map_context_tenv PatternMatch.Java.implements_collection
+        &:: "get" <>$ capt_arg_payload $+ capt_arg_payload
+        $--> Cplusplus.Vector.at ~desc:"Collection.get()"
+      ; +map_context_tenv PatternMatch.Java.implements_list
+        &:: "set" <>$ capt_arg_payload $+ any_arg $+ capt_arg_payload $--> Collection.set
+      ; +map_context_tenv PatternMatch.Java.implements_iterator
+        &:: "hasNext"
+        &--> Basic.nondet ~desc:"Iterator.hasNext()"
+      ; +map_context_tenv PatternMatch.Java.implements_enumeration
+        &:: "hasMoreElements"
+        &--> Basic.nondet ~desc:"Enumeration.hasMoreElements()"
+      ; +map_context_tenv (PatternMatch.Java.implements_lang "Object")
+        &:: "equals"
+        &--> Basic.nondet ~desc:"Object.equals"
+      ; +map_context_tenv (PatternMatch.Java.implements_lang "Iterable")
+        &:: "iterator" <>$ capt_arg_payload
+        $+...$--> Iterator.constructor ~desc:"Iterable.iterator"
+      ; +map_context_tenv PatternMatch.Java.implements_iterator
+        &:: "next" <>$ capt_arg_payload
+        $!--> Iterator.next ~desc:"Iterator.next()"
+      ; +BuiltinDecl.(match_builtin __instanceof) <>$ capt_arg_payload $+ capt_exp $--> instance_of
+      ; +BuiltinDecl.(match_builtin __cast) <>$ capt_arg_payload $+ capt_exp $--> java_cast
+      ; ( +map_context_tenv PatternMatch.Java.implements_enumeration
+        &:: "nextElement" <>$ capt_arg_payload
+        $!--> fun x ->
+        Cplusplus.Vector.at ~desc:"Enumeration.nextElement" x (AbstractValue.mk_fresh (), []) ) ]
+      |> List.map ~f:(ProcnameDispatcher.Call.contramap_arg_payload ~f:ValuePath.addr_hist)

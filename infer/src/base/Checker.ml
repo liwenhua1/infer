@@ -321,7 +321,7 @@ let config_unsafe checker =
       ; enabled_by_default= false
       ; activates= [] }
   | Pulse ->
-      { id= "pulseisl"
+      { id= "pulseooil"
       ; kind= UserFacing {title= "Pulse"; markdown_body= [%blob "./documentation/checkers/Pulse.md"]}
       ; support= mk_support_func ~clang:Support ~java:Support ~erlang:ExperimentalSupport ()
       ; short_documentation= "Memory and lifetime analysis."

@@ -4,7 +4,7 @@
 # LICENSE file in the root directory of this source tree.
 
 TESTS_DIR = ../../..
-INFER_OPTIONS = --pulse-only \
+INFER_OPTIONS = --pulseooil-only \
 #--debug-exceptions \
 #--no-pulse-nullsafe-report-npe \
 --pulse-report-ignore-unknown-java-methods-patterns-reset \

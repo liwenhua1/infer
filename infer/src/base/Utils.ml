@@ -610,4 +610,7 @@ let rec item_in_list item alist f =
     | x::xs -> if f item x then true else item_in_list item xs f 
     | [] -> false
 
-      
+let print_option opt printer= 
+  match opt with 
+  |None -> print_endline "None" 
+  |Some x -> printer x

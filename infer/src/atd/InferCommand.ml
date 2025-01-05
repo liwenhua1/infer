@@ -32,6 +32,8 @@ let of_string name =
 
 let infer_exe_name = "infer"
 
+let analyse_cast = ref false 
+
 let exe_name_of_command_string name = Printf.sprintf "%s-%s" infer_exe_name name
 
 let to_exe_name cmd = to_string cmd |> exe_name_of_command_string

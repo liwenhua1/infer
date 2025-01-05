@@ -401,6 +401,7 @@ let list_json_decoder json_decoder ~inferconfig_dir json =
 
 (* selects "--long" if not empty, or some non-empty "-deprecated" or "-short" *)
 let mk_flag ~deprecated ~short ~long =
+  
   if String.is_empty long then
     match short with
     | Some c ->
@@ -826,11 +827,13 @@ let set_curr_speclist_for_parse_mode ~usage parse_mode =
   (* "-help" and "--help" are automatically recognized by Arg.parse, so we have to give them special
      treatment *)
   let add_or_suppress_help speclist =
+    
     let unknown opt =
+    
       (opt, Unit (fun () -> raise (Arg.Bad ("unknown option '" ^ opt ^ "'"))), "")
     in
     let has_opt opt = List.exists ~f:(fun (o, _, _) -> String.equal opt o) speclist in
-    let add_unknown opt = if not (has_opt opt) then List.cons (unknown opt) else Fn.id in
+    let add_unknown opt = if not (has_opt opt) then  (List.cons (unknown opt)) else Fn.id in
     add_unknown "-help" @@ add_unknown "--help" @@ speclist
   in
   let full_desc_list =
@@ -1012,6 +1015,7 @@ let extra_env_args = ref []
 let extend_env_args args = extra_env_args := List.rev_append args !extra_env_args
 
 let parse_args ~usage initial_action ?initial_command args =
+  (* Utils.list_printer print_endline args; *)
   let exe_name = Sys.executable_name in
   args_to_parse := Array.of_list (exe_name :: args) ;
   arg_being_parsed := 0 ;
@@ -1022,7 +1026,8 @@ let parse_args ~usage initial_action ?initial_command args =
       in
       switch () ) ;
   (* tests if msg indicates an unknown option, as opposed to a known option with bad argument *)
-  let is_unknown msg = String.is_substring msg ~substring:": unknown option" in
+  let is_unknown msg =  String.is_substring msg ~substring:": unknown option" in
+  
   let rec parse_loop () =
     try
       Arg.parse_argv_dynamic ~current:arg_being_parsed !args_to_parse curr_speclist anon_fun usage
@@ -1059,10 +1064,12 @@ let keep_args_file = ref false
 let inferconfig_path_arg = "inferconfig-path"
 
 let parse ?config_file ~usage action initial_command =
+  (* Utils.print_option initial_command (fun x ->print_endline (InferCommand.to_string x)); *)
   let env_args = decode_env_to_argv (Option.value (Sys.getenv args_env_var) ~default:"") in
   let inferconfig_args =
     Option.map ~f:decode_inferconfig_to_argv config_file |> Option.value ~default:[]
   in
+  
   let args_to_export = ref "" in
   let add_parsed_args_to_args_to_export () =
     (* reread args_to_parse instead of using all_args since mk_path_helper may have modified them *)
@@ -1088,6 +1095,9 @@ let parse ?config_file ~usage action initial_command =
   add_parsed_args_to_args_to_export () ;
   let curr_usage =
     let cl_args = match Array.to_list (Sys.get_argv ()) with _ :: tl -> tl | [] -> [] in
+    if (List.exists cl_args ~f:(fun x -> String.equal "--cast" x)) then InferCommand.analyse_cast := true; 
+    (* Utils.print_bool !InferCommand.analyse_cast; *)
+    let cl_args = List.filter ~f:(fun x -> not (String.equal "--cast" x)) cl_args in
     let curr_usage = parse_args ~usage action ?initial_command cl_args in
     add_parsed_args_to_args_to_export () ;
     curr_usage

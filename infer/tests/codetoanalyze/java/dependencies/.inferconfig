@@ -5,7 +5,7 @@
     "starvation": false,
     "racerd": false,
     "eradicate": false,
-    "pulseisl": true,
+    "pulseooil": true,
     "report-block-list-path-regex": [
         ".*\\.class$"
     ],

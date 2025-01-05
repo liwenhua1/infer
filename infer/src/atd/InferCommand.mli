@@ -23,6 +23,8 @@ type t =
 
 val of_string : string -> t
 
+val analyse_cast : bool ref
+
 val to_string : t -> string
 
 val equal : t -> t -> bool
