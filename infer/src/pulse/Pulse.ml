@@ -1321,6 +1321,10 @@ module PulseTransferFunctions = struct
                         
                         )
           in 
+          let spe = match ty_name with 
+                | JavaClass a -> if String.is_substring (JavaClassName.to_string a) ~substring:("TTFSubsetter") then true else false
+                | _ -> false
+          in 
           (* let inter_or_abs_known =  (Tenv.is_java_normal_cls tenv ty_name)  
 
           in
@@ -1350,6 +1354,7 @@ module PulseTransferFunctions = struct
                       
           if (Procname.equal p BuiltinDecl.__new) || (Procname.equal p BuiltinDecl.__cast) 
             ||  ((not (!is_known_call)) && (not inter_or_abs))
+            || ((not (!is_known_call)) && spe)
             ||(List.is_empty actuals) || Procname.is_java_static_method p then
 
               (*不要做subtyping的情况*)
