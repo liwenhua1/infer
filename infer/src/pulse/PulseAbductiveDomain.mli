@@ -438,3 +438,5 @@ module CanonValue : sig
 
   val downcast : t -> AbstractValue.t [@@inline always]
 end
+
+val is_list_package : bool ref

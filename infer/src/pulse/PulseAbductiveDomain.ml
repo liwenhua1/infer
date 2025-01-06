@@ -2249,6 +2249,8 @@ module AddressAttributes = struct
     SafeAttributes.get_address_of_stack_variable (CanonValue.canon' astate v) astate
 end
 
+let is_list_package = ref false 
+
 module CanonValue = struct
   include CanonValue
 

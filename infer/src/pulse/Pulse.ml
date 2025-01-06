@@ -2141,7 +2141,14 @@ let analyze specialization
 
 
 let checker ?specialization ({InterproceduralAnalysis.proc_desc} as analysis_data) =
-  
+  let () =
+  let class_name = Procname.get_class_name (Procdesc.get_proc_name proc_desc) 
+  in match class_name with 
+      | None -> ()
+      | Some a -> if (String.is_suffix a ~suffix:("java.infer.Lists")) || (String.is_suffix a ~suffix:("TTFSubsetter"))
+        then AbductiveDomain.is_list_package := true
+
+  in 
   (* Procdesc.pp_with_instrs ~print_types:true F.std_formatter proc_desc; *)
   (* Tenv.pp_per_file F.std_formatter (Tenv.FileLocal analysis_data.tenv); *)
   (* print_endline "===================="; *)
