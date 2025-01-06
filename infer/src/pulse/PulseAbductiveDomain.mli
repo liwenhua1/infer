@@ -440,3 +440,4 @@ module CanonValue : sig
 end
 
 val is_list_package : bool ref
+val pdf_pack : bool ref

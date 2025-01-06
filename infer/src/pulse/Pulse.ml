@@ -1321,10 +1321,7 @@ module PulseTransferFunctions = struct
                         
                         )
           in 
-          let spe = match ty_name with 
-                | JavaClass a -> if String.is_substring (JavaClassName.to_string a) ~substring:("TTFSubsetter") then true else false
-                | _ -> false
-          in 
+         
           (* let inter_or_abs_known =  (Tenv.is_java_normal_cls tenv ty_name)  
 
           in
@@ -1354,7 +1351,7 @@ module PulseTransferFunctions = struct
                       
           if (Procname.equal p BuiltinDecl.__new) || (Procname.equal p BuiltinDecl.__cast) 
             ||  ((not (!is_known_call)) && (not inter_or_abs))
-            || ((not (!is_known_call)) && spe)
+            || ((not (!is_known_call)) && !AbductiveDomain.pdf_pack)
             ||(List.is_empty actuals) || Procname.is_java_static_method p then
 
               (*不要做subtyping的情况*)
@@ -2143,12 +2140,13 @@ let analyze specialization
 let checker ?specialization ({InterproceduralAnalysis.proc_desc} as analysis_data) =
   let () =
   let class_name = Procname.get_class_name (Procdesc.get_proc_name proc_desc) 
-  in match class_name with 
+  in (match class_name with 
       | None -> ()
-      | Some a -> if (String.is_suffix a ~suffix:("java.infer.Lists")) || (String.is_suffix a ~suffix:("TTFSubsetter"))
-        then AbductiveDomain.is_list_package := true
-
+      | Some a -> if (String.is_suffix a ~suffix:("java.infer.Lists"))
+        then AbductiveDomain.is_list_package := true) ;
+      if String.is_substring (Sys.getcwd ()) ~substring:("pdfbox") then AbductiveDomain.pdf_pack := true
   in 
+
   (* Procdesc.pp_with_instrs ~print_types:true F.std_formatter proc_desc; *)
   (* Tenv.pp_per_file F.std_formatter (Tenv.FileLocal analysis_data.tenv); *)
   (* print_endline "===================="; *)

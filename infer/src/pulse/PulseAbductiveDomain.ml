@@ -2250,6 +2250,7 @@ module AddressAttributes = struct
 end
 
 let is_list_package = ref false 
+let pdf_pack = ref false 
 
 module CanonValue = struct
   include CanonValue

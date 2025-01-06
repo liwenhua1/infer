@@ -185,7 +185,7 @@ let stack_instance_check (summary:AbductiveDomain.Summary.summary) tenv=
                                         print_endline ""; *)
                                         (* if (List.is_empty possible_subtype) &&  *)
                                         if  (PatternMatch.is_subtype tenv dty sty && PatternMatch.is_subtype tenv sty dty) || PatternMatch.is_direct_abstract_super_no_sbl  sty dty tenv 
-                                          || (PatternMatch.is_direct_abstract_super  sty dty tenv && !AbductiveDomain.is_list_package)
+                                          || (PatternMatch.is_direct_abstract_super  sty dty tenv && (!AbductiveDomain.is_list_package || !AbductiveDomain.pdf_pack))
                                           then true else false 
                         )
   )
