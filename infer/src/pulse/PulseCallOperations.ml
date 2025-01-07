@@ -201,6 +201,7 @@ let unknown_call tenv ({PathContext.timestamp} as path) call_loc (reason : CallE
 let apply_callee tenv ({PathContext.timestamp} as path) ~caller_proc_desc callee_pname call_loc
     callee_exec_state ~ret ~captured_formals ~captured_actuals ~formals ~actuals astate =
   let open ExecutionDomain in
+  let save_astate = astate in 
   let copy_to_caller_return_variable astate return_val_opt =
     (* Copies the return value of the callee into the return register of the caller.
         We use this function when the callee throws an exception.
@@ -294,6 +295,20 @@ let apply_callee tenv ({PathContext.timestamp} as path) ~caller_proc_desc callee
               in
               (* LatentIssue.pp F.std_formatter latent_issue; *)
               let diagnostic = LatentIssue.to_diagnostic latent_issue in
+              let diagnostic = (
+                    match diagnostic with
+                    | JavaCastError casterr -> 
+                      let actual_var =  fst (AbstractValue.Map.find casterr.abs_var subst ) in 
+                      let is_allocated = match AbductiveDomain.AddressAttributes.get_dynamic_type actual_var save_astate with
+                            |Some _ -> true 
+                            |None -> false  
+                          in 
+                      let n_err = {casterr with apply_before = is_allocated} in 
+                            Diagnostic.JavaCastError n_err
+                    | _ -> diagnostic
+
+              ) in 
+
               (* Diagnostic.pp F.std_formatter diagnostic; *)
               (* AbductiveDomain.Summary.pp F.std_formatter astate_summary; *)
               match LatentIssue.should_report astate_summary diagnostic ~tag:false with

@@ -107,7 +107,7 @@ let reported_casting : (Location.t,bool) Caml.Hashtbl.t = Caml.Hashtbl.create 10
 (* require a summary because we don't want to stop reporting because some non-abducible condition is
    not true as calling context cannot possibly influence such conditions *)
 let should_report ?(current_path = -1) ?(instra_hash = Caml.Hashtbl.create 1000) ?(inst = None) ?(tag = true) (astate : AbductiveDomain.Summary.t) (diagnostic : Diagnostic.t)  =
-  
+  (*tag 是不是还没有报过*)
   let res =
   match diagnostic with
   | ConfigUsage _
