@@ -1,4 +1,31 @@
 #0
+src/main/java/com/fasterxml/jackson/databind/JsonMappingException.java:283: error: Null Dereference
+  null (null value originating from line 283) is dereferenced in the call to `JsonMappingException(...)`. 
+  281.        */
+  282.       public static JsonMappingException from(JsonGenerator g, String msg) {
+  283. >         return new JsonMappingException(g, msg, (Throwable) null);
+  284.       }
+  285.   
+
+#1
+src/main/java/com/fasterxml/jackson/databind/JsonMappingException.java:316: error: Null Dereference
+  `JsonGenerator JsonMappingException._generator(SerializerProvider)` could be null (from the call to `JsonMappingException._generator(...)` on line 316) and is dereferenced in the call to `JsonMappingException(...)`. 
+  314.        */
+  315.       public static JsonMappingException from(SerializerProvider ctxt, String msg) {
+  316. >         return new JsonMappingException(_generator(ctxt), msg);
+  317.       }
+  318.   
+
+#2
+src/main/java/com/fasterxml/jackson/databind/JsonMappingException.java:346: error: Null Dereference
+  null (null value originating from line 346) is dereferenced in the call to `JsonMappingException(...)`. 
+  344.       public static JsonMappingException fromUnexpectedIOE(IOException src) {
+  345.           return new JsonMappingException(null,
+  346. >                 String.format("Unexpected IOException (of type %s): %s",
+  347.                           src.getClass().getName(),
+  348.                           ClassUtil.exceptionMessage(src)));
+
+#3
 src/main/java/com/fasterxml/jackson/databind/ObjectReader.java:1670: error: Pulse Resource Leak
   Resource dynamically allocated by constructor java.io.FileInputStream(), indirectly via call to `ObjectReader._inputStream(...)` on line 1670 is not closed after the last access at line 1670. 
   1668.       {
@@ -7,7 +34,7 @@ src/main/java/com/fasterxml/jackson/databind/ObjectReader.java:1670: error: Puls
   1671.           }
   1672.   
 
-#1
+#4
 src/main/java/com/fasterxml/jackson/databind/ObjectReader.java:1997: error: Pulse Resource Leak
   Resource dynamically allocated by constructor java.io.FileInputStream(), indirectly via call to `ObjectReader._inputStream(...)` on line 1997 is not closed after the last access at line 1997. 
   1995.           if (_dataFormatReaders != null) {
@@ -16,7 +43,34 @@ src/main/java/com/fasterxml/jackson/databind/ObjectReader.java:1997: error: Puls
   1998.           }
   1999.           return _bindAndReadValues(_considerFilter(createParser(src), true));
 
-#2
+#5
+src/main/java/com/fasterxml/jackson/databind/SerializerProvider.java:1328: error: Null Dereference
+  `JsonGenerator SerializerProvider.getGenerator()` could be null (from the call to `SerializerProvider.getGenerator()` on line 1328) and is dereferenced in the call to `InvalidDefinitionException.from(...)`. 
+  1326.       @Override
+  1327.       public <T> T reportBadDefinition(JavaType type, String msg) throws JsonMappingException {
+  1328. >         throw InvalidDefinitionException.from(getGenerator(), msg, type);
+  1329.       }
+  1330.   
+
+#6
+src/main/java/com/fasterxml/jackson/databind/SerializerProvider.java:1336: error: Null Dereference
+  `JsonGenerator SerializerProvider.getGenerator()` could be null (from the call to `SerializerProvider.getGenerator()` on line 1336) and is dereferenced in the call to `InvalidDefinitionException.from(...)`. 
+  1334.       public <T> T reportBadDefinition(JavaType type, String msg, Throwable cause)
+  1335.               throws JsonMappingException {
+  1336. >         throw InvalidDefinitionException.from(getGenerator(), msg, type)
+  1337.               .withCause(cause);
+  1338.       }
+
+#7
+src/main/java/com/fasterxml/jackson/databind/SerializerProvider.java:1386: error: Null Dereference
+  `JsonGenerator SerializerProvider.getGenerator()` could be null (from the call to `SerializerProvider.getGenerator()` on line 1386) and is dereferenced in the call to `JsonMappingException.from(...)`. 
+  1384.       @Deprecated // since 2.9
+  1385.       public JsonMappingException mappingException(String message, Object... msgArgs) {
+  1386. >         return JsonMappingException.from(getGenerator(), _format(message, msgArgs));
+  1387.       }
+  1388.   
+
+#8
 src/main/java/com/fasterxml/jackson/databind/deser/std/ReferenceTypeDeserializer.java:219: error: Null Dereference
   `B` could be null (from the call to `JsonDeserializer.supportsUpdate(...)` on line 217) and is dereferenced. 
   217.           Boolean B = _valueDeserializer.supportsUpdate(ctxt.getConfig());
@@ -25,7 +79,7 @@ src/main/java/com/fasterxml/jackson/databind/deser/std/ReferenceTypeDeserializer
   220.               contents = (_valueTypeDeserializer == null)
   221.                       ? _valueDeserializer.deserialize(p, ctxt)
 
-#3
+#9
 src/main/java/com/fasterxml/jackson/databind/exc/InvalidFormatException.java:37: error: Null Dereference
   null (null value originating from line 37) is dereferenced in the call to `MismatchedInputException(...)`. 
   35.               Object value, Class<?> targetType)
@@ -34,7 +88,7 @@ src/main/java/com/fasterxml/jackson/databind/exc/InvalidFormatException.java:37:
   38.           _value = value;
   39.           _targetType = targetType;
 
-#4
+#10
 src/main/java/com/fasterxml/jackson/databind/introspect/JacksonAnnotationIntrospector.java:629: error: Null Dereference
   `cls1` could be null (from the call to `AnnotatedMethod.getRawParameterType(...)` on line 624) and is dereferenced. 
   627.           // First: prefer primitives over non-primitives
@@ -43,7 +97,7 @@ src/main/java/com/fasterxml/jackson/databind/introspect/JacksonAnnotationIntrosp
   630.               if (!cls2.isPrimitive()) {
   631.                   return setter1;
 
-#5
+#11
 src/main/java/com/fasterxml/jackson/databind/introspect/JacksonAnnotationIntrospector.java:1681: error: Null Dereference
   null (null value originating from line 1681) is dereferenced in the call to `JsonMappingException(...)`. 
   1679.       // @since 2.12
@@ -52,7 +106,7 @@ src/main/java/com/fasterxml/jackson/databind/introspect/JacksonAnnotationIntrosp
   1682.       }
   1683.   
 
-#6
+#12
 src/main/java/com/fasterxml/jackson/databind/introspect/POJOPropertiesCollector.java:1650: error: Null Dereference
   The call to `PropertyMetadata POJOPropertyBuilder.getMetadata()` ends up calling `Class POJOPropertyBuilder._rawTypeOf(AnnotatedMember)` (after 1 more call) and may trigger the following issue: `JavaType AnnotatedMethod.getParameterType(int)` could be null (from the call to `POJOPropertyBuilder.getMetadata()` on line 1433) and is dereferenced in the call to `POJOPropertyBuilder.getMetadata()`. 
   1648.       private boolean _anyIndexed(Collection<POJOPropertyBuilder> props) {
@@ -61,7 +115,7 @@ src/main/java/com/fasterxml/jackson/databind/introspect/POJOPropertiesCollector.
   1651.                   return true;
   1652.               }
 
-#7
+#13
 src/main/java/com/fasterxml/jackson/databind/type/SimpleType.java:188: error: Null Dereference
   `t` could be null (from the call to `TypeBase.containedType(...)` on line 184) and is dereferenced. 
   186.                       sb.append(',');
@@ -70,7 +124,7 @@ src/main/java/com/fasterxml/jackson/databind/type/SimpleType.java:188: error: Nu
   189.               }
   190.               sb.append('>');
 
-Found 8 issues
+Found 14 issues
                 Issue Type(ISSUED_TYPE_ID): #
-     Null Dereference(NULLPTR_DEREFERENCE): 6
+     Null Dereference(NULLPTR_DEREFERENCE): 12
   Pulse Resource Leak(PULSE_RESOURCE_LEAK): 2
