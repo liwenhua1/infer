@@ -415,7 +415,7 @@ let class_cast_exception =
 
 
 let pulse_class_cast_exception_latent =
-    register_with_latent ~id:"PULSE_CLASS_CAST_EXCEPTION" ~hum:"PULSE_CLASS_CAST_EXCEPTION" Error Pulse
+    register_with_latent ~id:"ToolX_CLASS_CAST_EXCEPTION" ~hum:"ToolX_CLASS_CAST_EXCEPTION" Error Pulse
     ~user_documentation:[%blob "./documentation/issues/CLASS_CAST_EXCEPTION.md"]
 let condition_always_false =
   register_hidden ~enabled:false ~id:"CONDITION_ALWAYS_FALSE" Warning BufferOverrunChecker
@@ -849,7 +849,7 @@ let null_dereference =
 
 
 let nullptr_dereference =
-  register_with_latent ~id:"NULLPTR_DEREFERENCE" ~hum:"Null Dereference" Error Pulse
+  register_with_latent ~id:"ToolX_NULLPTR_DEREFERENCE" ~hum:" ToolX Null Dereference" Error Pulse
     ~user_documentation:[%blob "./documentation/issues/NULLPTR_DEREFERENCE.md"]
 
 

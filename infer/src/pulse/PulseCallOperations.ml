@@ -297,7 +297,7 @@ let apply_callee tenv ({PathContext.timestamp} as path) ~caller_proc_desc callee
               let diagnostic = LatentIssue.to_diagnostic latent_issue in
               let diagnostic = (
                     match diagnostic with
-                    | JavaCastError casterr -> 
+                    | JavaCastError casterr when (String.is_substring (Sys.getcwd ()) ~substring:("-cast")) -> 
                       let actual_var =  fst (AbstractValue.Map.find casterr.abs_var subst ) in 
                       let is_allocated = match AbductiveDomain.AddressAttributes.get_dynamic_type actual_var save_astate with
                             |Some _ -> true 
