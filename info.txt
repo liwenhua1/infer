@@ -351,5 +351,5 @@ HdrHistogram-master	9866a4c
 classgraph 	1310809
 jans 4d17cbc
 StreamCQL-master
-jackson-databind 2.71 false-positive
+jackson-databind 2.71 false-positive 88554f51b
 rightid  c70d0cb53b215290996ffe40696cce15e61fce3d

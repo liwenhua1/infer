@@ -1,0 +1,76 @@
+#0
+src/main/java/com/fasterxml/jackson/databind/ObjectReader.java:1670: error: Pulse Resource Leak
+  Resource dynamically allocated by constructor java.io.FileInputStream(), indirectly via call to `ObjectReader._inputStream(...)` on line 1670 is not closed after the last access at line 1670. 
+  1668.       {
+  1669.           if (_dataFormatReaders != null) {
+  1670. >             return (T) _detectBindAndClose(_dataFormatReaders.findFormat(_inputStream(src)), true);
+  1671.           }
+  1672.   
+
+#1
+src/main/java/com/fasterxml/jackson/databind/ObjectReader.java:1997: error: Pulse Resource Leak
+  Resource dynamically allocated by constructor java.io.FileInputStream(), indirectly via call to `ObjectReader._inputStream(...)` on line 1997 is not closed after the last access at line 1997. 
+  1995.           if (_dataFormatReaders != null) {
+  1996.               return _detectBindAndReadValues(
+  1997. >                     _dataFormatReaders.findFormat(_inputStream(src)), false);
+  1998.           }
+  1999.           return _bindAndReadValues(_considerFilter(createParser(src), true));
+
+#2
+src/main/java/com/fasterxml/jackson/databind/deser/std/ReferenceTypeDeserializer.java:219: error: Null Dereference
+  `B` could be null (from the call to `JsonDeserializer.supportsUpdate(...)` on line 217) and is dereferenced. 
+  217.           Boolean B = _valueDeserializer.supportsUpdate(ctxt.getConfig());
+  218.           // if explicitly stated that merge won't work...
+  219. >         if (B.equals(Boolean.FALSE) ||  (_valueTypeDeserializer != null)) {
+  220.               contents = (_valueTypeDeserializer == null)
+  221.                       ? _valueDeserializer.deserialize(p, ctxt)
+
+#3
+src/main/java/com/fasterxml/jackson/databind/exc/InvalidFormatException.java:37: error: Null Dereference
+  null (null value originating from line 37) is dereferenced in the call to `MismatchedInputException(...)`. 
+  35.               Object value, Class<?> targetType)
+  36.       {
+  37. >         super(null, msg);
+  38.           _value = value;
+  39.           _targetType = targetType;
+
+#4
+src/main/java/com/fasterxml/jackson/databind/introspect/JacksonAnnotationIntrospector.java:629: error: Null Dereference
+  `cls1` could be null (from the call to `AnnotatedMethod.getRawParameterType(...)` on line 624) and is dereferenced. 
+  627.           // First: prefer primitives over non-primitives
+  628.           // 11-Dec-2015, tatu: TODO, perhaps consider wrappers for primitives too?
+  629. >         if (cls1.isPrimitive()) {
+  630.               if (!cls2.isPrimitive()) {
+  631.                   return setter1;
+
+#5
+src/main/java/com/fasterxml/jackson/databind/introspect/JacksonAnnotationIntrospector.java:1681: error: Null Dereference
+  null (null value originating from line 1681) is dereferenced in the call to `JsonMappingException(...)`. 
+  1679.       // @since 2.12
+  1680.       private JsonMappingException _databindException(String msg) {
+  1681. >         return new JsonMappingException(null, msg);
+  1682.       }
+  1683.   
+
+#6
+src/main/java/com/fasterxml/jackson/databind/introspect/POJOPropertiesCollector.java:1650: error: Null Dereference
+  The call to `PropertyMetadata POJOPropertyBuilder.getMetadata()` ends up calling `Class POJOPropertyBuilder._rawTypeOf(AnnotatedMember)` (after 1 more call) and may trigger the following issue: `JavaType AnnotatedMethod.getParameterType(int)` could be null (from the call to `POJOPropertyBuilder.getMetadata()` on line 1433) and is dereferenced in the call to `POJOPropertyBuilder.getMetadata()`. 
+  1648.       private boolean _anyIndexed(Collection<POJOPropertyBuilder> props) {
+  1649.           for (POJOPropertyBuilder prop : props) {
+  1650. >             if (prop.getMetadata().hasIndex()) {
+  1651.                   return true;
+  1652.               }
+
+#7
+src/main/java/com/fasterxml/jackson/databind/type/SimpleType.java:188: error: Null Dereference
+  `t` could be null (from the call to `TypeBase.containedType(...)` on line 184) and is dereferenced. 
+  186.                       sb.append(',');
+  187.                   }
+  188. >                 sb.append(t.toCanonical());
+  189.               }
+  190.               sb.append('>');
+
+Found 8 issues
+                Issue Type(ISSUED_TYPE_ID): #
+     Null Dereference(NULLPTR_DEREFERENCE): 6
+  Pulse Resource Leak(PULSE_RESOURCE_LEAK): 2
