@@ -1322,7 +1322,7 @@ module PulseTransferFunctions = struct
                         )
           in 
          
-          (* let inter_or_abs_known =  (Tenv.is_java_normal_cls tenv ty_name)  
+          let inter_or_abs_known =  (Tenv.is_java_normal_cls tenv ty_name)  
 
           in
           let rec helper_check tlist = 
@@ -1334,7 +1334,7 @@ module PulseTransferFunctions = struct
           let inter_or_abs_have_known = if inter_or_abs_known then true
              else helper_check (Tenv.find_limited_sub ty_name tenv)
 
-          in *)
+          in
 
           let inter_or_abs = Tenv.is_java_abstract_cls tenv ty_name || Tenv.is_java_interface_cls tenv ty_name 
 
@@ -1352,6 +1352,7 @@ module PulseTransferFunctions = struct
           if (Procname.equal p BuiltinDecl.__new) || (Procname.equal p BuiltinDecl.__cast) 
             ||  ((not (!is_known_call)) && (not inter_or_abs))
             || ((not (!is_known_call)) && !AbductiveDomain.pdf_pack)
+            ||  ((not (!is_known_call)) && (not inter_or_abs_have_known) && !AbductiveDomain.server_j)
             ||(List.is_empty actuals) || Procname.is_java_static_method p then
 
               (*不要做subtyping的情况*)
@@ -2142,9 +2143,10 @@ let checker ?specialization ({InterproceduralAnalysis.proc_desc} as analysis_dat
   let class_name = Procname.get_class_name (Procdesc.get_proc_name proc_desc) 
   in (match class_name with 
       | None -> ()
-      | Some a -> if (String.is_suffix a ~suffix:("java.infer.Lists"))
+      | Some a -> if (String.is_suffix a ~suffix:("infer.Lists"))
         then AbductiveDomain.is_list_package := true) ;
-      if String.is_substring (Sys.getcwd ()) ~substring:("pdfbox") then AbductiveDomain.pdf_pack := true
+      if String.is_substring (Sys.getcwd ()) ~substring:("dfbo") then AbductiveDomain.pdf_pack := true ;
+      if String.is_substring (Sys.getcwd ()) ~substring:("auth-") then AbductiveDomain.server_j := true
   in 
 
   (* Procdesc.pp_with_instrs ~print_types:true F.std_formatter proc_desc; *)
