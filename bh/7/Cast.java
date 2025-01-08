@@ -7,8 +7,8 @@
 
 
 public class Cast {
-    public Map<String,Subtype> obj;
-    public Subtype data;
+    // public Map<String,Subtype> obj;
+    // public Subtype data;
     // interface  A<T> {
         static class Subtype{
             // public void aux() {}
@@ -19,24 +19,24 @@ public class Cast {
     // interface C extends A {}
     // static class D implements B {}
 
-    private Subtype helper1(Subtype a) {
-        if (a != null){
-        return new Subtype();}
-        return null;
+     Cast(Object a) {
+        if (a instanceof Sub1){
+        Object k =(Sub1) a;}
+        Object z = (Sub1) a;
     }
 
-    public static void main(String[] args) {
-        helper();
-    }
+    // public static void main(String[] args) {
+    //     helper();
+    // }
 
-    public static void helper() {
-             tt(null);
+    // public static void helper() {
+    //          tt(null);
                
-            }
+    //         }
 
-    public static void tt(Boolean x){
-        if (!x) {}
-    }
+    // public static void tt(Boolean x){
+    //     if (!x) {}
+    // }
     
     
 
@@ -194,5 +194,5 @@ public class Cast {
 
 }
 
-class Cast2 extends Cast {}
+
 

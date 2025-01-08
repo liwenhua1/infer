@@ -13,6 +13,12 @@ module F = Format
 (** Visibility modifiers. *)
 type access = Default | Public | Private | Protected [@@deriving compare, equal]
 
+let access_to_string ac = match ac with 
+    |Default -> "Default"
+    |Public -> "Public"
+    |Private -> "Private"
+    |Protected -> "Protected" 
+
 let string_of_access = function
   | Default ->
       "Default"

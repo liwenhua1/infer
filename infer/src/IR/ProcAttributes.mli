@@ -13,6 +13,8 @@ module F = Format
 (** Visibility modifiers. *)
 type access = Default | Public | Private | Protected [@@deriving compare]
 
+val access_to_string : access -> string
+
 val equal_access : access -> access -> bool
 
 type objc_accessor_type = Objc_getter of Struct.field | Objc_setter of Struct.field

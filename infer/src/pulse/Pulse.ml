@@ -2040,7 +2040,7 @@ let analyze specialization
     
     (* let () =
     (* match procname_java_class with | None -> () 
-    | Some aa -> let test_name = "CtTypeReferenceImpl" in  
+    | Some aa -> let test_name = "ClasspathOrder" in  
     
   
     if (String.is_suffix ~suffix:test_name aa) then  *)
@@ -2150,6 +2150,10 @@ let checker ?specialization ({InterproceduralAnalysis.proc_desc} as analysis_dat
   (* Procdesc.pp_with_instrs ~print_types:true F.std_formatter proc_desc; *)
   (* Tenv.pp_per_file F.std_formatter (Tenv.FileLocal analysis_data.tenv); *)
   (* print_endline "===================="; *)
+
+  (* let iden = Procdesc.get_access proc_desc in 
+  let det = (Procname.to_string ~verbosity:(Procname.Verbose) (Procdesc.get_proc_name proc_desc)) in 
+  print_endline ((ProcAttributes.access_to_string iden)^det); *)
   let open IOption.Let_syntax in
   if should_analyze (proc_desc:Procdesc.t) then (
     try

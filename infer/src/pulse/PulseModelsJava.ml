@@ -239,7 +239,7 @@ let java_cast (argv, hist) typeexpr : model =
             | None -> Tenv.create ()
           in
         let access_trace = Trace.Immediate {location; history = hist} in 
-        if ( specifical_unsolved_method || apply_get_class || is_null || (not (Caml.Hashtbl.find should_analyse_cast (Procdesc.get_proc_name analysis_data.proc_desc)))) then 
+        if (ProcAttributes.equal_access (Procdesc.get_access proc) ProcAttributes.Default || specifical_unsolved_method || apply_get_class || is_null || (not (Caml.Hashtbl.find should_analyse_cast (Procdesc.get_proc_name analysis_data.proc_desc)))) then 
           
           let astate = PulseOperations.write_id ret_id (argv, Hist.single_event path event) astate in 
                     astate |> Basic.ok_continue else
