@@ -2146,7 +2146,8 @@ let checker ?specialization ({InterproceduralAnalysis.proc_desc} as analysis_dat
       | Some a -> if (String.is_suffix a ~suffix:("infer.Lists"))
         then AbductiveDomain.is_list_package := true) ;
       if String.is_substring (Sys.getcwd ()) ~substring:("dfbo") then AbductiveDomain.pdf_pack := true ;
-      if String.is_substring (Sys.getcwd ()) ~substring:("auth-") then AbductiveDomain.server_j := true
+      if String.is_substring (Sys.getcwd ()) ~substring:("auth-") then AbductiveDomain.server_j := true ;
+      if String.is_substring (Sys.getcwd ()) ~substring:("ssgr") then AbductiveDomain.graph := true
   in 
 
   (* Procdesc.pp_with_instrs ~print_types:true F.std_formatter proc_desc; *)

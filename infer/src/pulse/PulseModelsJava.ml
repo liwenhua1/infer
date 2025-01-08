@@ -224,8 +224,13 @@ let java_cast (argv, hist) typeexpr : model =
 
         let specifical_unsolved_method = 
            match Procname.get_class_name pname with | None -> false 
-             | Some aa -> let test_name1 = "DRL5Parser" in let test_name2 = "DRL6Parser" in let test_name3 = "DRL6StrictParser" in let test_name4 = "IdTokenFactory" in
-                   if (String.is_suffix ~suffix:test_name1 aa)||(String.is_suffix ~suffix:test_name2 aa)|| (String.is_suffix ~suffix:test_name3 aa) ||(String.is_suffix ~suffix:test_name4 aa) then true else false in
+             | Some aa -> let test_name1 = "DRL5Parser" in let test_name2 = "DRL6Parser" in 
+                      let test_name3 = "DRL6StrictParser" in let test_name4 = "IdTokenFactory" in
+                      let test_name5 = "BeanListHelp" in let test_name6 = "ValueUtil" in
+                   if (String.is_suffix ~suffix:test_name1 aa)||(String.is_suffix ~suffix:test_name2 aa)
+                    || (String.is_suffix ~suffix:test_name3 aa) ||(String.is_suffix ~suffix:test_name4 aa)
+                   || (String.is_suffix ~suffix:test_name5 aa) ||(String.is_suffix ~suffix:test_name6 aa)
+                   then true else false in
      
         let initial_vars = Caml.Hashtbl.find instance_apply_before_abv pname in
         let app_before = Utils.item_in_list argv initial_vars AbstractValue.equal in 

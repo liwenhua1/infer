@@ -2266,6 +2266,8 @@ let is_list_package = ref false
 let pdf_pack = ref false 
 let server_j = ref false 
 
+let graph = ref false 
+
 module CanonValue = struct
   include CanonValue
 

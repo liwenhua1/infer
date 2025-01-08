@@ -444,3 +444,4 @@ end
 val is_list_package : bool ref
 val pdf_pack : bool ref
 val server_j : bool ref
+val graph : bool ref
