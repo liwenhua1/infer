@@ -223,7 +223,7 @@ module Java = struct
 
   let is_class_initializer {method_name} = String.equal method_name class_initializer_method_name
 
-  let is_getclass_method {method_name} = String.equal method_name "getClass"
+  let is_getclass_method {method_name} = (String.equal method_name "getClass") || (String.is_substring method_name ~substring:("isReferenceType"))
 
   let get_class_initializer class_name =
     { method_name= class_initializer_method_name
