@@ -417,6 +417,8 @@ module Summary : sig
   type t = summary [@@deriving compare, equal, yojson_of]
 end
 
+val to_abductivedomain : Summary.summary -> t
+
 module Topl : sig
   val small_step : Location.t -> PulseTopl.event -> t -> t
 

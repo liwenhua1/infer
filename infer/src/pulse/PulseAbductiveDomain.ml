@@ -1730,6 +1730,8 @@ module Summary = struct
 
   let leq = leq
 
+ 
+
   let get_number_instanceof summary argv = 
     let condition = summary.path_condition in 
     let number = Formula.get_number_instanceof condition argv in number
@@ -1909,6 +1911,17 @@ module Summary = struct
             else (heap_paths, already_found) ) )
     |> snd |> fst
 end
+
+let to_abductivedomain (s:Summary.summary) = (s)
+    
+(* {post=s.post
+; pre=s.pre
+; path_condition=s.path_condition
+; decompiler = s.decompiler
+; topl: (PulseTopl.state[@yojson.opaque])
+; need_closure_specialization: bool
+; need_dynamic_type_specialization: (AbstractValue.Set.t[@yojson.opaque])
+; skipped_calls: SkippedCalls.t} *)
 
 module Topl = struct
   let small_step loc event astate =
