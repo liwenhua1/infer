@@ -19,12 +19,27 @@ public class Cast {
     // interface C extends A {}
     // static class D implements B {}
 
-     Cast(Object a) {
-        if (a instanceof Sub1){
-        Object k =(Sub1) a;}
-        Object z = (Sub1) a;
-    }
+    //  Cast(Object a) {
+    //     if (a instanceof Sub1){
+    //     Object k =(Sub1) a;}
+    //     Object z = (Sub1) a;
+    // }
 
+    public void of(Object o) {
+        
+        if (o != null) {
+            Object request = o.toString();
+            Object response = o.equals(new Object());
+
+            if (request instanceof Sub1) {
+                Object x = ((Sub1) request);
+            }
+            if (response instanceof Sub3) {
+                Object x = ((Sub3) request);
+            }
+        }
+        
+    }
     // public static void main(String[] args) {
     //     helper();
     // }

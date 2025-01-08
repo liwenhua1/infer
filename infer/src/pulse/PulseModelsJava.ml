@@ -349,11 +349,12 @@ let java_cast (argv, hist) typeexpr : model =
                           in re
 
                 |_ -> 
-                  
+                
                   let (instance,not_instance) = Formula.get_all_instance_constrains argv astate.path_condition in 
                   
                  
                   let name1 = (match AbductiveDomain.AddressAttributes.get_static_type argv astate with| Some a -> a|None-> 
+                    
                     let cons_list_head = 
                        (match List.hd instance with |Some a -> a | _ -> (raise UnsupportCast)) in (match Typ.name cons_list_head with |Some z -> z |_ -> (raise UnsupportCast))
                     ) in
@@ -381,12 +382,12 @@ let java_cast (argv, hist) typeexpr : model =
                 (* Typ.print_name name1; *)
                 if ((not (Typ.Name.equal name1 Typ.make_object)) && not (exist_super)) then 
                   let astate = PulseOperations.write_id ret_id (argv, Hist.single_event path event) astate in 
-             
+                  
                   astate |> Basic.ok_continue
                 else
                 (* Utils.list_printer (fun x -> Typ.print_name x) (Tenv.find_limited_sub name1 tenv); *)
-        (* AbductiveDomain.pp Format.std_formatter astate; *)
-       
+        
+                  
         (* Utils.list_printer (fun x -> Typ.pp Pp.text Format.std_formatter x) not_instance; *)
         let not_instance = List.filter_map not_instance ~f:(fun x -> Typ.name x) in 
         (* Utils.list_printer (fun x -> print_endline ("yes "^(Typ.to_string x))) a;
@@ -406,10 +407,14 @@ let java_cast (argv, hist) typeexpr : model =
             | Some a1 -> a1 in
             (* Utils.print_bool (PatternMatch.is_subtype tenv name1 name2);
             Utils.print_bool (PatternMatch.is_subtype tenv name2 name1); *)
+            
             let (yinstance, b) = Formula.find_last_subclass tenv name1 instance in 
             
-            if b then let ninstance = Formula.check_not_instance tenv yinstance not_instance in 
+            if b then 
+              
+              let ninstance = Formula.check_not_instance tenv yinstance not_instance in 
                 if (fst ninstance) then 
+                  
                   let check_non_interface_abstract_class_1 top_class = (*找到一个确切subclass 违反not instanceof 的要求*)
                     let all_possible_subtypes = top_class :: (Tenv.find_limited_sub top_class tenv) in 
                      (* let  () = print_endline "kkkkkkkkkkkkkkk" in  
@@ -419,18 +424,25 @@ let java_cast (argv, hist) typeexpr : model =
                     List.hd possible_subclass 
                   in
 
-
+               
 
 
                   let res1 =  List.fold not_instance ~init:true ~f:(fun acc x -> acc && if PatternMatch.is_subtype tenv name2 x then false else true) in (*cast to not instanceof *)
                   let res2 = PatternMatch.is_subtype tenv yinstance name2 in
-                
+                  (* Typ.print_name yinstance;  
+                  Typ.print_name name2; *)
+                 (* AbductiveDomain.pp Format.std_formatter astate; *)
+                  (* Utils.list_printer Typ.print_name not_instance;
+                  print_endline "-----------"; *)
                 if not (res1) then
+                  
+                  
                  ( match check_non_interface_abstract_class_1 yinstance with 
                   | Some outsider ->
                   add_instance_of_info_fail num_instance false argv typ astate outsider name2 access_trace location ret_id path event app_before access argv false
                   | _ -> let astate = PulseOperations.write_id ret_id (argv, Hist.single_event path event) astate in 
-                  (* let  () = print_endline "kkkkkkkkkkkkkkk" in   *)
+                 
+                  
                            astate |> Basic.ok_continue)
                             (* astate |> Basic.err_cast_abort yinstance name2 access_trace location *)
                          else if not (res2) then (*yinstance is not instance of target type*)
@@ -440,13 +452,14 @@ let java_cast (argv, hist) typeexpr : model =
                                 if Tenv.is_java_interface_cls tenv name2 
                                 (* || Tenv.is_java_interface_cls tenv yinstance ?, should  *)
                                 then let astate = PulseOperations.write_id ret_id (argv, Hist.single_event path event) astate in 
+                                
                                 astate |> Basic.ok_continue
                                 else 
 
-
-
+                                
                                 let check_non_interface_abstract_class_2 top_class = 
-                                  let all_possible_subtypes = Tenv.find_limited_sub top_class tenv in
+                                  let all_possible_subtypes =top_class :: (Tenv.find_limited_sub top_class tenv) in
+                                  (* Utils.list_printer Typ.print_name all_possible_subtypes; *)
                                   let possible_subclass = List.filter all_possible_subtypes ~f:(fun x -> (not (Tenv.is_java_abstract_cls tenv x || Tenv.is_java_interface_cls tenv x)) && (fst (Formula.check_not_instance tenv x not_instance) ) ) in 
                                   List.hd possible_subclass 
                                 in
@@ -457,7 +470,7 @@ let java_cast (argv, hist) typeexpr : model =
                                 )
                                 (* astate |> Basic.err_cast_abort yinstance name2 access_trace location *)
                               else
-                                
+                              
                               let exe1 = add_instance_of_info_succ true argv typ astate ret_id path event in 
                               
                               let check_non_interface_abstract_class top_class target_class = 
@@ -487,7 +500,9 @@ let java_cast (argv, hist) typeexpr : model =
                           (* let () =(print_endline ("possible cast error detected at "^ (Location.to_string location))) in  *)
                          (* astate |> Basic.ok_continue *)
                          else 
+                          
                           let astate = PulseOperations.write_id ret_id (argv, Hist.single_event path event) astate in 
+                          
                           astate |> Basic.ok_continue
                 else 
                   let () =print_endline ("infeasible path so cast is safe at "^ (Location.to_string location)) in []
@@ -504,9 +519,11 @@ let java_cast (argv, hist) typeexpr : model =
         | _ ->
         
           let astate = PulseOperations.write_id ret_id (argv, Hist.single_event path event) astate in 
+          
           astate |> Basic.ok_continue
 
         with UnsupportCast -> let astate = PulseOperations.write_id ret_id (argv, Hist.single_event path event) astate in 
+                              
                               astate |> Basic.ok_continue
 let call_may_throw_exception (exn : JavaClassName.t) : model =
  fun {location; path; analysis_data} astate ->
