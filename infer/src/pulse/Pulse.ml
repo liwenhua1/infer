@@ -1351,7 +1351,6 @@ module PulseTransferFunctions = struct
                       
           if (Procname.equal p BuiltinDecl.__new) || (Procname.equal p BuiltinDecl.__cast) 
             ||  ((not (!is_known_call)) && (not inter_or_abs))
-            || ((not (!is_known_call)) && !AbductiveDomain.pdf_pack)
             ||  ((not (!is_known_call)) && (not inter_or_abs_have_known) && !AbductiveDomain.server_j)
             ||(List.is_empty actuals) || Procname.is_java_static_method p then
 
@@ -2145,7 +2144,6 @@ let checker ?specialization ({InterproceduralAnalysis.proc_desc} as analysis_dat
       | None -> ()
       | Some a -> if (String.is_suffix a ~suffix:("infer.Lists"))
         then AbductiveDomain.is_list_package := true) ;
-      if String.is_substring (Sys.getcwd ()) ~substring:("dfbo") then AbductiveDomain.pdf_pack := true ;
       if String.is_substring (Sys.getcwd ()) ~substring:("auth-") then AbductiveDomain.server_j := true ;
       if String.is_substring (Sys.getcwd ()) ~substring:("ssgr") then AbductiveDomain.graph := true
   in 
