@@ -849,7 +849,7 @@ let null_dereference =
 
 
 let nullptr_dereference =
-  register_with_latent ~id:"ToolX_NULLPTR_DEREFERENCE" ~hum:" ToolX Null Dereference" Error Pulse
+  register_with_latent ~id:"NULLPTR_DEREFERENCE" ~hum:"Null Dereference" Error Pulse
     ~user_documentation:[%blob "./documentation/issues/NULLPTR_DEREFERENCE.md"]
 
 
